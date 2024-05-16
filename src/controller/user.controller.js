@@ -88,9 +88,9 @@ const retailRegister = asyncHandler(async (req, res) => {
 
 const corprateRegister = asyncHandler(async (req, res) => {
     const reqBody = req.body || {};
-    const { industry, companyName, zipCode, country, city, state, gender, phoneNo1, phoneNo2, landlineNo, email, website, address1, address2, address3 } = reqBody;
+    const { industry, companyName, zipCode, country, city, state, gender, phoneNo1, phoneNo2, landlineNo, email, password, website, address1, address2, address3 } = reqBody;
 
-    if (!industry || !companyName || !zipCode || !country || !city || !state || !gender || !phoneNo1 || !phoneNo2 || !landlineNo || !email || !website || !address1 || !address2 || !address3) {
+    if (!industry || !companyName || !zipCode || !country || !city || !state || !gender || !phoneNo1 || !phoneNo2 || !landlineNo || !email || !password || !website || !address1 || !address2 || !address3) {
         return res.status(400).json(
             new ApiResponse(
                 400,
@@ -113,6 +113,7 @@ const corprateRegister = asyncHandler(async (req, res) => {
         phoneNo2 VARCHAR(255) NOT NULL,
         landlineNo VARCHAR(255) NOT NULL,
         email VARCHAR(255) NOT NULL,
+        password VARCHAR(255) NOT NULL,
         website VARCHAR(255) NOT NULL,
         address1 VARCHAR(255) NOT NULL,
         address2 VARCHAR(255) NOT NULL,
@@ -136,92 +137,94 @@ const corprateRegister = asyncHandler(async (req, res) => {
         );
     }
 
-    const insertSql = `INSERT INTO corporate_user (industry, companyName, zipCode, country, city, state, gender, phoneNo1, phoneNo2, landlineNo, email, website, address1, address2, address3) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    const insertSql = `INSERT INTO corporate_user (industry, companyName, zipCode, country, city, state, gender, phoneNo1, phoneNo2, landlineNo, email, password, website, address1, address2, address3) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
-    const params = [industry, companyName, zipCode, country, city, state, gender, phoneNo1, phoneNo2, landlineNo, email, website, address1, address2, address3];
+    const hashedPassword = await hashPassword(password);
+
+    const params = [industry, companyName, zipCode, country, city, state, gender, phoneNo1, phoneNo2, landlineNo, email, hashedPassword, website, address1, address2, address3];
 
     const [result, fields] = await db.query(insertSql, params);
 
     // Send Mail
-    await sendMail(
-        email,
-        "Welcome to TGES",
-        `<h1>Hi ${companyName},</h1>
-        <p>Congratulations on registering with TGES Travel.</p>
-        <p>Below are the details of your registration:</p>
-        <style>
-            table, th, td {
-                border: 1px solid black;
-            }
-            table {
-                border-collapse: collapse;
-            }
-        </style>
-        <table>
-            <tr>
-                <th style="width: 20%">Industry</th>
-                <td style="width: 80%">${industry}</td>
-            </tr>
-            <tr>
-                <th>Company Name</th>
-                <td>${companyName}</td>
-            </tr>
-            <tr>
-                <th>Zip Code</th>
-                <td>${zipCode}</td>
-            </tr>
-            <tr>
-                <th>Country</th>
-                <td>${country}</td>
-            </tr>
-            <tr>
-                <th>City</th>
-                <td>${city}</td>
-            </tr>
-            <tr>
-                <th>State</th>
-                <td>${state}</td>
-            </tr>
-            <tr>
-                <th>Gender</th>
-                <td>${gender}</td>
-            </tr>
-            <tr>
-                <th>Phone No. 1</th>
-                <td>${phoneNo1}</td>
-            </tr>
-            <tr>
-                <th>Phone No. 2</th>
-                <td>${phoneNo2}</td>
-            </tr>
-            <tr>
-                <th>Landline No.</th>
-                <td>${landlineNo}</td>
-            </tr>
-            <tr>
-                <th>Email</th>
-                <td>${email}</td>
-            </tr>
-            <tr>
-                <th>Website</th>
-                <td>${website}</td>
-            </tr>
-            <tr>
-                <th>Address Line 1</th>
-                <td>${address1}</td>
-            </tr>
-            <tr>
-                <th>Address Line 2</th>
-                <td>${address2}</td>
-            </tr>
-            <tr>
-                <th>Address Line 3</th>
-                <td>${address3}</td>
-            </tr>
-        </table>
-        <p>Regards,<br>
-        TGES Travel Team</p>`
-    )
+    // await sendMail(
+    //     email,
+    //     "Welcome to TGES",
+    //     `<h1>Hi ${companyName},</h1>
+    //     <p>Congratulations on registering with TGES Travel.</p>
+    //     <p>Below are the details of your registration:</p>
+    //     <style>
+    //         table, th, td {
+    //             border: 1px solid black;
+    //         }
+    //         table {
+    //             border-collapse: collapse;
+    //         }
+    //     </style>
+    //     <table>
+    //         <tr>
+    //             <th style="width: 20%">Industry</th>
+    //             <td style="width: 80%">${industry}</td>
+    //         </tr>
+    //         <tr>
+    //             <th>Company Name</th>
+    //             <td>${companyName}</td>
+    //         </tr>
+    //         <tr>
+    //             <th>Zip Code</th>
+    //             <td>${zipCode}</td>
+    //         </tr>
+    //         <tr>
+    //             <th>Country</th>
+    //             <td>${country}</td>
+    //         </tr>
+    //         <tr>
+    //             <th>City</th>
+    //             <td>${city}</td>
+    //         </tr>
+    //         <tr>
+    //             <th>State</th>
+    //             <td>${state}</td>
+    //         </tr>
+    //         <tr>
+    //             <th>Gender</th>
+    //             <td>${gender}</td>
+    //         </tr>
+    //         <tr>
+    //             <th>Phone No. 1</th>
+    //             <td>${phoneNo1}</td>
+    //         </tr>
+    //         <tr>
+    //             <th>Phone No. 2</th>
+    //             <td>${phoneNo2}</td>
+    //         </tr>
+    //         <tr>
+    //             <th>Landline No.</th>
+    //             <td>${landlineNo}</td>
+    //         </tr>
+    //         <tr>
+    //             <th>Email</th>
+    //             <td>${email}</td>
+    //         </tr>
+    //         <tr>
+    //             <th>Website</th>
+    //             <td>${website}</td>
+    //         </tr>
+    //         <tr>
+    //             <th>Address Line 1</th>
+    //             <td>${address1}</td>
+    //         </tr>
+    //         <tr>
+    //             <th>Address Line 2</th>
+    //             <td>${address2}</td>
+    //         </tr>
+    //         <tr>
+    //             <th>Address Line 3</th>
+    //             <td>${address3}</td>
+    //         </tr>
+    //     </table>
+    //     <p>Regards,<br>
+    //     TGES Travel Team</p>`
+    // )
 
     return res.status(201).json(
         new ApiResponse(
@@ -234,9 +237,9 @@ const corprateRegister = asyncHandler(async (req, res) => {
 
 const vendorRegister = asyncHandler(async (req, res) => {
     const reqBody = req.body || {};
-    const { industry, companyName, zipCode, country, city, state, gender, phoneNo1, phoneNo2, landlineNo, email, website, address1, address2, address3 } = reqBody;
+    const { areaOfWork, companyName, zipCode, country, city, state, gender, phoneNo1, phoneNo2, landlineNo, email, password, website, address1, address2, address3 } = reqBody;
 
-    if (!industry || !companyName || !zipCode || !country || !city || !state || !gender || !phoneNo1 || !phoneNo2 || !landlineNo || !email || !website || !address1 || !address2 || !address3) {
+    if (!areaOfWork || !companyName || !zipCode || !country || !city || !state || !gender || !phoneNo1 || !phoneNo2 || !landlineNo || !email || !password || !website || !address1 || !address2 || !address3) {
         return res.status(400).json(
             new ApiResponse(
                 400,
@@ -248,7 +251,7 @@ const vendorRegister = asyncHandler(async (req, res) => {
 
     const sql = `CREATE TABLE IF NOT EXISTS vendor (
         id INT AUTO_INCREMENT PRIMARY KEY,
-        industry VARCHAR(255) NOT NULL,
+        areaOfWork VARCHAR(255) NOT NULL,
         companyName VARCHAR(255) NOT NULL,
         zipCode VARCHAR(255) NOT NULL,
         country VARCHAR(255) NOT NULL,
@@ -259,6 +262,7 @@ const vendorRegister = asyncHandler(async (req, res) => {
         phoneNo2 VARCHAR(255) NOT NULL,
         landlineNo VARCHAR(255) NOT NULL,
         email VARCHAR(255) NOT NULL,
+        password VARCHAR(255) NOT NULL,
         website VARCHAR(255) NOT NULL,
         address1 VARCHAR(255) NOT NULL,
         address2 VARCHAR(255) NOT NULL,
@@ -282,18 +286,20 @@ const vendorRegister = asyncHandler(async (req, res) => {
         );
     }
 
-    const insertSql = `INSERT INTO vendor (industry, companyName, zipCode, country, city, state, gender, phoneNo1, phoneNo2, landlineNo, email, website, address1, address2, address3) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    const insertSql = `INSERT INTO vendor (areaOfWork, companyName, zipCode, country, city, state, gender, phoneNo1, phoneNo2, landlineNo, email, password, website, address1, address2, address3) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
-    const params = [industry, companyName, zipCode, country, city, state, gender, phoneNo1, phoneNo2, landlineNo, email, website, address1, address2, address3];
+    const hashedPassword = await hashPassword(password);
+
+    const params = [areaOfWork, companyName, zipCode, country, city, state, gender, phoneNo1, phoneNo2, landlineNo, email, hashedPassword, website, address1, address2, address3];
 
     const [result, fields] = await db.query(insertSql, params);
 
     // Send Mail
-    await sendMail(
-        email,
-        "Welcome to TGES",
-        `<h1>Hi ${firstName} ${lastName}, Welcome to TGES.</h1>`
-    )
+    // await sendMail(
+    //     email,
+    //     "Welcome to TGES",
+    //     `<h1>Hi ${firstName} ${lastName}, Welcome to TGES.</h1>`
+    // )
 
     return res.status(201).json(
         new ApiResponse(
