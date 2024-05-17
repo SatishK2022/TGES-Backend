@@ -1,11 +1,14 @@
 import express from "express";
-import { corprateRegister, getUsers, retailRegister, vendorRegister } from "../controller/user.controller.js";
+import { corprateLogin, corprateRegister, logout, retailLogin, retailRegister, vendorLogin, vendorRegister } from "../controller/user.controller.js";
 
 const router = express.Router();
 
 router.post("/corprate-register", corprateRegister)
 router.post("/retail-register", retailRegister)
 router.post("/vendor-register", vendorRegister)
-router.get("/users", getUsers)
+router.post("/retail-login", retailLogin)
+router.post("/corprate-login", corprateLogin)
+router.post("/vendor-login", vendorLogin)
+router.get("/logout", logout)
 
 export default router;

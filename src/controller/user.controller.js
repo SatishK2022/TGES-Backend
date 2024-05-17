@@ -2,7 +2,7 @@ import connectToDb from "../config/db.js";
 import asyncHandler from "../utils/asyncHandler.js";
 import ApiResponse from "../utils/ApiResponse.js"
 import { sendMail } from "../utils/sendMail.js";
-import { hashPassword } from "../utils/helper.js";
+import { comparePassword, generateToken, hashPassword } from "../utils/helper.js";
 
 let db = await connectToDb();
 
@@ -19,33 +19,6 @@ const retailRegister = asyncHandler(async (req, res) => {
             )
         );
     }
-
-    const sql = `CREATE TABLE IF NOT EXISTS retail_user (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        firstName VARCHAR(255) NOT NULL,
-        secondName VARCHAR(255) NOT NULL,
-        lastName VARCHAR(255) NOT NULL,
-        email VARCHAR(255) NOT NULL,
-        gender VARCHAR(255) NOT NULL,
-        residentialAddress VARCHAR(255) NOT NULL,
-        zipCode VARCHAR(255) NOT NULL,
-        country VARCHAR(255) NOT NULL,
-        state VARCHAR(255) NOT NULL,
-        city VARCHAR(255) NOT NULL,
-        phoneNo VARCHAR(255) NOT NULL,
-        username VARCHAR(255) NOT NULL,
-        password VARCHAR(255) NOT NULL,
-        Occupation VARCHAR(255) ,
-        companyName VARCHAR(255) ,
-        designation VARCHAR(255) ,
-        companyAddress VARCHAR(255) ,
-        reference VARCHAR(255) ,
-        preferredCurrency VARCHAR(255) ,
-        website VARCHAR(255) ,
-        documentType VARCHAR(255) 
-    )`;
-
-    await db.query(sql);
 
     // Check for duplicate email or username
     const checkEmailSql = `SELECT * FROM retail_user WHERE email = ? OR username = ?`;
@@ -99,28 +72,6 @@ const corprateRegister = asyncHandler(async (req, res) => {
             )
         );
     }
-
-    const sql = `CREATE TABLE IF NOT EXISTS corporate_user (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        industry VARCHAR(255) NOT NULL,
-        companyName VARCHAR(255) NOT NULL,
-        zipCode VARCHAR(255) NOT NULL,
-        country VARCHAR(255) NOT NULL,
-        city VARCHAR(255) NOT NULL,
-        state VARCHAR(255) NOT NULL,
-        gender VARCHAR(255) NOT NULL,
-        phoneNo1 VARCHAR(255) NOT NULL,
-        phoneNo2 VARCHAR(255) NOT NULL,
-        landlineNo VARCHAR(255) NOT NULL,
-        email VARCHAR(255) NOT NULL,
-        password VARCHAR(255) NOT NULL,
-        website VARCHAR(255) NOT NULL,
-        address1 VARCHAR(255) NOT NULL,
-        address2 VARCHAR(255) NOT NULL,
-        address3 VARCHAR(255) NOT NULL
-    )`;
-
-    await db.query(sql);
 
     // Check for duplicate email or username
     const checkEmailSql = `SELECT * FROM corporate_user WHERE email = ?`;
@@ -249,28 +200,6 @@ const vendorRegister = asyncHandler(async (req, res) => {
         );
     }
 
-    const sql = `CREATE TABLE IF NOT EXISTS vendor (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        areaOfWork VARCHAR(255) NOT NULL,
-        companyName VARCHAR(255) NOT NULL,
-        zipCode VARCHAR(255) NOT NULL,
-        country VARCHAR(255) NOT NULL,
-        city VARCHAR(255) NOT NULL,
-        state VARCHAR(255) NOT NULL,
-        gender VARCHAR(255) NOT NULL,
-        phoneNo1 VARCHAR(255) NOT NULL,
-        phoneNo2 VARCHAR(255) NOT NULL,
-        landlineNo VARCHAR(255) NOT NULL,
-        email VARCHAR(255) NOT NULL,
-        password VARCHAR(255) NOT NULL,
-        website VARCHAR(255) NOT NULL,
-        address1 VARCHAR(255) NOT NULL,
-        address2 VARCHAR(255) NOT NULL,
-        address3 VARCHAR(255) NOT NULL
-    )`;
-
-    await db.query(sql);
-
     // Check for duplicate email or username
     const checkEmailSql = `SELECT * FROM vendor WHERE email = ?`;
     const emailParams = [email];
@@ -310,16 +239,220 @@ const vendorRegister = asyncHandler(async (req, res) => {
     );
 })
 
-const getUsers = asyncHandler(async (req, res) => {
-    const sql = `SELECT * FROM retail_user`;
-    const [result, fields] = await db.query(sql);
-    // console.log(fields)
-    return res.status(200).json(result);
+const retailLogin = asyncHandler(async (req, res) => {
+    const reqBody = req.body || {};
+    const { email, password } = reqBody;
+
+    if (!email || !password) {
+        return res.status(400).json(
+            new ApiResponse(
+                400,
+                null,
+                "All fields are required"
+            )
+        );
+    }
+
+    const sql = `SELECT * FROM retail_user WHERE email = ?`;
+    const params = [email];
+    const [result, fields] = await db.query(sql, params);
+    if (result.length === 0) {
+        return res.status(404).json(
+            new ApiResponse(
+                404,
+                null,
+                "User not found"
+            )
+        );
+    }
+
+    const user = result[0];
+
+    const passwordMatch = await comparePassword(password, user.password);
+    if (!passwordMatch) {
+        return res.status(401).json(
+            new ApiResponse(
+                401,
+                null,
+                "Invalid credentials"
+            )
+        );
+    }
+
+    const token = generateToken({
+        id: user.id,
+        email: user.email,
+    })
+
+    const cookieOptions = {
+        httpOnly: true,
+        secure: true,
+    }
+
+    // Remove password from user object
+    delete user.password;
+
+    return res
+        .status(200)
+        .cookie("token", token, cookieOptions)
+        .json(
+            new ApiResponse(
+                200,
+                user,
+                "Login Successful"
+            )
+        );
+})
+
+const corprateLogin = asyncHandler(async (req, res) => {
+    const reqBody = req.body || {};
+    const { email, password } = reqBody;
+
+    if (!email || !password) {
+        return res.status(400).json(
+            new ApiResponse(
+                400,
+                null,
+                "All fields are required"
+            )
+        );
+    }
+
+    const sql = `SELECT * FROM corporate_user WHERE email = ?`;
+    const params = [email];
+    const [result, fields] = await db.query(sql, params);
+    if (result.length === 0) {
+        return res.status(404).json(
+            new ApiResponse(
+                404,
+                null,
+                "User not found"
+            )
+        );
+    }
+
+    const user = result[0];
+
+    const passwordMatch = await comparePassword(password, user.password);
+    if (!passwordMatch) {
+        return res.status(401).json(
+            new ApiResponse(
+                401,
+                null,
+                "Invalid credentials"
+            )
+        );
+    }
+
+    const token = generateToken({
+        id: user.id,
+        email: user.email,
+    })
+
+    const cookieOptions = {
+        httpOnly: true,
+        secure: true,
+    }
+
+    // Remove password from user object
+    delete user.password;
+
+    return res
+        .status(200)
+        .cookie("token", token, cookieOptions)
+        .json(
+            new ApiResponse(
+                200,
+                user,
+                "Login Successful"
+            )
+        );
+})
+
+const vendorLogin = asyncHandler(async (req, res) => {
+    const reqBody = req.body || {};
+    const { email, password } = reqBody;
+
+    if (!email || !password) {
+        return res.status(400).json(
+            new ApiResponse(
+                400,
+                null,
+                "All fields are required"
+            )
+        );
+    }
+
+    const sql = `SELECT * FROM vendor WHERE email = ?`;
+    const params = [email];
+    const [result, fields] = await db.query(sql, params);
+    if (result.length === 0) {
+        return res.status(404).json(
+            new ApiResponse(
+                404,
+                null,
+                "User not found"
+            )
+        );
+    }
+
+    const user = result[0];
+
+    const passwordMatch = await comparePassword(password, user.password);
+    if (!passwordMatch) {
+        return res.status(401).json(
+            new ApiResponse(
+                401,
+                null,
+                "Invalid credentials"
+            )
+        );
+    }
+
+    const token = generateToken({
+        id: user.id,
+        email: user.email,
+    })
+
+    const cookieOptions = {
+        httpOnly: true,
+        secure: true,
+    }
+
+    // Remove password from user object
+    delete user.password;
+
+    return res
+        .status(200)
+        .cookie("token", token, cookieOptions)
+        .json(
+            new ApiResponse(
+                200,
+                user,
+                "Login Successful"
+            )
+        );
+})
+
+const logout = asyncHandler(async (req, res) => {
+    return res
+        .status(200)
+        .clearCookie("token")
+        .json(
+            new ApiResponse(
+                200,
+                null,
+                "Logout Successful"
+            )
+        );
 })
 
 export {
     corprateRegister,
     retailRegister,
     vendorRegister,
-    getUsers
+    retailLogin,
+    corprateLogin,
+    vendorLogin,
+    logout,
 }
