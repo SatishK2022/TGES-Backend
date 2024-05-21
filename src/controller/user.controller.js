@@ -10,7 +10,7 @@ const retailRegister = asyncHandler(async (req, res) => {
     const reqBody = req.body || {};
     const { firstName, secondName, lastName, email, residentialAddress, zipCode, country, city, state, phoneNo, username, password, gender, occupation, companyName, designation, companyAddress, reference, preferredCurrency, website } = reqBody;
 
-    if (!firstName || !secondName || !lastName || !email || !zipCode || !country || !city || !state || !username || !password || !gender) {
+    if (!firstName || !secondName || !lastName || !email || !zipCode || !country || !city || !state || !username || !password || !gender || !residentialAddress || !phoneNo) {
         return res.status(400).json(
             new ApiResponse(
                 400,

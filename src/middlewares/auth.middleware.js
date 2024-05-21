@@ -1,31 +1,50 @@
 import jwt from "jsonwebtoken"
-import asyncHandler from "../utils/asyncHandler";
+import asyncHandler from "../utils/asyncHandler.js";
+import ApiResponse from "../utils/ApiResponse.js";
+import dbConnection from "../config/db.js";
 
-const isLoggedIn =asyncHandler(async (req, res, next) => {
+let db = await dbConnection();
+
+const isLoggedIn = asyncHandler(async (req, res, next) => {
     const { token } = req.cookies;
 
     if (!token) {
-        return res.status(500).json({
-            success: false,
-            message: "Unauthorized request"
-        })
+        return res.status(401).json(
+            new ApiResponse(
+                401,
+                null,
+                "Unautherized request"
+            )
+        )
     }
 
-    const tokenDetails = jwt.verify(token, process.env.JWT_SECRET);
-    console.log(tokenDetails)
+    try {
+        const tokenDetails = jwt.verify(token, process.env.JWT_SECRET);
 
-    const sql = `SELECT * FROM user WHERE id = ?`;
-    const [result, fields] = await db.query(sql, [tokenDetails.id]);
+        const sql = `SELECT * FROM user WHERE id = ?`;
+        const params = [tokenDetails.id];
+        const [result, fields] = await db.query(sql, params);
 
-    if (!tokenDetails) {
-        return res.status(500).json({
+        if (result.length === 0) {
+            return res.status(401).json(
+                new ApiResponse(
+                    401,
+                    null,
+                    "Unauthenticated! Please Login"
+                )
+            )
+        }
+
+        req.user = result[0];
+        next();
+    } catch (error) {
+        console.log(error)
+        return res.status(401).json({
             success: false,
-            message: "Unauthenticated! Please Login"
+            message: "Unauthenticated! Please Login",
+            error
         })
     }
-
-    req.user = result[0];
-    next();
 })
 
 export {
