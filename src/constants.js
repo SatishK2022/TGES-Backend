@@ -126,9 +126,31 @@ export const cab = `CREATE TABLE IF NOT EXISTS cab (
     dropTime VARCHAR(255) NOT NULL,
     dropAddress VARCHAR(255) NOT NULL,
     cabDuration VARCHAR(255) NOT NULL,
-    NoOfCabs VARCHAR(255) ,
+    NoOfCabs VARCHAR(255),
     typeOfCabs VARCHAR(255),
     noOfPassengers VARCHAR(255),
     travellingWith VARCHAR(255),
     remarks VARCHAR(255)
 )`; 
+
+export const hotel = `CREATE TABLE IF NOT EXISTS hotel (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    userId INT NOT NULL,
+    FOREIGN KEY (userId) REFERENCES user (id),
+    name VARCHAR(255) NOT NULL,
+    contactNo VARCHAR(255) NOT NULL,
+    nationality VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    hotelName VARCHAR(255) NOT NULL,
+    hotelAddress VARCHAR(255) NOT NULL,
+    hotelContactNo VARCHAR(255) NOT NULL,
+    mealPlan VARCHAR(255) NOT NULL,
+    roomCategory VARCHAR(255) NOT NULL,
+    checkInDate VARCHAR(255) NOT NULL,
+    checkOutDate VARCHAR(255) NOT NULL,
+    numberOfNights VARCHAR(255) NOT NULL,
+    noOfRooms VARCHAR(255) NOT NULL,
+    adults VARCHAR(255) NOT NULL,
+    children VARCHAR(255) NOT NULL,
+    infants VARCHAR(255) NOT NULL
+)`

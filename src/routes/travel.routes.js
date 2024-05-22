@@ -1,5 +1,5 @@
 import express from "express"
-import { createAirTravel, createCabTravel, createTrainTravel, createVolvoBusTravel, deleteAirTravel, deleteCabTravel, deleteTrainTravel, deleteVolvoBusTravel, getAirTravelDetails, getCabTravelDetails, getTrainTravelDetails, getVolvoBusTravelDetails, updateAirTravel, updateCabTravel, updateTrainTravel, updateVolvoBusTravel } from "../controller/travel.controller.js";
+import { createAirTravel, createCabTravel, createHotelBooking, createTrainTravel, createVolvoBusTravel, deleteAirTravel, deleteCabTravel, deleteHotelBooking, deleteTrainTravel, deleteVolvoBusTravel, getAirTravelDetails, getCabTravelDetails, getHotelBookings, getTrainTravelDetails, getVolvoBusTravelDetails, updateAirTravel, updateCabTravel, updateHotelBooking, updateTrainTravel, updateVolvoBusTravel } from "../controller/travel.controller.js";
 import { isLoggedIn } from "../middlewares/auth.middleware.js";
 const router = express.Router()
 
@@ -38,5 +38,14 @@ router.route("/cab")
 router.route("/cab/:id")
     .put(isLoggedIn, updateCabTravel)
     .delete(isLoggedIn, deleteCabTravel)
+
+// Hotel Routes
+router.route("/hotel")
+    .post(isLoggedIn, createHotelBooking)
+    .get(isLoggedIn, getHotelBookings)
+
+router.route("/hotel/:id")
+    .delete(isLoggedIn, deleteHotelBooking)
+    .put(isLoggedIn, updateHotelBooking)
 
 export default router;

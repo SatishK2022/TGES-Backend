@@ -542,9 +542,9 @@ const updateCabTravel = asyncHandler(async (req, res) => {
             );
         }
 
-        const cabTravel = `INSERT INTO cab (userId, tourPlan, name, pickupCountry, contactNo, email, cabRequiredFor, pickupDate, pickupTime, pickupAddress, dropDate, dropTime, dropAddress, cabDuration, NoOfCabs, typeOfCabs, noOfPassengers, travellingWith, remarks) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-        const cabParams = [req.user.id, tourPlan, name, pickupCountry, contactNo, email, cabRequiredFor, pickupDate, pickupTime, pickupAddress, dropDate, dropTime, dropAddress, cabDuration, NoOfCabs, typeOfCabs, noOfPassengers, travellingWith, remarks];
-        const [insertResult, insertFields] = await db.query(cabTravel, cabParams);
+        const cabTravel = `UPDATE cab SET tourPlan = ?, name = ?, pickupCountry = ?, contactNo = ?, email = ?, cabRequiredFor = ?, pickupDate = ?, pickupTime = ?, pickupAddress = ?, dropDate = ?, dropTime = ?, dropAddress = ?, cabDuration = ?, NoOfCabs = ?, typeOfCabs = ?, noOfPassengers = ?, travellingWith = ?, remarks = ? WHERE id = ?`;
+        const cabParams = [tourPlan, name, pickupCountry, contactNo, email, cabRequiredFor, pickupDate, pickupTime, pickupAddress, dropDate, dropTime, dropAddress, cabDuration, NoOfCabs, typeOfCabs, noOfPassengers, travellingWith, remarks, id];
+        const [updateResult, updateFields] = await db.query(cabTravel, cabParams);
 
         return res.status(200).json(
             new ApiResponse(
@@ -635,6 +635,159 @@ const getCabTravelDetails = asyncHandler(async (req, res) => {
     }
 })
 
+// Hotel Controller
+const createHotelBooking = asyncHandler(async (req, res) => {
+    const reqBody = req.body || {};
+    const { name, contactNo, nationality, email, hotelName, hotelAddress, hotelContactNo, mealPlan, roomCategory, checkInDate, checkOutDate, numberOfNights, noOfRooms, adults, children, infants } = reqBody;
+
+    if (!name || !contactNo || !nationality || !email || !hotelName || !hotelAddress || !hotelContactNo || !mealPlan || !roomCategory || !checkInDate || !checkOutDate || !numberOfNights || !noOfRooms || !adults || !children || !infants) {
+        return res.status(400).json(
+            new ApiResponse(
+                400,
+                null,
+                "All fields are required"
+            )
+        )
+    }
+
+    try {
+        const hotelTravel = `INSERT INTO hotel (userId, name, contactNo, nationality, email, hotelName, hotelAddress, hotelContactNo, mealPlan, roomCategory, checkInDate, checkOutDate, numberOfNights, noOfRooms, adults, children, infants) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+        const hotelParams = [req.user.id ,name, contactNo, nationality, email, hotelName, hotelAddress, hotelContactNo, mealPlan, roomCategory, checkInDate, checkOutDate, numberOfNights, noOfRooms, adults, children, infants];
+        const [insertResult, insertFields] = await db.query(hotelTravel, hotelParams);
+       
+        return res.status(200).json(
+            new ApiResponse(
+                200,
+                null,
+                "Hotel travel created successfully"
+            )
+        )
+    } catch (error) {
+        console.log("Error Creating Hotel Travel:", error);
+        return res.status(500).json(
+            new ApiResponse(
+                500,
+                null,
+                "An error occurred while creating hotel travel"
+            )
+        )
+    }
+
+})
+
+const updateHotelBooking = asyncHandler(async (req, res) => {
+    const reqBody = req.body || {};
+    const { name, contactNo, nationality, email, hotelName, hotelAddress, hotelContactNo, mealPlan, roomCategory, checkInDate, checkOutDate, numberOfNights, noOfRooms, adults, children, infants } = reqBody;
+    const { id } = req.params;
+
+    if (!name || !contactNo || !nationality || !email || !hotelName || !hotelAddress || !hotelContactNo || !mealPlan || !roomCategory || !checkInDate || !checkOutDate || !numberOfNights || !noOfRooms || !adults || !children || !infants) {
+        return res.status(400).json(
+            new ApiResponse(
+                400,
+                null,
+                "All fields are required"
+            )
+        )
+    }
+
+    try {
+        const selectHotel = `SELECT * FROM hotel WHERE id = ?`;
+        const [result, fields] = await db.query(selectHotel, [id]);
+        if (result.length === 0) {
+            return res.status(404).json(
+                new ApiResponse(
+                    404,
+                    null,
+                    "Hotel travel details not found"
+                )
+            );
+        }
+
+        const hotelBooking = `UPDATE hotel SET name = ?, contactNo = ?, nationality = ?, email = ?, hotelName = ?, hotelAddress = ?, hotelContactNo = ?, mealPlan = ?, roomCategory = ?, checkInDate = ?, checkOutDate = ?, numberOfNights = ?, noOfRooms = ?, adults = ?, children = ?, infants = ? WHERE id = ?`;
+        const hotelBookingParams = [name, contactNo, nationality, email, hotelName, hotelAddress, hotelContactNo, mealPlan, roomCategory, checkInDate, checkOutDate, numberOfNights, noOfRooms, adults, children, infants, id];
+        const [updateResult, updateFields] = await db.query(hotelBooking, hotelBookingParams);
+       
+        return res.status(200).json(
+            new ApiResponse(
+                200,
+                null,
+                "Hotel travel updated successfully"
+            )
+        )
+
+    } catch (error) {
+        console.log("Error Updating Hotel Travel:", error);
+        return res.status(500).json(
+            new ApiResponse(
+                500,
+                null,
+                "An error occurred while updating hotel travel"
+            )
+        )
+    }
+})
+
+const deleteHotelBooking = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const selectHotel = `SELECT * FROM hotel WHERE id = ?`;
+        const [result, fields] = await db.query(selectHotel, [id]);
+        if (result.length === 0) {
+            return res.status(404).json(
+                new ApiResponse(
+                    404,
+                    null,
+                    "Hotel travel details not found"
+                )
+            );
+        }
+        const hotelBooking = `DELETE FROM hotel WHERE id = ?`;
+        const hotelBookingParams = [id];
+        const [deleteResult, deleteFields] = await db.query(hotelBooking, hotelBookingParams);
+       
+        return res.status(200).json(
+            new ApiResponse(
+                200,
+                null,
+                "Hotel travel deleted successfully"
+            )
+        )
+    } catch (error) {
+        console.log("Error Deleting Hotel Travel:", error);
+        return res.status(500).json(
+            new ApiResponse(
+                500,
+                null,
+                "An error occurred while deleting hotel travel"
+            )
+        )
+    }
+})
+
+const getHotelBookings = asyncHandler(async (req, res) => {
+    try {
+        const selectHotel = `SELECT * FROM hotel`;
+        const [result, fields] = await db.query(selectHotel);
+        return res.status(200).json(
+            new ApiResponse(
+                200,
+                result,
+                "Hotel bookings fetched successfully"
+            )
+        )
+    } catch (error) {
+        console.log("Error Fetching Hotel Bookings:", error);
+        return res.status(500).json(
+            new ApiResponse(
+                500,
+                null,
+                "An error occurred while fetching hotel bookings"
+            )
+        )
+    }
+})
+    
 export {
     createTrainTravel,
     updateTrainTravel,
@@ -651,5 +804,9 @@ export {
     createCabTravel,
     updateCabTravel,
     deleteCabTravel,
-    getCabTravelDetails
+    getCabTravelDetails,
+    createHotelBooking,
+    updateHotelBooking,
+    deleteHotelBooking,
+    getHotelBookings
 }

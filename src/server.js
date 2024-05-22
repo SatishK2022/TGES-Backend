@@ -5,7 +5,7 @@ import cors from "cors"
 import cookieParser from "cookie-parser"
 import morgan from "morgan"
 import connectToDb from "./config/db.js";
-import {user, retail_user, corporate_user, vendor, train, air, volvoBus, cab} from "./constants.js"
+import {user, retail_user, corporate_user, vendor, train, air, volvoBus, cab, hotel} from "./constants.js"
 
 const app = express();
 
@@ -25,6 +25,7 @@ dbConnection
         await db.query(air);
         await db.query(cab);
         await db.query(volvoBus);
+        await db.query(hotel)
 
         console.log("✅ Database connected successfully");
     })
