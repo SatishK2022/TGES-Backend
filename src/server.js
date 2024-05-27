@@ -19,8 +19,8 @@ dbConnection
         
         await db.query(user);
         await db.query(retail_user);
-        await db.query(corporate_user);
         await db.query(vendor);
+        await db.query(corporate_user);
         await db.query(train);
         await db.query(air);
         await db.query(cab);
@@ -33,7 +33,7 @@ dbConnection
 
 // middlewares
 app.use(cors({
-    origin: "*",
+    origin: ["http://localhost:5173", "http://localhost:3000"],
     credentials: true
 }))
 app.use(express.json())

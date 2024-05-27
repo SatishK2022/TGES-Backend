@@ -19,3 +19,7 @@ export const generateToken = (payload) => {
         { expiresIn: process.env.JWT_EXPIRY }
     );
 };
+
+export function isValuePresent(obj) {
+    return Object.values(obj).every(value => value !== undefined && value !== null && value !== "");
+}
