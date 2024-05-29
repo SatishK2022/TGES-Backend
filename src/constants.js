@@ -37,15 +37,22 @@ export const corporate_user = `CREATE TABLE IF NOT EXISTS corporate_user (
     FOREIGN KEY (userId) REFERENCES user (id),
     industry VARCHAR(255) NOT NULL,
     companyName VARCHAR(255) NOT NULL,
-    phoneNo1 VARCHAR(255) NOT NULL,
-    phoneNo2 VARCHAR(255),
+    address1 VARCHAR(255) NOT NULL,
+    address2 VARCHAR(255) NOT NULL,
+    address3 VARCHAR(255),
+    address4 VARCHAR(255),
+    phoneNumber VARCHAR(255) NOT NULL,
     countryCode VARCHAR(255),
     stateCode VARCHAR(255),
-    landlineNo VARCHAR(255),
-    website VARCHAR(255) NOT NULL,
-    address1 VARCHAR(255) NOT NULL,
-    address2 VARCHAR(255),
-    address3 VARCHAR(255)
+    landlineNumber VARCHAR(255),
+    landlineCityCode VARCHAR(255),
+    landlineCountryCode VARCHAR(255),
+    contactDepartment VARCHAR(255),
+    contactPersonFirstName VARCHAR(255) NOT NULL,
+    contactPersonSecondName VARCHAR(255),
+    contactPersonLastName VARCHAR(255) NOT NULL,
+    contactPersonGender VARCHAR(255) NOT NULL,
+    website VARCHAR(255) NOT NULL
 )`;
 
 export const vendor = `CREATE TABLE IF NOT EXISTS vendor (

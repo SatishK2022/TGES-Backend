@@ -46,7 +46,7 @@ const retailRegister = asyncHandler(async (req, res) => {
         const userId = result.insertId;
 
         const insertRetailUserSql = `INSERT INTO retail_user (userId, firstName, secondName, lastName, username, gender, phoneNumber1, phoneNumber2, stateCode, countryCode, occupation, residentialAddress, companyName, designation, companyAddress, howDidYouKnow, preferredCurrency, website) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-        const retailParams = [userId, firstName, secondName, lastName, username,  gender, phoneNumber1, phoneNumber2, stateCode, countryCode, occupation, residentialAddress, companyName, designation, companyAddress, howDidYouKnow, preferredCurrency, website];
+        const retailParams = [userId, firstName, secondName, lastName, username, gender, phoneNumber1, phoneNumber2, stateCode, countryCode, occupation, residentialAddress, companyName, designation, companyAddress, howDidYouKnow, preferredCurrency, website];
         await db.query(insertRetailUserSql, retailParams);
 
         // Send Mail
@@ -77,22 +77,14 @@ const retailRegister = asyncHandler(async (req, res) => {
 
 const corprateRegister = asyncHandler(async (req, res) => {
     const reqBody = req.body || {};
-    const { industry, companyName, zipCode, country, city, state, gender, phoneNo1, phoneNo2, countryCode, stateCode, landlineNo, username, email, password, website, address1, address2, address3 } = reqBody;
+    const { industry, companyName, address1, address2, address3, address4, phoneNumber, countryCode, stateCode, landlineNumber, landlineCityCode, landlineCountryCode, contactDepartment, contactPersonFirstName, contactPersonSecondName, contactPersonLastName, contactPersonGender, website, email, password, zipCode, country, city, state } = reqBody;
 
-    if (!isValuePresent(reqBody)) {
-        return res.status(400).json(
-            new ApiResponse(
-                400,
-                null,
-                "All fields are required"
-            )
-        );
-    }
+    let contactDepartmentTitle = (contactDepartment?.title === 'Other') ? contactDepartment?.otherTitle : contactDepartment?.title;
 
     try {
-        // Check for duplicate email or username
-        const checkEmailSql = `SELECT * FROM user WHERE email = ? OR username = ?`;
-        const emailParams = [email, username];
+        // Check for duplicate email
+        const checkEmailSql = `SELECT * FROM user WHERE email = ?`;
+        const emailParams = [email];
         const [emailResult, emailFields] = await db.query(checkEmailSql, emailParams);
 
         if (emailResult.length > 0) {
@@ -100,21 +92,21 @@ const corprateRegister = asyncHandler(async (req, res) => {
                 new ApiResponse(
                     409,
                     null,
-                    "User already exists with this email or username"
+                    "User already exists with this email"
                 )
             );
         }
 
-        const insertUserSql = `INSERT INTO user (email, gender, zipCode, country, state, city, username, password) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?)`;
+        const insertUserSql = `INSERT INTO user (email, zipCode, country, city, state, password) VALUES ( ?, ?, ?, ?, ?, ?)`;
         const hashedPassword = await hashPassword(password);
-        const userParams = [email, gender, zipCode, country, city, state, username, hashedPassword];
+        const userParams = [email, zipCode, country, city, state, hashedPassword];
         const [result, fields] = await db.query(insertUserSql, userParams);
 
         const userId = result.insertId;
 
-        const insertCorprateUserSql = `INSERT INTO corporate_user (userId, industry, companyName, phoneNo1, phoneNo2, countryCode, stateCode, landlineNo, website, address1, address2, address3) VALUES (?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?)`;
-        const corprateParams = [userId, industry, companyName, phoneNo1, phoneNo2, countryCode, stateCode, landlineNo, website, address1, address2, address3];
-        await db.query(insertCorprateUserSql, corprateParams);
+        const insertCorprate = `INSERT INTO corporate_user (userId, industry, companyName, address1, address2, address3, address4, phoneNumber, countryCode, stateCode, landlineNumber, landlineCityCode, landlineCountryCode, contactDepartment, contactPersonFirstName, contactPersonSecondName, contactPersonLastName, contactPersonGender, website) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+        const corprateParams = [userId, industry, companyName, address1, address2, address3, address4, phoneNumber, countryCode, stateCode, landlineNumber, landlineCityCode, landlineCountryCode, contactDepartmentTitle, contactPersonFirstName, contactPersonSecondName, contactPersonLastName, contactPersonGender, website];
+        await db.query(insertCorprate, corprateParams);
 
         // Send Mail
         // await sendMail(
