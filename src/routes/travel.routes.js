@@ -1,6 +1,10 @@
 import express from "express"
-import { createAirTravel, createCabTravel, createHotelBooking, createTrainTravel, createVolvoBusTravel, deleteAirTravel, deleteCabTravel, deleteHotelBooking, deleteTrainTravel, deleteVolvoBusTravel, getAirTravelDetails, getCabTravelDetails, getHotelBookings, getTrainTravelDetails, getVolvoBusTravelDetails, updateAirTravel, updateCabTravel, updateHotelBooking, updateTrainTravel, updateVolvoBusTravel } from "../controller/travel.controller.js";
 import { isLoggedIn } from "../middlewares/auth.middleware.js";
+import { createTrainTravel, deleteTrainTravel, getTrainTravelDetails, updateTrainTravel } from "../controller/train.controller.js";
+import { createAirTravel, deleteAirTravel, getAirTravelDetails, updateAirTravel } from "../controller/air.controller.js";
+import { createVolvoBusTravel, deleteVolvoBusTravel, getVolvoBusTravelDetails, updateVolvoBusTravel } from "../controller/volvo.controller.js";
+import { createCabTravel, deleteCabTravel, getCabTravelDetails, updateCabTravel } from "../controller/cab.controller.js";
+import { createHotelBooking, deleteHotelBooking, getHotelBookings, updateHotelBooking } from "../controller/hotel.controller.js";
 const router = express.Router()
 
 // Train Routes

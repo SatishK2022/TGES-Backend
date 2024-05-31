@@ -6,6 +6,11 @@ import { comparePassword, generateToken, hashPassword, isValuePresent } from "..
 
 let db = await connectToDb();
 
+/**
+ * @retailRegister
+ * @params req, res
+ * @Description : This function is used to create retail user data in the 'retail_user' table of the 'tges' database using the MySQL module
+*/
 const retailRegister = asyncHandler(async (req, res) => {
     const reqBody = req.body || {};
     const { firstName, secondName, lastName, email, residentialAddress, zipCode, country, city, state, phoneNumber1, phoneNumber2, stateCode, countryCode, username, password, gender, occupation, companyName, designation, companyAddress, howDidYouKnow, preferredCurrency, website } = reqBody;
@@ -75,7 +80,12 @@ const retailRegister = asyncHandler(async (req, res) => {
     }
 });
 
-const corprateRegister = asyncHandler(async (req, res) => {
+/**
+ * @corporateRegister
+ * @params req, res
+ * @Description : This function is used to create corporate user data in the 'corporate_user' table of the 'tges' database using the MySQL module
+*/
+const corporateRegister = asyncHandler(async (req, res) => {
     const reqBody = req.body || {};
     const { industry, companyName, address1, address2, address3, address4, phoneNumber, countryCode, stateCode, landlineNumber, landlineCityCode, landlineCountryCode, contactDepartment, contactPersonFirstName, contactPersonSecondName, contactPersonLastName, contactPersonGender, website, email, password, zipCode, country, city, state } = reqBody;
 
@@ -134,6 +144,11 @@ const corprateRegister = asyncHandler(async (req, res) => {
     }
 });
 
+/**
+ * @vendorRegister
+ * @params req, res
+ * @Description : This function is used to create vendor user data in the 'vendor' table of the 'tges' database using the MySQL module
+*/
 const vendorRegister = asyncHandler(async (req, res) => {
     const reqBody = req.body || {};
     const { areaOfWork, companyName, zipCode, country, city, state, contactPersonFirstName, contactPersonSecondName, contactPersonLastName, landlineCityCode, landlineCountryCode, contactPersonGender, phoneNumber, landlineNumber, countryCode, stateCode, email, password, website, address1, address2, address3, address4 } = reqBody;
@@ -201,6 +216,11 @@ const vendorRegister = asyncHandler(async (req, res) => {
     }
 })
 
+/**
+ * @retailLogin
+ * @params req, res
+ * @Description : This function is used to login retail user data in the 'user' table of the 'tges' database using the MySQL module
+*/
 const retailLogin = asyncHandler(async (req, res) => {
     const reqBody = req.body || {};
     const { email, password } = reqBody;
@@ -275,7 +295,12 @@ const retailLogin = asyncHandler(async (req, res) => {
         );
 })
 
-const corprateLogin = asyncHandler(async (req, res) => {
+/**
+ * @corporateLogin
+ * @params req, res
+ * @Description : This function is used to login corporate user data in the 'user' table of the 'tges' database using the MySQL module
+*/
+const corporateLogin = asyncHandler(async (req, res) => {
     const reqBody = req.body || {};
     const { email, password } = reqBody;
 
@@ -346,6 +371,11 @@ const corprateLogin = asyncHandler(async (req, res) => {
         );
 })
 
+/**
+ * @vendorLogin
+ * @params req, res
+ * @Description : This function is used to login vendor user data in the 'user' table of the 'tges' database using the MySQL module
+*/
 const vendorLogin = asyncHandler(async (req, res) => {
     const reqBody = req.body || {};
     const { email, password } = reqBody;
@@ -417,6 +447,11 @@ const vendorLogin = asyncHandler(async (req, res) => {
         );
 })
 
+/**
+ * @logout
+ * @params req, res
+ * @Description : This function is used to logout user by removing the token cookie from the browser.
+ */
 const logout = asyncHandler(async (req, res) => {
     return res
         .status(200)
@@ -431,11 +466,11 @@ const logout = asyncHandler(async (req, res) => {
 })
 
 export {
-    corprateRegister,
+    corporateRegister,
     retailRegister,
     vendorRegister,
     retailLogin,
-    corprateLogin,
+    corporateLogin,
     vendorLogin,
-    logout,
+    logout
 }
