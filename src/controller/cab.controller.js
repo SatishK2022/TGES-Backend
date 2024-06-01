@@ -11,28 +11,19 @@ let db = await connectToDb();
 */
 const createCabTravel = asyncHandler(async (req, res) => {
     const reqBody = req.body || {};
-    const { tourPlan, name, country, contact, email, cabRequiredFor, pickUpDate, pickUpAddress, dropDate, dropAddress, cabDuration, noOfCab, noOfPersons, travellingWithInfant, otherRequirements } = reqBody;
-
-    if (!tourPlan || !name || !country || !contact || !email || !cabRequiredFor || !pickUpDate || !pickUpAddress || !dropDate || !dropAddress || !cabDuration || !noOfCab || !noOfPersons) {
-        return res.status(400).json(
-            new ApiResponse(
-                400,
-                null,
-                "All fields are required"
-            )
-        )
-    }
+    const { pickupCountry, nationality, tourPlan, name, contactNo, alternateContactNo, email, cabRequiredAt, cabRequiredFor, localTravelKmsLimit, pickupDateTime, pickupAddress, pickupLandmark, dropDateTime, dropAddress, dropLandmark, cabDuration, noOfCabsRequired, typeOfCabRequired, noOfPersonsTravelling, noOfInfants, noOfChildren, otherRequirements } = reqBody;
 
     try {
-        const cabTravel = `INSERT INTO cab (userId, tourPlan, name, country, contact, email, cabRequiredFor, pickUpDate, pickUpAddress, dropDate, dropAddress, cabDuration, noOfCab, noOfPersons, travellingWithInfant, otherRequirements) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-        const cabParams = [req.user.id, tourPlan, name, country, contact, email, cabRequiredFor, pickUpDate, pickUpAddress, dropDate, dropAddress, cabDuration, noOfCab, noOfPersons, travellingWithInfant, otherRequirements];
-        const [insertResult, insertFields] = await db.query(cabTravel, cabParams);
+        const insertCab = `INSERT INTO cab (userId, pickupCountry, nationality, tourPlan, name, contactNo, alternateContactNo, email, cabRequiredAt, cabRequiredFor, localTravelKmsLimit, pickupDateTime, pickupAddress, pickupLandmark, dropDateTime, dropAddress, dropLandmark, cabDuration, noOfCabsRequired, typeOfCabRequired, noOfPersonsTravelling, noOfInfants, noOfChildren, otherRequirements) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+        const cabParams = [req.user.id, pickupCountry, nationality, tourPlan, name, contactNo, alternateContactNo, email, cabRequiredAt, cabRequiredFor, localTravelKmsLimit, pickupDateTime, pickupAddress, pickupLandmark, dropDateTime, dropAddress, dropLandmark, cabDuration, noOfCabsRequired, typeOfCabRequired, noOfPersonsTravelling, noOfInfants, noOfChildren, otherRequirements]
 
+        const [result, fields] = await db.query(insertCab, cabParams);
+        
         return res.status(200).json(
             new ApiResponse(
                 200,
                 null,
-                "Cab travel created successfully"
+                "Travel created successfully"
             )
         )
     } catch (error) {

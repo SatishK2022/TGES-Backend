@@ -11,9 +11,9 @@ let db = await connectToDb();
 */
 const createHotelBooking = asyncHandler(async (req, res) => {
     const reqBody = req.body || {};
-    const { fullName, contactNo, nationality, email, hotelfullName, hotelAddress, hotelContactNo, mealPlan, roomCategory, checkInDate, checkOutDate, numberOfNights, noOfRooms, adults, children, infants } = reqBody;
+    const { name, contactNo, nationality, email, hotelName, hotelAddress, hotelContactNo, mealPlan, roomCategory, checkInDate, checkOutDate, numberOfNights, numberOfRooms, adults, children, infants } = reqBody;
 
-    if (!fullName || !contactNo || !nationality || !email || !hotelfullName || !hotelAddress || !hotelContactNo || !mealPlan || !roomCategory || !checkInDate || !checkOutDate || !numberOfNights || !noOfRooms || !adults || !children || !infants) {
+    if (!name || !contactNo || !nationality || !email || !hotelName || !hotelAddress || !hotelContactNo || !mealPlan || !roomCategory || !checkInDate || !checkOutDate || !numberOfNights || !numberOfRooms || !adults || !children || !infants) {
         return res.status(400).json(
             new ApiResponse(
                 400,
@@ -24,15 +24,15 @@ const createHotelBooking = asyncHandler(async (req, res) => {
     }
 
     try {
-        const hotelTravel = `INSERT INTO hotel (userId, fullName, contactNo, nationality, email, hotelfullName, hotelAddress, hotelContactNo, mealPlan, roomCategory, checkInDate, checkOutDate, numberOfNights, noOfRooms, adults, children, infants) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-        const hotelParams = [req.user.id ,fullName, contactNo, nationality, email, hotelfullName, hotelAddress, hotelContactNo, mealPlan, roomCategory, checkInDate, checkOutDate, numberOfNights, noOfRooms, adults, children, infants];
+        const hotelTravel = `INSERT INTO hotel (userId, name, contactNo, nationality, email, hotelName, hotelAddress, hotelContactNo, mealPlan, roomCategory, checkInDate, checkOutDate, numberOfNights, numberOfRooms, adults, children, infants) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+        const hotelParams = [req.user.id ,name, contactNo, nationality, email, hotelName, hotelAddress, hotelContactNo, mealPlan, roomCategory, checkInDate, checkOutDate, numberOfNights, numberOfRooms, adults, children, infants];
         const [insertResult, insertFields] = await db.query(hotelTravel, hotelParams);
        
         return res.status(200).json(
             new ApiResponse(
                 200,
                 null,
-                "Hotel travel created successfully"
+                "Hotel booking created successfully"
             )
         )
     } catch (error) {
@@ -45,7 +45,6 @@ const createHotelBooking = asyncHandler(async (req, res) => {
             )
         )
     }
-
 })
 
 const updateHotelBooking = asyncHandler(async (req, res) => {
