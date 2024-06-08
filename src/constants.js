@@ -28,7 +28,9 @@ export const retail_user = `CREATE TABLE IF NOT EXISTS retail_user (
     companyAddress VARCHAR(255),
     howDidYouKnow VARCHAR(255),
     preferredCurrency VARCHAR(255),
-    website VARCHAR(255)
+    website VARCHAR(255),
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 )`;
 
 export const corporate_user = `CREATE TABLE IF NOT EXISTS corporate_user (
@@ -52,7 +54,9 @@ export const corporate_user = `CREATE TABLE IF NOT EXISTS corporate_user (
     contactPersonSecondName VARCHAR(255),
     contactPersonLastName VARCHAR(255) NOT NULL,
     contactPersonGender VARCHAR(255) NOT NULL,
-    website VARCHAR(255) NOT NULL
+    website VARCHAR(255) NOT NULL,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 )`;
 
 export const vendor = `CREATE TABLE IF NOT EXISTS vendor (
@@ -75,7 +79,9 @@ export const vendor = `CREATE TABLE IF NOT EXISTS vendor (
     address1 VARCHAR(255) NOT NULL,
     address2 VARCHAR(255) NOT NULL,
     address3 VARCHAR(255),
-    address4 VARCHAR(255)
+    address4 VARCHAR(255),
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 )`;
 
 export const train = `CREATE TABLE IF NOT EXISTS train (
@@ -93,7 +99,9 @@ export const train = `CREATE TABLE IF NOT EXISTS train (
     travelDate VARCHAR(255) NOT NULL,
     trainNo VARCHAR(255),
     timePreference VARCHAR(255),
-    remarks VARCHAR(255)
+    remarks VARCHAR(255),
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 )`;
 
 export const air = `CREATE TABLE IF NOT EXISTS air (
@@ -111,7 +119,9 @@ export const air = `CREATE TABLE IF NOT EXISTS air (
     travelDate VARCHAR(255) NOT NULL,
     flightNo VARCHAR(255),
     timePreference VARCHAR(255),
-    remarks VARCHAR(255)
+    remarks VARCHAR(255),
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 )`;
 
 export const volvoBus = `CREATE TABLE IF NOT EXISTS bus (
@@ -127,7 +137,9 @@ export const volvoBus = `CREATE TABLE IF NOT EXISTS bus (
     destination VARCHAR(255) NOT NULL,
     travelDate VARCHAR(255) NOT NULL,
     seatType VARCHAR(255),
-    busNo VARCHAR(255)
+    busNo VARCHAR(255),
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 )`;
 
 export const cab = `CREATE TABLE IF NOT EXISTS cab (
@@ -156,7 +168,9 @@ export const cab = `CREATE TABLE IF NOT EXISTS cab (
     noOfPersonsTravelling VARCHAR(255) NOT NULL,
     noOfInfants VARCHAR(255),
     noOfChildren VARCHAR(255) NOT NULL,
-    otherRequirements VARCHAR(255)
+    otherRequirements VARCHAR(255),
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 )`; 
 
 export const hotel = `CREATE TABLE IF NOT EXISTS hotel (
@@ -181,5 +195,7 @@ export const hotel = `CREATE TABLE IF NOT EXISTS hotel (
     numberOfRooms VARCHAR(255) NOT NULL,
     adults VARCHAR(255) NOT NULL,
     children VARCHAR(255) NOT NULL,
-    infants VARCHAR(255) NOT NULL
+    infants VARCHAR(255) NOT NULL,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 )`

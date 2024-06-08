@@ -283,6 +283,10 @@ const retailLogin = asyncHandler(async (req, res) => {
         user.retailUser = retailUserResult[0];
     }
 
+    delete retailUserResult[0].createdAt;
+    delete retailUserResult[0].updatedAt;
+    user.retailUser = retailUserResult[0];
+
     return res
         .status(200)
         .cookie("token", token, cookieOptions)
@@ -357,6 +361,8 @@ const corporateLogin = asyncHandler(async (req, res) => {
     const corporateUserParams = [user.id];
     const [corporateUserResult, corporateUserFields] = await db.query(getCorporateUserSql, corporateUserParams);
 
+    delete corporateUserResult[0].createdAt;
+    delete corporateUserResult[0].updatedAt;
     user.corporateUser = corporateUserResult[0];
 
     return res
@@ -433,6 +439,9 @@ const vendorLogin = asyncHandler(async (req, res) => {
     const getVendorSql = `SELECT * FROM vendor WHERE userId = ?`;
     const vendorParams = [user.id];
     const [vendorResult, vendorFields] = await db.query(getVendorSql, vendorParams);
+
+    delete vendorResult[0].createdAt;
+    delete vendorResult[0].updatedAt;
     user.vendor = vendorResult[0];
 
     return res
