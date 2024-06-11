@@ -50,10 +50,12 @@ app.use(morgan("dev"))
 // Routes Import
 import userRouter from "./routes/user.routes.js"
 import travelRouter from "./routes/travel.routes.js"
+import dashboardRouter from "./routes/dashboard.routes.js"
 
 // Routes Decleration
 app.use("/api/v1/user", userRouter)
 app.use("/api/v1/travel", travelRouter)
+app.use("/api/v1/dashboard", dashboardRouter)
 
 // Home Route
 app.get("/", (req, res) => {
