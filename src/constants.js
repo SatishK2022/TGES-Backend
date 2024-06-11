@@ -1,3 +1,4 @@
+// Users
 export const user = `CREATE TABLE IF NOT EXISTS user (
     id INT AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(255) NOT NULL,
@@ -84,6 +85,8 @@ export const vendor = `CREATE TABLE IF NOT EXISTS vendor (
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 )`;
 
+
+// Travel
 export const train = `CREATE TABLE IF NOT EXISTS train (
     id INT AUTO_INCREMENT PRIMARY KEY,
     userId INT NOT NULL,
@@ -173,6 +176,8 @@ export const cab = `CREATE TABLE IF NOT EXISTS cab (
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 )`; 
 
+
+// Services
 export const hotel = `CREATE TABLE IF NOT EXISTS hotel (
     id INT AUTO_INCREMENT PRIMARY KEY,
     userId INT NOT NULL,
@@ -196,6 +201,83 @@ export const hotel = `CREATE TABLE IF NOT EXISTS hotel (
     adults VARCHAR(255) NOT NULL,
     children VARCHAR(255) NOT NULL,
     infants VARCHAR(255) NOT NULL,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+)`
+
+export const passport = `CREATE TABLE IF NOT EXISTS passport (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    userId INT NOT NULL,
+    FOREIGN KEY (userId) REFERENCES user (id),
+    totalNoOfTravellers VARCHAR(255) NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    nationality VARCHAR(255) NOT NULL,
+    dateOfBirth VARCHAR(255) NOT NULL,
+    gender VARCHAR(255) NOT NULL,
+    passportNo VARCHAR(255) NOT NULL,
+    passportIssueDate VARCHAR(255) NOT NULL,
+    passportExpiryDate VARCHAR(255) NOT NULL,
+    passportValidityPeriod VARCHAR(255) NOT NULL,
+    placeOfIssue VARCHAR(255) NOT NULL,
+    nomineeName VARCHAR(255) NOT NULL,
+    nomineeGender VARCHAR(255) NOT NULL,
+    addressWithPinCode VARCHAR(255) NOT NULL,
+    passportFile VARCHAR(255) NOT NULL,
+    contactNo VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    holdPassportFrom VARCHAR(255) NOT NULL,
+    applyFrom VARCHAR(255) NOT NULL,
+    goTo VARCHAR(255) NOT NULL,
+    travelEntryDate VARCHAR(255) NOT NULL,
+    travelExitDate VARCHAR(255) NOT NULL,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+)`
+
+export const travelInsurance = `CREATE TABLE IF NOT EXISTS travelInsurance (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    userId INT NOT NULL,
+    FOREIGN KEY (userId) REFERENCES user (id),
+    name VARCHAR(255) NOT NULL,
+    gender VARCHAR(255) NOT NULL,
+    dateOfBirth VARCHAR(255) NOT NULL,
+    address VARCHAR(255) NOT NULL,
+    contactNo VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    tripType VARCHAR(255) NOT NULL,
+    startDate VARCHAR(255) NOT NULL,
+    endDate VARCHAR(255) NOT NULL,
+    preExistingDisease VARCHAR(255) NOT NULL,
+    diseaseName VARCHAR(255) NOT NULL,
+    smoker VARCHAR(255) NOT NULL,
+    passportNo VARCHAR(255) NOT NULL,
+    dateOfIssue VARCHAR(255) NOT NULL,
+    dateOfExpiry VARCHAR(255) NOT NULL,
+    nomineeName VARCHAR(255) NOT NULL,
+    nomineeGender VARCHAR(255) NOT NULL,
+    nomineeRelationship VARCHAR(255) NOT NULL,
+    proofOfBirthAndAddress VARCHAR(255) NOT NULL,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+)`
+
+export const healthInsurance = `CREATE TABLE IF NOT EXISTS healthInsurance (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    userId INT NOT NULL,
+    FOREIGN KEY (userId) REFERENCES user (id),
+    name VARCHAR(255) NOT NULL,
+    gender VARCHAR(255) NOT NULL,
+    dateOfBirth VARCHAR(255) NOT NULL,
+    address VARCHAR(255) NOT NULL,
+    contactNo VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    preExistingDisease VARCHAR(255) NOT NULL,
+    diseaseName VARCHAR(255) NOT NULL,
+    smoker VARCHAR(255) NOT NULL,
+    nomineeName VARCHAR(255) NOT NULL,
+    nomineeGender VARCHAR(255) NOT NULL,
+    nomineeRelationship VARCHAR(255) NOT NULL,
+    proofOfBirthAndAddress VARCHAR(255) NOT NULL,
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 )`

@@ -3,9 +3,10 @@ dotenv.config();
 import express from "express"
 import cors from "cors"
 import cookieParser from "cookie-parser"
+import bodyParser from "body-parser";
 import morgan from "morgan"
 import connectToDb from "./config/db.js";
-import {user, retail_user, corporate_user, vendor, train, air, volvoBus, cab, hotel} from "./constants.js"
+import { user, retail_user, corporate_user, vendor, train, air, volvoBus, cab, hotel, passport, healthInsurance, travelInsurance } from "./constants.js"
 
 const app = express();
 
@@ -16,7 +17,7 @@ dbConnection
     .then(async () => {
         const db = await connectToDb();
         await db.query("CREATE DATABASE IF NOT EXISTS tges");
-        
+
         await db.query(user);
         await db.query(retail_user);
         await db.query(vendor);
@@ -26,6 +27,9 @@ dbConnection
         await db.query(cab);
         await db.query(volvoBus);
         await db.query(hotel)
+        await db.query(passport)
+        await db.query(healthInsurance)
+        await db.query(travelInsurance)
 
         console.log("✅ Database connected successfully");
     })
@@ -38,6 +42,8 @@ app.use(cors({
 }))
 app.use(express.json())
 app.use(cookieParser())
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(morgan("dev"))
 
 
