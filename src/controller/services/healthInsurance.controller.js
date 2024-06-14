@@ -6,11 +6,11 @@ let db = await connectToDb();
 
 const createHealthInsurance = asyncHandler(async (req, res) => {
     const reqBody = req.body || {};
-    const { name, gender, dateOfBirth, address, contactNo, email, preExistingDisease, diseaseName, smoker, passportNo, dateOfIssue, dateOfExpiry, nomineeName, nomineeGender, nomineeRelationship, proofOfBirthAndAddress } = reqBody;
+    const { name, gender, dateOfBirth, address, contactNo, email, preExistingDisease, diseaseName, smoker, nomineeName, nomineeGender, nomineeRelationship, proofOfBirthAndAddress } = reqBody;
 
     try {
-        const healthInsurance = `INSERT INTO healthInsurance (userId, name, gender, dateOfBirth, address, contactNo, email, preExistingDisease, diseaseName, smoker, passportNo, dateOfIssue, dateOfExpiry, nomineeName, nomineeGender, nomineeRelationship, proofOfBirthAndAddress) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-        const healthInsuranceParams = [req.user.id, name, gender, dateOfBirth, address, contactNo, email, preExistingDisease, diseaseName, smoker, passportNo, dateOfIssue, dateOfExpiry, nomineeName, nomineeGender, nomineeRelationship, proofOfBirthAndAddress]
+        const healthInsurance = `INSERT INTO healthInsurance (userId, name, gender, dateOfBirth, address, contactNo, email, preExistingDisease, diseaseName, smoker, nomineeName, nomineeGender, nomineeRelationship, proofOfBirthAndAddress) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+        const healthInsuranceParams = [req.user.id, name, gender, dateOfBirth, address, contactNo, email, preExistingDisease, diseaseName, smoker, nomineeName, nomineeGender, nomineeRelationship, proofOfBirthAndAddress]
 
         const [insertResult, insertFields] = await db.query(healthInsurance, healthInsuranceParams);
 
