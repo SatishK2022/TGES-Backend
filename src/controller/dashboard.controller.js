@@ -238,11 +238,51 @@ const getAllCabDetails = asyncHandler(async (req, res) => {
     }
 })
 
+const getAllBusDetails = asyncHandler(async (req, res) => {
+    try {
+        const sql = `SELECT * FROM bus`
+        const [result, fields] = await db.query(sql);
+
+        const cleanedResult = result.map(user => {
+            const { userId, createdAt, updatedAt, ...rest } = user;
+            return rest;
+        });
+
+        if (result.length === 0) {
+            return res.status(404).json(
+                new ApiResponse(
+                    404,
+                    null,
+                    "No vendors found"
+                )
+            )
+        }
+
+        return res.status(200).json(
+            new ApiResponse(
+                200,
+                cleanedResult,
+                "Volvo details fetched successfully"
+            )
+        )
+    } catch (error) {
+        console.log("Error getting volvo details: ", error);
+        return res.status(500).json(
+            new ApiResponse(
+                500,
+                null,
+                "An error occurred while getting volvo details"
+            )
+        )
+    }
+})
+
 export {
     getAllRetailUsers,
     getAllCorporateUsers,
     getAllVendors,
     getAllTrainDetails,
     getAllAirDetails,
-    getAllCabDetails
+    getAllCabDetails,
+    getAllBusDetails
 }
