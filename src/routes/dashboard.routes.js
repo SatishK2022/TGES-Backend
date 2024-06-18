@@ -1,5 +1,5 @@
 import express from "express";
-import { getAllAirDetails, getAllBusDetails, getAllCabDetails, getAllCorporateUsers, getAllRetailUsers, getAllTrainDetails, getAllVendors } from "../controller/dashboard.controller.js";
+import { getAllAirDetails, getAllBusDetails, getAllCabDetails, getAllCorporateUsers, getAllHotelDetails, getAllRetailUsers, getAllTrainDetails, getAllVendors } from "../controller/dashboard.controller.js";
 
 const router = express.Router();
 
@@ -23,5 +23,8 @@ router.route("/cab")
 
 router.route("/bus")
     .get(getAllBusDetails)
+
+router.route("/hotel")
+    .get(getAllHotelDetails)
 
 export default router;

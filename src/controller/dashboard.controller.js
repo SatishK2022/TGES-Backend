@@ -136,7 +136,7 @@ const getAllTrainDetails = asyncHandler(async (req, res) => {
                 new ApiResponse(
                     404,
                     null,
-                    "No vendors found"
+                    "No train details found"
                 )
             )
         }
@@ -175,7 +175,7 @@ const getAllAirDetails = asyncHandler(async (req, res) => {
                 new ApiResponse(
                     404,
                     null,
-                    "No vendors found"
+                    "No air details found"
                 )
             )
         }
@@ -214,7 +214,7 @@ const getAllCabDetails = asyncHandler(async (req, res) => {
                 new ApiResponse(
                     404,
                     null,
-                    "No vendors found"
+                    "No cab details found"
                 )
             )
         }
@@ -253,7 +253,7 @@ const getAllBusDetails = asyncHandler(async (req, res) => {
                 new ApiResponse(
                     404,
                     null,
-                    "No vendors found"
+                    "No bus details found"
                 )
             )
         }
@@ -277,6 +277,45 @@ const getAllBusDetails = asyncHandler(async (req, res) => {
     }
 })
 
+const getAllHotelDetails = asyncHandler(async (req, res) => {
+    try {
+        const sql = `SELECT * FROM hotel`
+        const [result, fields] = await db.query(sql);
+
+        const cleanedResult = result.map(user => {
+            const { userId, createdAt, updatedAt, ...rest } = user;
+            return rest;
+        });
+
+        if (result.length === 0) {
+            return res.status(404).json(
+                new ApiResponse(
+                    404,
+                    null,
+                    "No hotel details found"
+                )
+            )
+        }
+
+        return res.status(200).json(
+            new ApiResponse(
+                200,
+                cleanedResult,
+                "Hotel details fetched successfully"
+            )
+        )
+    } catch (error) {
+        console.log("Error getting hotel details: ", error);
+        return res.status(500).json(
+            new ApiResponse(
+                500,
+                null,
+                "An error occurred while getting hotel details"
+            )
+        )
+    }
+})
+
 export {
     getAllRetailUsers,
     getAllCorporateUsers,
@@ -284,5 +323,6 @@ export {
     getAllTrainDetails,
     getAllAirDetails,
     getAllCabDetails,
-    getAllBusDetails
+    getAllBusDetails,
+    getAllHotelDetails
 }
