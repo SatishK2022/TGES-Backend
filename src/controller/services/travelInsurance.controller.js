@@ -6,11 +6,11 @@ let db = await connectToDb();
 
 const createTravelInsurance = asyncHandler(async (req, res) => {
     const reqBody = req.body || {};
-    const { name, gender, dateOfBirth, address, contactNo, email, tripType, startDate, endDate, preExistingDisease, diseaseName, smoker, passportNo, dateOfIssue, dateOfExpiry, nomineeName, nomineeGender, nomineeRelationship, proofOfBirthAndAddress } = reqBody;
+    const { name, gender, dateOfBirth, address, contactNo, email, tripType, startDate, endDate, preExistingDisease, diseaseName, smoker, passportNo, dateOfIssue, dateOfExpiry, nomineeName, nomineeGender, nomineeRelationship } = reqBody;
 
     try {
-        const travelInsurance = `INSERT INTO travelInsurance (userId, name, gender, dateOfBirth, address, contactNo, email, tripType, startDate, endDate, preExistingDisease, diseaseName, smoker, passportNo, dateOfIssue, dateOfExpiry, nomineeName, nomineeGender, nomineeRelationship, proofOfBirthAndAddress) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-        const travelInsuranceParams = [req.user.id, name, gender, dateOfBirth, address, contactNo, email, tripType, startDate, endDate, preExistingDisease, diseaseName, smoker, passportNo, dateOfIssue, dateOfExpiry, nomineeName, nomineeGender, nomineeRelationship, proofOfBirthAndAddress]
+        const travelInsurance = `INSERT INTO travelInsurance (userId, name, gender, dateOfBirth, address, contactNo, email, tripType, startDate, endDate, preExistingDisease, diseaseName, smoker, passportNo, dateOfIssue, dateOfExpiry, nomineeName, nomineeGender, nomineeRelationship) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+        const travelInsuranceParams = [req.user.id, name, gender, dateOfBirth, address, contactNo, email, tripType, startDate, endDate, preExistingDisease, diseaseName, smoker, passportNo, dateOfIssue, dateOfExpiry, nomineeName, nomineeGender, nomineeRelationship]
 
         const [insertResult, insertFields] = await db.query(travelInsurance, travelInsuranceParams);
 

@@ -222,7 +222,6 @@ export const passport = `CREATE TABLE IF NOT EXISTS passport (
     nomineeName VARCHAR(255) NOT NULL,
     nomineeGender VARCHAR(255) NOT NULL,
     addressWithPinCode VARCHAR(255) NOT NULL,
-    passportFile VARCHAR(255) NOT NULL,
     contactNo VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL,
     holdPassportFrom VARCHAR(255) NOT NULL,
@@ -256,7 +255,6 @@ export const travelInsurance = `CREATE TABLE IF NOT EXISTS travelInsurance (
     nomineeName VARCHAR(255) NOT NULL,
     nomineeGender VARCHAR(255) NOT NULL,
     nomineeRelationship VARCHAR(255) NOT NULL,
-    proofOfBirthAndAddress VARCHAR(255) NOT NULL,
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 )`
@@ -277,7 +275,6 @@ export const healthInsurance = `CREATE TABLE IF NOT EXISTS healthInsurance (
     nomineeName VARCHAR(255) NOT NULL,
     nomineeGender VARCHAR(255) NOT NULL,
     nomineeRelationship VARCHAR(255) NOT NULL,
-    proofOfBirthAndAddress VARCHAR(255) NOT NULL,
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 )`

@@ -11,11 +11,11 @@ let db = await connectToDb();
 */
 const createPassport = asyncHandler(async (req, res) => {
     const reqBody = req.body || {};
-    const { totalNoOfTravellers, name, nationality, dateOfBirth, gender, passportNo, passportIssueDate, passportExpiryDate, passportValidityPeriod, placeOfIssue, nomineeName, nomineeGender, addressWithPinCode, passportFile, contactNo, email, holdPassportFrom, applyFrom, goTo, travelDuration } = reqBody;
+    const { totalNoOfTravellers, name, nationality, dateOfBirth, gender, passportNo, passportIssueDate, passportExpiryDate, passportValidityPeriod, placeOfIssue, nomineeName, nomineeGender, addressWithPinCode, contactNo, email, holdPassportFrom, applyFrom, goTo, travelDuration } = reqBody;
 
     try {
-        const passportTravel = `INSERT INTO passport (userId, totalNoOfTravellers, name, nationality, dateOfBirth, gender, passportNo, passportIssueDate, passportExpiryDate, passportValidityPeriod, placeOfIssue, nomineeName, nomineeGender, addressWithPinCode, passportFile, contactNo, email, holdPassportFrom, applyFrom, goTo, travelEntryDate, travelExitDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-        const passportParams = [req.user.id, totalNoOfTravellers, name, nationality, dateOfBirth, gender, passportNo, passportIssueDate, passportExpiryDate, passportValidityPeriod, placeOfIssue, nomineeName, nomineeGender, addressWithPinCode, passportFile, contactNo, email, holdPassportFrom, applyFrom, goTo, travelDuration.entryDate, travelDuration.exitDate];
+        const passportTravel = `INSERT INTO passport (userId, totalNoOfTravellers, name, nationality, dateOfBirth, gender, passportNo, passportIssueDate, passportExpiryDate, passportValidityPeriod, placeOfIssue, nomineeName, nomineeGender, addressWithPinCode, contactNo, email, holdPassportFrom, applyFrom, goTo, travelEntryDate, travelExitDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+        const passportParams = [req.user.id, totalNoOfTravellers, name, nationality, dateOfBirth, gender, passportNo, passportIssueDate, passportExpiryDate, passportValidityPeriod, placeOfIssue, nomineeName, nomineeGender, addressWithPinCode, contactNo, email, holdPassportFrom, applyFrom, goTo, travelDuration.entryDate, travelDuration.exitDate];
 
         const [insertResult, insertFields] = await db.query(passportTravel, passportParams);
 

@@ -4,6 +4,11 @@ import connectToDb from "../config/db.js";
 
 let db = await connectToDb();
 
+/**
+ * @getAllRetailUsers
+ * @params req, res
+ * @Description : This function is used to get all retail users data in the 'retail_user' table of the 'tges' database using the MySQL module
+*/
 const getAllRetailUsers = asyncHandler(async (req, res) => {
     try {
         const sql = `SELECT user.id, user.email, user.zipCode, user.country, user.city, user.state, user.password, retail_user.* FROM retail_user INNER JOIN user ON retail_user.userId = user.id`;
@@ -43,6 +48,11 @@ const getAllRetailUsers = asyncHandler(async (req, res) => {
     }
 })
 
+/**
+ * @getAllCorporateUsers
+ * @params req, res
+ * @Description : This function is used to get all corporate users data in the 'corporate_user' table of the 'tges' database using the MySQL module
+*/
 const getAllCorporateUsers = asyncHandler(async (req, res) => {
     try {
         const sql = `SELECT user.id, user.email, user.zipCode, user.country, user.city, user.state, user.password, corporate_user.* FROM corporate_user INNER JOIN user ON corporate_user.userId = user.id`;
@@ -82,6 +92,11 @@ const getAllCorporateUsers = asyncHandler(async (req, res) => {
     }
 })
 
+/**
+ * @getAllVendors
+ * @params req, res
+ * @Description : This function is used to get all vendors data in the 'vendor' table of the 'tges' database using the MySQL module
+*/
 const getAllVendors = asyncHandler(async (req, res) => {
     try {
         const sql = `SELECT user.id, user.email, user.zipCode, user.country, user.city, user.state, user.password, vendor.* FROM vendor INNER JOIN user ON vendor.userId = user.id`;
@@ -121,6 +136,11 @@ const getAllVendors = asyncHandler(async (req, res) => {
     }
 })
 
+/**
+ * @getAllTrainDetails
+ * @params req, res
+ * @Description : This function is used to get all train details data in the 'train' table of the 'tges' database using the MySQL module
+*/
 const getAllTrainDetails = asyncHandler(async (req, res) => {
     try {
         const sql = `SELECT * FROM train`
@@ -160,6 +180,11 @@ const getAllTrainDetails = asyncHandler(async (req, res) => {
     }
 })
 
+/**
+ * @getAllAirDetails
+ * @params req, res
+ * @Description : This function is used to get all air details data in the 'air' table of the 'tges' database using the MySQL module
+*/
 const getAllAirDetails = asyncHandler(async (req, res) => {
     try {
         const sql = `SELECT * FROM air`
@@ -199,6 +224,11 @@ const getAllAirDetails = asyncHandler(async (req, res) => {
     }
 })
 
+/**
+ * @getAllCabDetails
+ * @params req, res
+ * @Description : This function is used to get all cab details data in the 'cab' table of the 'tges' database using the MySQL module
+*/
 const getAllCabDetails = asyncHandler(async (req, res) => {
     try {
         const sql = `SELECT * FROM cab`
@@ -238,6 +268,11 @@ const getAllCabDetails = asyncHandler(async (req, res) => {
     }
 })
 
+/**
+ * @getAllBusDetails
+ * @params req, res
+ * @Description : This function is used to get all bus details data in the 'bus' table of the 'tges' database using the MySQL module
+*/
 const getAllBusDetails = asyncHandler(async (req, res) => {
     try {
         const sql = `SELECT * FROM bus`
@@ -277,6 +312,11 @@ const getAllBusDetails = asyncHandler(async (req, res) => {
     }
 })
 
+/**
+ * @getAllHotelDetails
+ * @params req, res
+ * @Description : This function is used to get all hotel details data in the 'hotel' table of the 'tges' database using the MySQL module
+*/
 const getAllHotelDetails = asyncHandler(async (req, res) => {
     try {
         const sql = `SELECT * FROM hotel`
