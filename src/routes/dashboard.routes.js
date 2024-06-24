@@ -1,5 +1,5 @@
 import express from "express";
-import { getAllAirDetails, getAllBusDetails, getAllCabDetails, getAllCorporateUsers, getAllHotelDetails, getAllRetailUsers, getAllTrainDetails, getAllVendors } from "../controller/dashboard.controller.js";
+import { getAllAirDetails, getAllBusDetails, getAllCabDetails, getAllCorporateUsers, getAllHealthInsurance, getAllHotelDetails, getAllRetailUsers, getAllTrainDetails, getAllTravelInsurance, getAllVendors } from "../controller/dashboard.controller.js";
 
 const router = express.Router();
 
@@ -26,5 +26,11 @@ router.route("/bus")
 
 router.route("/hotel")
     .get(getAllHotelDetails)
+
+router.route("/healthInsurance")
+    .get(getAllHealthInsurance)
+
+router.route("/travelInsurance")
+    .get(getAllTravelInsurance)
 
 export default router;

@@ -356,6 +356,84 @@ const getAllHotelDetails = asyncHandler(async (req, res) => {
     }
 })
 
+const getAllTravelInsurance = asyncHandler(async (req, res) => {
+    try {
+        const sql = `SELECT * FROM travelInsurance`;
+        const [result, fields] = await db.query(sql);
+
+        const cleanedResult = result.map(user => {
+            const { userId, createdAt, updatedAt, ...rest } = user;
+            return rest;
+        });
+
+        if (result.length === 0) {
+            return res.status(404).json(
+                new ApiResponse(
+                    404,
+                    null,
+                    "No travel insurance details found"
+                )
+            )
+        }
+
+        return res.status(200).json(
+            new ApiResponse(
+                200,
+                cleanedResult,
+                "Travel insurance details fetched successfully"
+            )
+        )
+    } catch (error) {
+        console.log("Error getting travel insurance: ", error);
+        return res.status(500).json(
+            new ApiResponse(
+                500,
+                null,
+                "An error occurred while getting travel details"
+            )
+        )
+    }
+})
+
+const getAllHealthInsurance = asyncHandler(async (req, res) => {
+    try {
+        const sql = `SELECT * FROM healthInsurance`;
+        const [result, fields] = await db.query(sql);
+
+        const cleanedResult = result.map(user => {
+            const { userId, createdAt, updatedAt, ...rest } = user;
+            return rest;
+        });
+
+        if (result.length === 0) {
+            return res.status(404).json(
+                new ApiResponse(
+                    404,
+                    null,
+                    "No health insurance details found"
+                )
+            )
+        }
+
+        return res.status(200).json(
+            new ApiResponse(
+                200,
+                cleanedResult,
+                "Health insurance details fetched successfully"
+            )
+        )
+    } catch (error) {
+        console.log("Error getting health insurance: ", error);
+        return res.status(500).json(
+            new ApiResponse(
+                500,
+                null,
+                "An error occurred while getting health details"
+            )
+        )
+    }
+})
+
 export {
     getAllRetailUsers,
     getAllCorporateUsers,
@@ -364,5 +442,7 @@ export {
     getAllAirDetails,
     getAllCabDetails,
     getAllBusDetails,
-    getAllHotelDetails
+    getAllHotelDetails,
+    getAllTravelInsurance,
+    getAllHealthInsurance
 }
