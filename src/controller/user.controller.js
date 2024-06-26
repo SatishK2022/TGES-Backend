@@ -235,7 +235,7 @@ const retailLogin = asyncHandler(async (req, res) => {
         );
     }
 
-    const sql = `SELECT * FROM user WHERE email = ?`;
+    const sql = `SELECT user.*, retail_user.* FROM user INNER JOIN retail_user ON user.id = retail_user.userId WHERE user.email = ?`;
     const params = [email];
     const [result, fields] = await db.query(sql, params);
     if (result.length === 0) {
@@ -271,21 +271,15 @@ const retailLogin = asyncHandler(async (req, res) => {
         secure: true,
     }
 
-    // Remove password from user object
-    delete user.password;
-
-    // Add user details from retail_user table
-    const getRetailUserSql = `SELECT * FROM retail_user WHERE userId = ?`;
-    const retailUserParams = [user.id];
-    const [retailUserResult, retailUserFields] = await db.query(getRetailUserSql, retailUserParams);
-
-    if (retailUserResult.length > 0) {
-        user.retailUser = retailUserResult[0];
-    }
-
-    delete retailUserResult[0].createdAt;
-    delete retailUserResult[0].updatedAt;
-    user.retailUser = retailUserResult[0];
+    const cleanedResult = {
+        ...user,
+        otp: undefined,
+        otpExpires: undefined,
+        password: undefined,
+        userId: undefined,
+        createdAt: undefined,
+        updatedAt: undefined,
+    };
 
     return res
         .status(200)
@@ -293,7 +287,7 @@ const retailLogin = asyncHandler(async (req, res) => {
         .json(
             new ApiResponse(
                 200,
-                user,
+                cleanedResult,
                 "Login Successful"
             )
         );
@@ -318,7 +312,7 @@ const corporateLogin = asyncHandler(async (req, res) => {
         );
     }
 
-    const sql = `SELECT * FROM user WHERE email = ?`;
+    const sql = `SELECT user.*, corporate_user.* FROM user INNER JOIN corporate_user ON user.id = corporate_user.userId WHERE user.email = ?`;
     const params = [email];
     const [result, fields] = await db.query(sql, params);
     if (result.length === 0) {
@@ -354,16 +348,15 @@ const corporateLogin = asyncHandler(async (req, res) => {
         secure: true,
     }
 
-    // Remove password from user object
-    delete user.password;
-
-    const getCorporateUserSql = `SELECT * FROM corporate_user WHERE userId = ?`;
-    const corporateUserParams = [user.id];
-    const [corporateUserResult, corporateUserFields] = await db.query(getCorporateUserSql, corporateUserParams);
-
-    delete corporateUserResult[0].createdAt;
-    delete corporateUserResult[0].updatedAt;
-    user.corporateUser = corporateUserResult[0];
+    const cleanedResult = {
+        ...user,
+        otp: undefined,
+        otpExpires: undefined,
+        password: undefined,
+        userId: undefined,
+        createdAt: undefined,
+        updatedAt: undefined,
+    };
 
     return res
         .status(200)
@@ -371,7 +364,7 @@ const corporateLogin = asyncHandler(async (req, res) => {
         .json(
             new ApiResponse(
                 200,
-                user,
+                cleanedResult,
                 "Login Successful"
             )
         );
@@ -396,7 +389,7 @@ const vendorLogin = asyncHandler(async (req, res) => {
         );
     }
 
-    const sql = `SELECT * FROM user WHERE email = ?`;
+    const sql = `SELECT user.*, vendor.* FROM user INNER JOIN vendor ON user.id = vendor.userId WHERE user.email = ?`;
     const params = [email];
     const [result, fields] = await db.query(sql, params);
     if (result.length === 0) {
@@ -410,7 +403,6 @@ const vendorLogin = asyncHandler(async (req, res) => {
     }
 
     const user = result[0];
-    console.log(user);
 
     const passwordMatch = await comparePassword(password, user.password);
     if (!passwordMatch) {
@@ -433,16 +425,15 @@ const vendorLogin = asyncHandler(async (req, res) => {
         secure: true,
     }
 
-    // Remove password from user object
-    delete user.password;
-
-    const getVendorSql = `SELECT * FROM vendor WHERE userId = ?`;
-    const vendorParams = [user.id];
-    const [vendorResult, vendorFields] = await db.query(getVendorSql, vendorParams);
-
-    delete vendorResult[0].createdAt;
-    delete vendorResult[0].updatedAt;
-    user.vendor = vendorResult[0];
+    const cleanedResult = {
+        ...user,
+        otp: undefined,
+        otpExpires: undefined,
+        password: undefined,
+        userId: undefined,
+        createdAt: undefined,
+        updatedAt: undefined,
+    };
 
     return res
         .status(200)
@@ -450,7 +441,7 @@ const vendorLogin = asyncHandler(async (req, res) => {
         .json(
             new ApiResponse(
                 200,
-                user,
+                cleanedResult,
                 "Login Successful"
             )
         );

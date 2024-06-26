@@ -356,6 +356,11 @@ const getAllHotelDetails = asyncHandler(async (req, res) => {
     }
 })
 
+/**
+ * @getAllTravelInsurance
+ * @params req, res
+ * @Description : This function is used to get all travel insurance details data in the 'travelInsurance' table of the 'tges' database using the MySQL module
+*/
 const getAllTravelInsurance = asyncHandler(async (req, res) => {
     try {
         const sql = `SELECT * FROM travelInsurance`;
@@ -395,6 +400,11 @@ const getAllTravelInsurance = asyncHandler(async (req, res) => {
     }
 })
 
+/**
+ * @getAllHealthInsurance
+ * @params req, res
+ * @Description : This function is used to get all health insurance details data in the 'healthInsurance' table of the 'tges' database using the MySQL module
+*/
 const getAllHealthInsurance = asyncHandler(async (req, res) => {
     try {
         const sql = `SELECT * FROM healthInsurance`;
