@@ -457,6 +457,208 @@ const vendorLogin = asyncHandler(async (req, res) => {
 })
 
 /**
+ * @forgotPassword
+ * @params req, res
+ * @Description : This function is used to send a forgot password email to the user.
+ */
+const forgotPassword = asyncHandler(async (req, res) => {
+    const reqBody = req.body || {};
+    const { email } = reqBody;
+
+    if (!email) {
+        return res.status(400).json(
+            new ApiResponse(
+                400,
+                null,
+                "Email is required"
+            )
+        );
+    }
+
+    try {
+        const sql = `SELECT * FROM user WHERE email = ?`;
+        const params = [email];
+        const [result, fields] = await db.query(sql, params);
+
+        const user = result[0];
+
+        if (!user) {
+            return res.status(404).json(
+                new ApiResponse(
+                    404,
+                    null,
+                    "User not found"
+                )
+            );
+        }
+
+        // Generate OTP
+        const otp = Math.floor(100000 + Math.random() * 900000); // 6 digits OTP
+        const otpExpires = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes from now
+
+        await db.query('UPDATE user SET otp = ?, otpExpires = ? WHERE email = ?', [otp, otpExpires, email]);
+
+        // Send OTP via email
+        await sendMail(
+            email,
+            "Forgot Password OTP",
+            `<h1>Hi, </br>Here is your OTP: ${otp}</h1>`
+        )
+
+        return res.status(200).json(
+            new ApiResponse(
+                200,
+                null,
+                "OTP sent to your email"
+            )
+        );
+    } catch (error) {
+        console.log("Error while forgot password: ", error);
+        return res.status(500).json(
+            new ApiResponse(
+                500,
+                null,
+                "Error while forgot password"
+            )
+        );
+    }
+})
+
+/**
+ * @verifyOtp
+ * @params req, res
+ * @Description : This function is used to verify the OTP sent to the user's email.
+ */
+const verifyOtp = asyncHandler(async (req, res) => {
+    const reqBody = req.body || {};
+    const { email, otp } = reqBody;
+
+    if (!email || !otp) {
+        return res.status(400).json(
+            new ApiResponse(
+                400,
+                null,
+                "All fields are required"
+            )
+        );
+    }
+
+    try {
+        const sql = `SELECT * FROM user WHERE email = ?`;
+        const params = [email];
+        const [result, fields] = await db.query(sql, params);
+
+        const user = result[0];
+
+        if (!user) {
+            return res.status(404).json(
+                new ApiResponse(
+                    404,
+                    null,
+                    "User not found"
+                )
+            );
+        }
+
+        if (user.otp !== otp) {
+            return res.status(401).json(
+                new ApiResponse(
+                    401,
+                    null,
+                    "Invalid OTP"
+                )
+            );
+        }
+
+        if (user.otpExpires < Date.now()) {
+            return res.status(401).json(
+                new ApiResponse(
+                    401,
+                    null,
+                    "OTP expired"
+                )
+            );
+        }
+
+        return res.status(200).json(
+            new ApiResponse(
+                200,
+                null,
+                "OTP verified"
+            )
+        );
+    } catch (error) {
+        console.log("Error while verifying OTP: ", error);
+        return res.status(500).json(
+            new ApiResponse(
+                500,
+                null,
+                "Error while verifying OTP"
+            )
+        );
+    }
+})
+
+/**
+ * @resetPassword
+ * @params req, res
+ * @Description : This function is used to reset the user's password.
+ */
+const resetPassword = asyncHandler(async (req, res) => {
+    const reqBody = req.body || {};
+    const { email, password } = reqBody;
+
+    if (!email || !password) {
+        return res.status(400).json(
+            new ApiResponse(
+                400,
+                null,
+                "All fields are required"
+            )
+        );
+    }
+
+    try {
+        const sql = `SELECT * FROM user WHERE email = ?`;
+        const params = [email];
+        const [result, fields] = await db.query(sql, params);
+
+        const user = result[0];
+
+        if (!user) {
+            return res.status(404).json(
+                new ApiResponse(
+                    404,
+                    null,
+                    "User not found"
+                )
+            );
+        }
+
+        const hashedPassword = await hashPassword(password);
+
+        await db.query('UPDATE user SET password = ? WHERE email = ?', [hashedPassword, email]);
+
+        return res.status(200).json(
+            new ApiResponse(
+                200,
+                null,
+                "Password reset successful"
+            )
+        );
+    } catch (error) {
+        console.log("Error while resetting password: ", error);
+        return res.status(500).json(
+            new ApiResponse(
+                500,
+                null,
+                "Error while resetting password"
+            )
+        );
+    }
+})
+
+/**
  * @logout
  * @params req, res
  * @Description : This function is used to logout user by removing the token cookie from the browser.
@@ -481,5 +683,8 @@ export {
     retailLogin,
     corporateLogin,
     vendorLogin,
+    forgotPassword,
+    verifyOtp,
+    resetPassword,
     logout
 }

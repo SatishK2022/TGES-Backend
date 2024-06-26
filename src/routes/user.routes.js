@@ -1,5 +1,5 @@
 import express from "express";
-import { corporateLogin, corporateRegister, logout, retailLogin, retailRegister, vendorLogin, vendorRegister } from "../controller/user.controller.js";
+import { corporateLogin, corporateRegister, forgotPassword, logout, resetPassword, retailLogin, retailRegister, vendorLogin, vendorRegister, verifyOtp } from "../controller/user.controller.js";
 
 const router = express.Router();
 
@@ -10,5 +10,9 @@ router.post("/retail-login", retailLogin)
 router.post("/corporate-login", corporateLogin)
 router.post("/vendor-login", vendorLogin)
 router.get("/logout", logout)
+
+router.post("/forgot-password", forgotPassword)
+router.post("/verify-otp", verifyOtp)
+router.post("/reset-password", resetPassword)
 
 export default router;

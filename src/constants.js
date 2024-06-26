@@ -6,7 +6,9 @@ export const user = `CREATE TABLE IF NOT EXISTS user (
     country VARCHAR(255) NOT NULL,
     city VARCHAR(255) NOT NULL,
     state VARCHAR(255) NOT NULL,
-    password VARCHAR(255) NOT NULL
+    password VARCHAR(255) NOT NULL,
+    otp VARCHAR(6),
+    otpExpires DATETIME
 )`;
 
 export const retail_user = `CREATE TABLE IF NOT EXISTS retail_user (
