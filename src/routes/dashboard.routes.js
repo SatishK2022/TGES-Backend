@@ -1,36 +1,46 @@
 import express from "express";
-import { getAllAirDetails, getAllBusDetails, getAllCabDetails, getAllCorporateUsers, getAllHealthInsurance, getAllHotelDetails, getAllRetailUsers, getAllTrainDetails, getAllTravelInsurance, getAllVendors } from "../controller/dashboard.controller.js";
+import { getAllAirDetails, getAllBusDetails, getAllCabDetails, getAllCorporateUsers, getAllHealthInsurance, getAllHotelDetails, getAllRetailUsers, getAllTrainDetails, getAllTravelInsurance, getAllVendors, loginAdmin, logoutAdmin, registerAdmin } from "../controller/dashboard.controller.js";
+import { isAdmin } from "../middlewares/auth.middleware.js";
 
 const router = express.Router();
 
+router.route("/register")
+    .post(registerAdmin);
+
+router.route("/login")
+    .post(loginAdmin);
+
+router.route("/logout")
+    .get(isAdmin, logoutAdmin);
+
 router.route("/retail")
-    .get(getAllRetailUsers);
+    .get(isAdmin, getAllRetailUsers);
 
 router.route("/corporate")
-    .get(getAllCorporateUsers);
+    .get(isAdmin, getAllCorporateUsers);
 
 router.route("/vendor")
-    .get(getAllVendors);
+    .get(isAdmin, getAllVendors);
 
 router.route("/train")
-    .get(getAllTrainDetails)
+    .get(isAdmin, getAllTrainDetails)
 
 router.route("/air")
-    .get(getAllAirDetails)
+    .get(isAdmin, getAllAirDetails)
 
 router.route("/cab")
-    .get(getAllCabDetails)
+    .get(isAdmin, getAllCabDetails)
 
 router.route("/bus")
-    .get(getAllBusDetails)
+    .get(isAdmin, getAllBusDetails)
 
 router.route("/hotel")
-    .get(getAllHotelDetails)
+    .get(isAdmin, getAllHotelDetails)
 
 router.route("/healthInsurance")
-    .get(getAllHealthInsurance)
+    .get(isAdmin, getAllHealthInsurance)
 
 router.route("/travelInsurance")
-    .get(getAllTravelInsurance)
+    .get(isAdmin, getAllTravelInsurance)
 
 export default router;

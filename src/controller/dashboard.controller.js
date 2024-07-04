@@ -1,8 +1,165 @@
 import asyncHandler from "../utils/asyncHandler.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import connectToDb from "../config/db.js";
+import { comparePassword, generateToken, hashPassword } from "../utils/helper.js";
 
 let db = await connectToDb();
+
+/**
+ * @registerAdmin
+ * @params req, res
+ * @Description : This function is used to create admin data in the 'admin' table of the 'tges' database using the MySQL module
+*/
+const registerAdmin = asyncHandler(async (req, res) => {
+    const reqBody = req.body || {};
+    const { email, password } = reqBody;
+
+    if (!email || !password) {
+        return res.status(400).json(
+            new ApiResponse(
+                400,
+                null,
+                "All fields are required"
+            )
+        );
+    }
+
+    try {
+        const sql = `SELECT * FROM admin WHERE email = ?`;
+        const params = [email];
+        const [result, fields] = await db.query(sql, params);
+
+        if (result.length > 0) {
+            return res.status(409).json(
+                new ApiResponse(
+                    409,
+                    null,
+                    "Admin already exists"
+                )
+            );
+        }
+
+        const sql2 = `INSERT INTO admin (email, password) VALUES (?, ?)`;
+        const hashedPassword = await hashPassword(password);
+        const params2 = [email, hashedPassword];
+        const [result2, fields2] = await db.query(sql2, params2);
+
+        return res.status(201).json(
+            new ApiResponse(
+                201,
+                null,
+                "Admin registered successfully"
+            )
+        );
+    } catch (error) {
+        console.log("Error while registering admin: ", error);
+        return res.status(500).json(
+            new ApiResponse(
+                500,
+                null,
+                "Error while registering admin"
+            )
+        );
+    }
+});
+
+/**
+ * @loginAdmin
+ * @params req, res
+ * @Description : This function is used to login admin data in the 'admin' table of the 'tges' database using the MySQL module
+*/
+const loginAdmin = asyncHandler(async (req, res) => {
+    const reqBody = req.body || {};
+    const { email, password } = reqBody;
+
+    if (!email || !password) {
+        return res.status(400).json(
+            new ApiResponse(
+                400,
+                null,
+                "All fields are required"
+            )
+        );
+    }
+
+    try {
+        const sql = `SELECT * FROM admin WHERE email = ?`;
+        const params = [email];
+        const [result, fields] = await db.query(sql, params);
+
+        if (result.length === 0) {
+            return res.status(404).json(
+                new ApiResponse(
+                    404,
+                    null,
+                    "Admin not found"
+                )
+            );
+        }
+
+        const admin = result[0];
+
+        console.log(admin)
+
+        const passwordMatch = await comparePassword(password, admin.password);
+        if (!passwordMatch) {
+            return res.status(401).json(
+                new ApiResponse(401, null, "Invalid credentials")
+            );
+        }
+
+        const token = generateToken({
+            id: admin.id,
+            email: admin.email,
+        })
+
+        const cookieOptions = {
+            httpOnly: true,
+            secure: true,
+        }
+
+        const cleanedResult = {
+            ...admin,
+            id: undefined,
+            password: undefined,
+            createdAt: undefined,
+            updatedAt: undefined,
+        };
+
+        return res
+            .status(200)
+            .cookie("token", token, cookieOptions)
+            .json(
+                new ApiResponse(
+                    200,
+                    cleanedResult,
+                    "Admin logged in successfully"
+                )
+            );
+    } catch (error) {
+        console.log("Error while logging in admin: ", error);
+        return res.status(500).json(
+            new ApiResponse(
+                500,
+                null,
+                "Error while logging in admin"
+            )
+        );
+    }
+});
+
+const logoutAdmin = asyncHandler(async (req, res) => {
+    return res
+        .status(200)
+        .clearCookie("token")
+        .json(
+            new ApiResponse(
+                200,
+                null,
+                "Admin logged out successfully"
+            )
+        );
+});
 
 /**
  * @getAllRetailUsers
@@ -445,6 +602,9 @@ const getAllHealthInsurance = asyncHandler(async (req, res) => {
 })
 
 export {
+    registerAdmin,
+    loginAdmin,
+    logoutAdmin,
     getAllRetailUsers,
     getAllCorporateUsers,
     getAllVendors,

@@ -6,7 +6,7 @@ import cookieParser from "cookie-parser"
 import bodyParser from "body-parser";
 import morgan from "morgan"
 import connectToDb from "./config/db.js";
-import { user, retail_user, corporate_user, vendor, train, air, volvoBus, cab, hotel, passport, healthInsurance, travelInsurance } from "./constants.js"
+import { user, retail_user, corporate_user, vendor, train, air, volvoBus, cab, hotel, passport, healthInsurance, travelInsurance, admin } from "./constants.js"
 
 const app = express();
 
@@ -18,6 +18,7 @@ dbConnection
         const db = await connectToDb();
         await db.query("CREATE DATABASE IF NOT EXISTS tges");
 
+        await db.query(admin)
         await db.query(user);
         await db.query(retail_user);
         await db.query(vendor);
