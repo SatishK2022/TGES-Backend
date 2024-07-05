@@ -47,7 +47,45 @@ const deleteCabTravel = asyncHandler(async (req, res) => {
 })
 
 const getCabTravelDetails = asyncHandler(async (req, res) => {
-    // TODO: Implement get travel
+    try {
+        const id = req.user.id;
+
+        const sql = `SELECT * FROM cab WHERE userId = ?`;
+        const params = [id];
+        const [result, fields] = await db.query(sql, params);
+
+        if (result.length === 0) {
+            return res.status(404).json(
+                new ApiResponse(
+                    404,
+                    null,
+                    "Cab Travel Details not found"
+                )
+            )
+        }
+
+        const cabData = result.map(user => {
+            const { userId, password, createdAt, updatedAt, ...rest } = user;
+            return rest;
+        });
+
+        return res.status(200).json(
+            new ApiResponse(
+                200,
+                cabData,
+                "Cab Travel Details Fetched Successfully"
+            )
+        )
+    } catch (error) {
+        console.log("Error getting Cab Travel Details:", error);
+        return res.status(500).json(
+            new ApiResponse(
+                500,
+                null,
+                "An error occurred while getting cab travel details"
+            )
+        )
+    }
 })
 
 export {
