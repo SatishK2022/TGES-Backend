@@ -2,6 +2,7 @@ import connectToDb from "../config/db.js";
 import asyncHandler from "../utils/asyncHandler.js";
 import ApiResponse from "../utils/ApiResponse.js"
 import { sendMail } from "../utils/sendMail.js";
+import { corporateRegisterTemplate, forgotPasswordTemplate, retailRegisterTemplate, vendorRegisterTemplate } from "../email/email-template.js";
 import { comparePassword, generateToken, hashPassword, isValuePresent } from "../utils/helper.js";
 
 let db = await connectToDb();
@@ -15,15 +16,15 @@ const retailRegister = asyncHandler(async (req, res) => {
     const reqBody = req.body || {};
     const { firstName, secondName, lastName, email, residentialAddress, zipCode, country, city, state, phoneNumber1, phoneNumber2, stateCode, countryCode, username, password, gender, occupation, companyName, designation, companyAddress, howDidYouKnow, preferredCurrency, website } = reqBody;
 
-    if (!isValuePresent(reqBody)) {
-        return res.status(400).json(
-            new ApiResponse(
-                400,
-                null,
-                "All fields are required"
-            )
-        );
-    }
+    // if (!isValuePresent(reqBody)) {
+    //     return res.status(400).json(
+    //         new ApiResponse(
+    //             400,
+    //             null,
+    //             "All fields are required"
+    //         )
+    //     );
+    // }
 
     try {
         // Check for duplicate email or username
@@ -58,7 +59,7 @@ const retailRegister = asyncHandler(async (req, res) => {
         // await sendMail(
         //     email,
         //     "Welcome to TGES",
-        //     `<h1>Hi ${firstName} ${lastName}, Welcome to TGES.</h1>`
+        //     retailRegisterTemplate({ fullName: `${firstName} ${lastName}`, email, residentialAddress, city, country, state, zipCode, phoneNumber1 })
         // )
 
         return res.status(201).json(
@@ -122,7 +123,7 @@ const corporateRegister = asyncHandler(async (req, res) => {
         // await sendMail(
         //     email,
         //     "Welcome to TGES",
-        //     `<h1>Hi ${firstName} ${lastName}, Welcome to TGES.</h1>`
+        //     corporateRegisterTemplate({ companyName, address: `${address1} ${address2} ${address3} ${address4}`, city, country, state, zipCode, phoneNumber, contactPerson: `${contactPersonFirstName} ${contactPersonLastName}`, landlineNumber, email })
         // )
 
         return res.status(201).json(
@@ -153,15 +154,15 @@ const vendorRegister = asyncHandler(async (req, res) => {
     const reqBody = req.body || {};
     const { areaOfWork, companyName, zipCode, country, city, state, contactPersonFirstName, contactPersonSecondName, contactPersonLastName, landlineCityCode, landlineCountryCode, contactPersonGender, phoneNumber, landlineNumber, countryCode, stateCode, email, password, website, address1, address2, address3, address4 } = reqBody;
 
-    if (!isValuePresent(reqBody)) {
-        return res.status(400).json(
-            new ApiResponse(
-                400,
-                null,
-                "All fields are required"
-            )
-        );
-    }
+    // if (!isValuePresent(reqBody)) {
+    //     return res.status(400).json(
+    //         new ApiResponse(
+    //             400,
+    //             null,
+    //             "All fields are required"
+    //         )
+    //     );
+    // }
 
     try {
         // Check for duplicate email or username
@@ -194,7 +195,7 @@ const vendorRegister = asyncHandler(async (req, res) => {
         // await sendMail(
         //     email,
         //     "Welcome to TGES",
-        //     `<h1>Hi ${firstName} ${lastName}, Welcome to TGES.</h1>`
+        //     vendorRegisterTemplate({ companyName, address: `${address1} ${address2} ${address3} ${address4}`, city, country, state, zipCode, phoneNumber, contactPerson: `${contactPersonFirstName} ${contactPersonLastName}`, landlineNumber, email })
         // )
 
         return res.status(201).json(
@@ -493,7 +494,7 @@ const forgotPassword = asyncHandler(async (req, res) => {
         await sendMail(
             email,
             "Forgot Password OTP",
-            `<h1>Hi, </br>Here is your OTP: ${otp}</h1>`
+            forgotPasswordTemplate(otp)
         )
 
         return res.status(200).json(
