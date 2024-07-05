@@ -3,7 +3,7 @@ import asyncHandler from "../utils/asyncHandler.js";
 import ApiResponse from "../utils/ApiResponse.js"
 import { sendMail } from "../utils/sendMail.js";
 import { corporateRegisterTemplate, forgotPasswordTemplate, retailRegisterTemplate, vendorRegisterTemplate } from "../email/email-template.js";
-import { comparePassword, generateOTP, generateToken, hashPassword, isValuePresent } from "../utils/helper.js";
+import { comparePassword, generateOTP, generateToken, hashPassword } from "../utils/helper.js";
 
 let db = await connectToDb();
 
@@ -15,16 +15,6 @@ let db = await connectToDb();
 const retailRegister = asyncHandler(async (req, res) => {
     const reqBody = req.body || {};
     const { firstName, secondName, lastName, email, residentialAddress, zipCode, country, city, state, phoneNumber1, phoneNumber2, stateCode, countryCode, username, password, gender, occupation, companyName, designation, companyAddress, howDidYouKnow, preferredCurrency, website } = reqBody;
-
-    // if (!isValuePresent(reqBody)) {
-    //     return res.status(400).json(
-    //         new ApiResponse(
-    //             400,
-    //             null,
-    //             "All fields are required"
-    //         )
-    //     );
-    // }
 
     try {
         // Check for duplicate email or username
@@ -56,11 +46,18 @@ const retailRegister = asyncHandler(async (req, res) => {
         await db.query(insertRetailUserSql, retailParams);
 
         // Send Mail
-        // await sendMail(
-        //     email,
-        //     "Welcome to TGES",
-        //     retailRegisterTemplate({ fullName: `${firstName} ${lastName}`, email, residentialAddress, city, country, state, zipCode, phoneNumber1 })
-        // )
+        sendMail(
+            email,
+            "Welcome to TGES",
+            retailRegisterTemplate({ fullName: `${firstName} ${lastName}`, email, residentialAddress, city, country, state, zipCode, phoneNumber1 })
+        )
+
+        // Send Mail to admin
+        sendMail(
+            "tges@gmail.com",
+            "Retail Registration",
+            retailRegisterTemplate({ fullName: `${firstName} ${lastName}`, email, residentialAddress, city, country, state, zipCode, phoneNumber1 }) 
+        )
 
         return res.status(201).json(
             new ApiResponse(
@@ -120,9 +117,16 @@ const corporateRegister = asyncHandler(async (req, res) => {
         await db.query(insertCorprate, corprateParams);
 
         // Send Mail
-        // await sendMail(
+        // sendMail(
         //     email,
         //     "Welcome to TGES",
+        //     corporateRegisterTemplate({ companyName, address: `${address1} ${address2} ${address3} ${address4}`, city, country, state, zipCode, phoneNumber, contactPerson: `${contactPersonFirstName} ${contactPersonLastName}`, landlineNumber, email })
+        // )
+
+        // Send Mail to admin
+        // sendMail(
+        //     "tges@gmail.com",
+        //     "Corporate Registration",
         //     corporateRegisterTemplate({ companyName, address: `${address1} ${address2} ${address3} ${address4}`, city, country, state, zipCode, phoneNumber, contactPerson: `${contactPersonFirstName} ${contactPersonLastName}`, landlineNumber, email })
         // )
 
@@ -154,16 +158,6 @@ const vendorRegister = asyncHandler(async (req, res) => {
     const reqBody = req.body || {};
     const { areaOfWork, companyName, zipCode, country, city, state, contactPersonFirstName, contactPersonSecondName, contactPersonLastName, landlineCityCode, landlineCountryCode, contactPersonGender, phoneNumber, landlineNumber, countryCode, stateCode, email, password, website, address1, address2, address3, address4 } = reqBody;
 
-    // if (!isValuePresent(reqBody)) {
-    //     return res.status(400).json(
-    //         new ApiResponse(
-    //             400,
-    //             null,
-    //             "All fields are required"
-    //         )
-    //     );
-    // }
-
     try {
         // Check for duplicate email or username
         const checkEmailSql = `SELECT * FROM user WHERE email = ?`;
@@ -192,9 +186,16 @@ const vendorRegister = asyncHandler(async (req, res) => {
         await db.query(insertVendorSql, vendorParams);
 
         // Send Mail
-        // await sendMail(
+        // sendMail(
         //     email,
         //     "Welcome to TGES",
+        //     vendorRegisterTemplate({ companyName, address: `${address1} ${address2} ${address3} ${address4}`, city, country, state, zipCode, phoneNumber, contactPerson: `${contactPersonFirstName} ${contactPersonLastName}`, landlineNumber, email })
+        // )
+
+        // Send Mail to admin
+        // sendMail(
+        //     "tges@gmail.com",
+        //     "Vendor Registration",
         //     vendorRegisterTemplate({ companyName, address: `${address1} ${address2} ${address3} ${address4}`, city, country, state, zipCode, phoneNumber, contactPerson: `${contactPersonFirstName} ${contactPersonLastName}`, landlineNumber, email })
         // )
 
@@ -491,7 +492,7 @@ const forgotPassword = asyncHandler(async (req, res) => {
         await db.query('UPDATE user SET otp = ?, otpExpires = ? WHERE email = ?', [otp, otpExpires, email]);
 
         // Send OTP via email
-        await sendMail(
+        sendMail(
             email,
             "Forgot Password OTP",
             forgotPasswordTemplate(otp)
