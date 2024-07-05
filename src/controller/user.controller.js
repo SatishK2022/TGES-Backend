@@ -3,7 +3,7 @@ import asyncHandler from "../utils/asyncHandler.js";
 import ApiResponse from "../utils/ApiResponse.js"
 import { sendMail } from "../utils/sendMail.js";
 import { corporateRegisterTemplate, forgotPasswordTemplate, retailRegisterTemplate, vendorRegisterTemplate } from "../email/email-template.js";
-import { comparePassword, generateToken, hashPassword, isValuePresent } from "../utils/helper.js";
+import { comparePassword, generateOTP, generateToken, hashPassword, isValuePresent } from "../utils/helper.js";
 
 let db = await connectToDb();
 
@@ -485,7 +485,7 @@ const forgotPassword = asyncHandler(async (req, res) => {
         }
 
         // Generate OTP
-        const otp = Math.floor(100000 + Math.random() * 900000); // 6 digits OTP
+        const otp = generateOTP(6);
         const otpExpires = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes from now
 
         await db.query('UPDATE user SET otp = ?, otpExpires = ? WHERE email = ?', [otp, otpExpires, email]);

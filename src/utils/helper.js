@@ -23,3 +23,12 @@ export const generateToken = (payload) => {
 export function isValuePresent(obj) {
     return Object.values(obj).every(value => value !== undefined && value !== null && value !== "");
 }
+
+export const generateOTP = (length) => {
+    const characters = '0123456789';
+    let otp = '';
+    for (let i = 0; i < length; i++) {
+        otp += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return parseInt(otp);
+}
