@@ -1,6 +1,8 @@
 import ApiResponse from "../../utils/ApiResponse.js";
 import asyncHandler from "../../utils/asyncHandler.js";
 import connectToDb from "../../config/db.js";
+import { volvoBusBookingTemplate } from "../../email/email-template.js";
+import { sendMail } from "../../utils/sendMail.js";
 
 let db = await connectToDb();
 
@@ -38,6 +40,13 @@ const createVolvoBusTravel = asyncHandler(async (req, res) => {
             data.busNo
         ]);
         const [insertResult, insertFields] = await db.query(insertBus, [busParams]);
+
+        // Send Mail
+        // sendMail(
+        //     req.user.email,
+        //     "Volvo Bus Travel Details",
+        //     volvoBusBookingTemplate(reqBody)
+        // )
 
         return res.status(200).json(
             new ApiResponse(

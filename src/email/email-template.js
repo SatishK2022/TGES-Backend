@@ -301,3 +301,365 @@ export function vendorRegisterTemplate({ companyName, address, city, country, st
     </html>
     `
 }
+
+export function trainBookingTemplate(data) {
+    let passengerTable = '';
+
+    data.forEach(passenger => {
+        passengerTable += `
+            <table>
+                <tr>
+                    <th colspan="4">Passenger ${passengerTable.split('</table>').length}</th>
+                </tr>
+                <tr>
+                    <td>Full Name</td>
+                    <td>${passenger.fullName}</td>
+                    <td>Date of Birth</td>
+                    <td>${passenger.dob}</td>
+                </tr>
+                <tr>
+                    <td>Gender</td>
+                    <td>${passenger.gender}</td>
+                    <td>Contact Number</td>
+                    <td>${passenger.contactNo}</td>
+                </tr>
+                <tr>
+                    <td>Travel From</td>
+                    <td>${passenger.travelFrom}</td>
+                    <td>Class of Travel</td>
+                    <td>${passenger.classOfTravel}</td>
+                </tr>
+                <tr>
+                    <td>Travel To</td>
+                    <td>${passenger.travelTo}</td>
+                    <td>Travel Date</td>
+                    <td>${passenger.travelDate}</td>
+                </tr>
+                <tr>
+                    <td>Train Number</td>
+                    <td>${passenger?.trainNo || "N/A"}</td>
+                    <td>Time Preference</td>
+                    <td>${passenger?.timePreference || "N/A"}</td>
+                </tr>
+            </table>`
+    })
+
+    return `
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Train Booking Confirmation</title>
+        <style>
+            body {
+                font-family: Verdana, Geneva, Tahoma, sans-serif;
+                font-size: 14px;
+                line-height: 1.5;
+                color: #333;
+                padding: 5px;
+            }
+
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-bottom: 20px;
+            }
+
+            th {
+                text-align: left;
+                padding: 8px;
+                background-color: #f2f2f2;
+                border: 1px solid #ddd
+            }
+
+            td {
+                padding: 8px;
+                border: 1px solid #ddd
+            }        
+        </style>
+    </head>
+    <body>
+        <h1>Train Booking Confirmation</h1>
+        ${passengerTable}
+    </body>
+    </html>`
+}
+
+export function airBookingTemplate(data) {
+    let passengerTable = '';
+
+    data.forEach(passenger => {
+        passengerTable += `
+            <table>
+                <tr>
+                    <th colspan="4">Passenger ${passengerTable.split('</table>').length}</th>
+                </tr>
+                <tr>
+                    <td>Full Name</td>
+                    <td>${passenger.fullName}</td>
+                    <td>Date of Birth</td>
+                    <td>${passenger.dob}</td>
+                </tr>
+                <tr>
+                    <td>Gender</td>
+                    <td>${passenger.gender}</td>
+                    <td>Contact Number</td>
+                    <td>${passenger.contactNo}</td>
+                </tr>
+                <tr>
+                    <td>Travel From</td>
+                    <td>${passenger.travelFrom}</td>
+                    <td>Class of Travel</td>
+                    <td>${passenger.classOfTravel}</td>
+                </tr>
+                <tr>
+                    <td>Travel To</td>
+                    <td>${passenger.travelTo}</td>
+                    <td>Travel Date</td>
+                    <td>${passenger.travelDate}</td>
+                </tr>
+                <tr>
+                    <td>Flight Number</td>
+                    <td>${passenger?.flightNo || "N/A"}</td>
+                    <td>Time Preference</td>
+                    <td>${passenger?.timePreference || "N/A"}</td>
+                </tr>
+                <tr>
+                    <td>Remarks</td>
+                    <td>${passenger?.remarks || "N/A"}</td>
+                </tr>
+            </table>`
+    })
+
+    return `
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Train Booking Confirmation</title>
+        <style>
+            body {
+                font-family: Verdana, Geneva, Tahoma, sans-serif;
+                font-size: 14px;
+                line-height: 1.5;
+                color: #333;
+                padding: 5px;
+            }
+
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-bottom: 20px;
+            }
+
+            th {
+                text-align: left;
+                padding: 8px;
+                background-color: #f2f2f2;
+                border: 1px solid #ddd
+            }
+
+            td {
+                padding: 8px;
+                border: 1px solid #ddd
+            }        
+        </style>
+    </head>
+    <body>
+        <h1>Flight Booking Confirmation</h1>
+        ${passengerTable}
+    </body>
+    </html>`
+}
+
+export function volvoBusBookingTemplate(data) {
+    let passengerTable = '';
+
+    data.forEach(passenger => {
+        passengerTable += `
+            <table>
+                <tr>
+                    <th colspan="4">Passenger ${passengerTable.split('</table>').length}</th>
+                </tr>
+                <tr>
+                    <td>Full Name</td>
+                    <td>${passenger.fullName}</td>
+                    <td>Date of Birth</td>
+                    <td>${passenger.dob}</td>
+                </tr>
+                <tr>
+                    <td>Gender</td>
+                    <td>${passenger.gender}</td>
+                    <td>Contact Number</td>
+                    <td>${passenger.contactNo}</td>
+                </tr>
+                <tr>
+                    <td>Pickup Location</td>
+                    <td>${passenger.pickupLocation}</td>
+                    <td>Seat Type</td>
+                    <td>${passenger.seatType}</td>
+                </tr>
+                <tr>
+                    <td>Destination</td>
+                    <td>${passenger.destination}</td>
+                    <td>Travel Date</td>
+                    <td>${passenger.travelDate}</td>
+                </tr>
+                <tr>
+                    <td>Bus Number</td>
+                    <td>${passenger?.busNo || "N/A"}</td>
+                </tr>
+            </table>`
+    })
+
+    return `
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Volvo Bus Booking Confirmation</title>
+        <style>
+            body {
+                font-family: Verdana, Geneva, Tahoma, sans-serif;
+                font-size: 14px;
+                line-height: 1.5;
+                color: #333;
+                padding: 5px;
+            }
+
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-bottom: 20px;
+            }
+
+            th {
+                text-align: left;
+                padding: 8px;
+                background-color: #f2f2f2;
+                border: 1px solid #ddd
+            }
+
+            td {
+                padding: 8px;
+                border: 1px solid #ddd
+            }        
+        </style>
+    </head>
+    <body>
+        <h1>Volvo Bus Booking Confirmation</h1>
+        ${passengerTable}
+    </body>
+    </html>`
+}
+
+export function cabBookingTemplate({pickupCountry, nationality, tourPlan, name, contactNo, alternateContactNo, email, cabRequiredAt, cabRequiredFor, localTravelKmsLimit, pickupDateTime, pickupAddress, pickupLandmark, dropDateTime, dropAddress, dropLandmark, cabDuration, noOfCabsRequired, typeOfCabRequired, noOfPersonsTravelling, noOfInfants, noOfChildren, otherRequirements}) {
+    return `
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Cab Booking Confirmation</title>
+        <style>
+            body {
+                font-family: Verdana, Geneva, Tahoma, sans-serif;
+                font-size: 14px;
+                line-height: 1.5;
+                color: #333;
+                padding: 5px;
+            }
+
+            table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+
+            th {
+                text-align: left;
+                padding: 8px;
+                background-color: #f2f2f2;
+                border: 1px solid #ddd
+            }
+
+            td {
+                padding: 8px;
+                border: 1px solid #ddd
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Cab Booking Confirmation</h1>
+        <table>
+            <tr>
+                <th colspan="4">Booking Details</th>
+            </tr>
+            <tr>
+                <td>Pickup Country</td>
+                <td>${pickupCountry}</td>
+                <td>Nationality</td>
+                <td>${nationality}</td>
+            </tr>
+            <tr>
+                <td>Tour Plan</td>
+                <td>${tourPlan}</td>
+                <td>Name</td>
+                <td>${name}</td>
+            </tr>
+            <tr>
+                <td>Contact Number</td>
+                <td>${contactNo}</td>
+                <td>Alternate Contact Number</td>
+                <td>${alternateContactNo}</td>
+            </tr>
+            <tr>
+                <td>Email</td>
+                <td>${email}</td>
+                <td>Cab Required At</td>
+                <td>${cabRequiredAt}</td>
+            </tr>
+            <tr>
+                <td>Cab Required For</td>
+                <td>${cabRequiredFor}</td>
+                <td>Local Travel Kms Limit</td>
+                <td>${localTravelKmsLimit}</td>
+            </tr>
+            <tr>
+                <td>Pickup Date Time</td>
+                <td>${pickupDateTime}</td>
+                <td>Pickup Address</td>
+                <td>${pickupAddress}</td>
+            </tr>
+            <tr>
+                <td>Pickup Landmark</td>
+                <td>${pickupLandmark}</td>
+                <td>Drop Date Time</td>
+                <td>${dropDateTime}</td>
+            </tr>
+            <tr>
+                <td>Drop Address</td>
+                <td>${dropAddress}</td>
+                <td>Drop Landmark</td>
+                <td>${dropLandmark}</td>
+            </tr>
+            <tr>
+                <td>Cab Duration</td>
+                <td>${cabDuration}</td>
+                <td>No of Cabs Required</td>
+                <td>${noOfCabsRequired}</td>
+            </tr>
+            <tr>
+                <td>Type of Cab Required</td>
+                <td>${typeOfCabRequired}</td>
+                <td>No of Persons Travelling</td>
+                <td>${noOfPersonsTravelling}</td>
+            </tr>
+            <tr>
+                <td>No of Infants</td>
+                <td>${noOfInfants}</td>
+                <td>No of Children</td>
+                <td>${noOfChildren}</td>
+            </tr>
+            <tr>
+                <td>Other Requirements</td>
+                <td colspan="3">${otherRequirements || "N/A"}</td>
+            </tr>
+        </table>
+    </body>
+    </html>`
+}

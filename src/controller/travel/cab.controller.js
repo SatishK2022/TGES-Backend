@@ -1,6 +1,8 @@
 import ApiResponse from "../../utils/ApiResponse.js";
 import asyncHandler from "../../utils/asyncHandler.js";
 import connectToDb from "../../config/db.js";
+import { sendMail } from "../../utils/sendMail.js";
+import { cabBookingTemplate } from "../../email/email-template.js";
 
 let db = await connectToDb();
 
@@ -18,6 +20,13 @@ const createCabTravel = asyncHandler(async (req, res) => {
         const cabParams = [req.user.id, pickupCountry, nationality, tourPlan, name, contactNo, alternateContactNo, email, cabRequiredAt, cabRequiredFor, localTravelKmsLimit, pickupDateTime, pickupAddress, pickupLandmark, dropDateTime, dropAddress, dropLandmark, cabDuration, noOfCabsRequired, typeOfCabRequired, noOfPersonsTravelling, noOfInfants, noOfChildren, otherRequirements]
 
         const [result, fields] = await db.query(insertCab, cabParams);
+
+        // Send Mail
+        // sendMail(
+        //     req.user.email,
+        //     "Cab Travel Details",
+        //     cabBookingTemplate({pickupCountry, nationality, tourPlan, name, contactNo, alternateContactNo, email, cabRequiredAt, cabRequiredFor, localTravelKmsLimit, pickupDateTime, pickupAddress, pickupLandmark, dropDateTime, dropAddress, dropLandmark, cabDuration, noOfCabsRequired, typeOfCabRequired, noOfPersonsTravelling, noOfInfants, noOfChildren, otherRequirements})
+        // )
         
         return res.status(200).json(
             new ApiResponse(

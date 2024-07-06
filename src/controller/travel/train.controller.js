@@ -1,6 +1,8 @@
 import ApiResponse from "../../utils/ApiResponse.js";
 import asyncHandler from "../../utils/asyncHandler.js";
 import connectToDb from "../../config/db.js";
+import { sendMail } from "../../utils/sendMail.js";
+import { trainBookingTemplate } from "../../email/email-template.js";
 
 let db = await connectToDb();
 
@@ -11,8 +13,6 @@ let db = await connectToDb();
 */
 const createTrainTravel = asyncHandler(async (req, res) => {
     const reqBody = req.body || [];
-
-    console.log(reqBody);
 
     if (reqBody.length === 0) {
         return res.status(400).json(
@@ -42,6 +42,16 @@ const createTrainTravel = asyncHandler(async (req, res) => {
         ]);
 
         const [result, fields] = await db.query(insertTrain, [trainParams]);
+
+        console.log("User Object", req.user);
+
+        // Send Mail
+        // sendMail(
+        //     req.user.email,
+        //     "Train Booking Details",
+        //     trainBookingTemplate(reqBody)
+        // )
+
         return res.status(200).json(
             new ApiResponse(
                 200,

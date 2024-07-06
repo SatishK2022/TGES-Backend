@@ -1,6 +1,8 @@
 import ApiResponse from "../../utils/ApiResponse.js";
 import asyncHandler from "../../utils/asyncHandler.js";
 import connectToDb from "../../config/db.js";
+import { sendMail } from "../../utils/sendMail.js"
+import { airBookingTemplate } from "../../email/email-template.js";
 
 let db = await connectToDb();
 
@@ -24,7 +26,7 @@ const createAirTravel = asyncHandler(async (req, res) => {
 
     try {
         const insertAir = `INSERT INTO air (userId, fullName, dob, gender, contactNo, email, travelFrom, travelTo, classOfTravel, travelDate, flightNo, timePreference, remarks) VALUES ?`;
-        
+
         const airParams = reqBody.map(data => [
             req.user.id,
             data.fullName,
@@ -42,6 +44,13 @@ const createAirTravel = asyncHandler(async (req, res) => {
         ])
 
         const [insertResult, insertFields] = await db.query(insertAir, [airParams]);
+
+        // Send Mail
+        // sendMail(
+        //     req.user.email,
+        //     "Air Travel Details",
+        //     airBookingTemplate(reqBody)
+        // )
 
         return res.status(200).json(
             new ApiResponse(
