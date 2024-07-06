@@ -237,7 +237,7 @@ const retailLogin = asyncHandler(async (req, res) => {
         );
     }
 
-    const sql = `SELECT user.*, retail_user.* FROM user INNER JOIN retail_user ON user.id = retail_user.userId WHERE user.email = ?`;
+    const sql = `SELECT retail_user.*,  user.id, user.password FROM retail_user INNER JOIN user ON retail_user.userId = user.id WHERE user.email = ?`;
     const params = [email];
     const [result, fields] = await db.query(sql, params);
     if (result.length === 0) {
@@ -314,7 +314,7 @@ const corporateLogin = asyncHandler(async (req, res) => {
         );
     }
 
-    const sql = `SELECT user.*, corporate_user.* FROM user INNER JOIN corporate_user ON user.id = corporate_user.userId WHERE user.email = ?`;
+    const sql = `SELECT corporate_user.*, user.* FROM corporate_user INNER JOIN user ON corporate_user.userId = user.id WHERE user.email = ?`;
     const params = [email];
     const [result, fields] = await db.query(sql, params);
     if (result.length === 0) {
@@ -391,7 +391,7 @@ const vendorLogin = asyncHandler(async (req, res) => {
         );
     }
 
-    const sql = `SELECT user.*, vendor.* FROM user INNER JOIN vendor ON user.id = vendor.userId WHERE user.email = ?`;
+    const sql = `SELECT vendor.*, user.* FROM vendor INNER JOIN vendor ON vendor.userId = user.id WHERE user.email = ?`;
     const params = [email];
     const [result, fields] = await db.query(sql, params);
     if (result.length === 0) {
