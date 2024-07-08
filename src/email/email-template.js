@@ -550,7 +550,7 @@ export function volvoBusBookingTemplate(data) {
     </html>`
 }
 
-export function cabBookingTemplate({pickupCountry, nationality, tourPlan, name, contactNo, alternateContactNo, email, cabRequiredAt, cabRequiredFor, localTravelKmsLimit, pickupDateTime, pickupAddress, pickupLandmark, dropDateTime, dropAddress, dropLandmark, cabDuration, noOfCabsRequired, typeOfCabRequired, noOfPersonsTravelling, noOfInfants, noOfChildren, otherRequirements}) {
+export function cabBookingTemplate({ pickupCountry, nationality, tourPlan, name, contactNo, alternateContactNo, email, cabRequiredAt, cabRequiredFor, localTravelKmsLimit, pickupDateTime, pickupAddress, pickupLandmark, dropDateTime, dropAddress, dropLandmark, cabDuration, noOfCabsRequired, typeOfCabRequired, noOfPersonsTravelling, noOfInfants, noOfChildren, otherRequirements }) {
     return `
     <!DOCTYPE html>
     <html>
@@ -658,6 +658,390 @@ export function cabBookingTemplate({pickupCountry, nationality, tourPlan, name, 
             <tr>
                 <td>Other Requirements</td>
                 <td colspan="3">${otherRequirements || "N/A"}</td>
+            </tr>
+        </table>
+    </body>
+    </html>`
+}
+
+export function hotelBookingTemplate({ nationality, name, contactNo1, contactNo2, email, country, state, city, roomCategory, mealPlan, hotelCategory, priceRange, checkInDate, checkOutDate, numberOfNights, numberOfRooms, adults, children, infants }) {
+    return `
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Hotel Booking Confirmation</title>
+        <style>
+            body {
+                font-family: Verdana, Geneva, Tahoma, sans-serif;
+                font-size: 14px;
+                line-height: 1.5;
+                color: #333;
+                padding: 5px;
+            }
+
+            table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+
+            th {
+                text-align: left;
+                padding: 8px;
+                background-color: #f2f2f2;
+                border: 1px solid #ddd
+            }
+
+            td {
+                padding: 8px;
+                border: 1px solid #ddd
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Hotel Booking Confirmation</h1>
+        <table>
+            <tr>
+                <th colspan="4">Booking Details</th>
+            </tr>
+            <tr>
+                <td>Nationality</td>
+                <td>${nationality}</td>
+                <td>Name</td>
+                <td>${name}</td>
+            </tr>
+            <tr>
+                <td>Contact Number 1</td>
+                <td>${contactNo1}</td>
+                <td>Contact Number 2</td>
+                <td>${contactNo2}</td>
+            </tr>
+            <tr>
+                <td>Email</td>
+                <td>${email}</td>
+                <td>Country</td>
+                <td>${country}</td>
+            </tr>
+            <tr>
+                <td>State</td>
+                <td>${state}</td>
+                <td>City</td>
+                <td>${city}</td>
+            </tr>
+            <tr>
+                <td>Room Category</td>
+                <td>${roomCategory}</td>
+                <td>Meal Plan</td>
+                <td>${mealPlan}</td>
+            </tr>
+            <tr>
+                <td>Hotel Category</td>
+                <td>${hotelCategory}</td>
+                <td>Price Range</td>
+                <td>${priceRange}</td>
+            </tr>
+            <tr>
+                <td>Check In Date</td>
+                <td>${checkInDate}</td>
+                <td>Check Out Date</td>
+                <td>${checkOutDate}</td>
+            </tr>
+            <tr>
+                <td>Number of Nights</td>
+                <td>${numberOfNights}</td>
+                <td>Number of Rooms</td>
+                <td>${numberOfRooms}</td>
+            </tr>
+            <tr>
+                <td>Adults</td>
+                <td>${adults}</td>
+                <td>Children</td>
+                <td>${children}</td>
+            </tr>
+            <tr>
+                <td>Infants</td>
+                <td>${infants}</td>
+            </tr>
+        </table>
+    </body>
+    </html>`
+}
+
+export function passportBookingTemplate({ totalNoOfTravellers, name, nationality, dateOfBirth, gender, passportNo, passportIssueDate, passportExpiryDate, passportValidityPeriod, placeOfIssue, nomineeName, nomineeGender, addressWithPinCode, contactNo, email, holdPassportFrom, applyFrom, goTo, travelDuration }) {
+    return `
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Passport Details</title>
+        <style>
+            body {
+                font-family: Verdana, Geneva, Tahoma, sans-serif;
+                font-size: 14px;
+                line-height: 1.5;
+                color: #333;
+                padding: 5px;
+            }
+
+            table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+
+            th {
+                text-align: left;
+                padding: 8px;
+                background-color: #f2f2f2;
+                border: 1px solid #ddd
+            }
+
+            td {
+                padding: 8px;
+                border: 1px solid #ddd
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Passport Details</h1>
+        <table>
+            <tr>
+                <th colspan="4">Booking Details</th>
+            </tr>
+            <tr>
+                <td>Number of Travellers</td>
+                <td>${totalNoOfTravellers}</td>
+                <td>Name</td>
+                <td>${name}</td>
+            </tr>
+            <tr>
+                <td>Nationality</td>
+                <td>${nationality}</td>
+                <td>Date of Birth</td>
+                <td>${dateOfBirth}</td>
+            </tr>
+            <tr>
+                <td>Gender</td>
+                <td>${gender}</td>
+                <td>Passport No.</td>
+                <td>${passportNo}</td>
+            </tr>
+            <tr>
+                <td>Passport Issue Date</td>
+                <td>${passportIssueDate}</td>
+                <td>Passport Expiry Date</td>
+                <td>${passportExpiryDate}</td>
+            </tr>
+            <tr>
+                <td>Passport Validity Period</td>
+                <td>${passportValidityPeriod}</td>
+                <td>Place of Issue</td>
+                <td>${placeOfIssue}</td>
+            </tr>
+            <tr>
+                <td>Nominee Name</td>
+                <td>${nomineeName}</td>
+                <td>Nominee Gender</td>
+                <td>${nomineeGender}</td>
+            </tr>
+            <tr>
+                <td>Address with Pin Code</td>
+                <td>${addressWithPinCode}</td>
+                <td>Contact No.</td>
+                <td>${contactNo}</td>
+            </tr>
+            <tr>
+                <td>Email</td>
+                <td>${email}</td>
+                <td>Hold Passport From</td>
+                <td>${holdPassportFrom}</td>
+            </tr>
+            <tr>
+                <td>Apply From</td>
+                <td>${applyFrom}</td>
+                <td>Go To</td>
+                <td>${goTo}</td>
+            </tr>
+            <tr>
+                <td>Travel Duration</td>
+                <td>${travelDuration}</td>
+            </tr>
+        </table>
+    </body>
+    </html>
+`
+}
+
+export function healthInsuranceTemplate({ name, gender, dateOfBirth, address, contactNo, email, preExistingDisease, diseaseName, smoker, nomineeName, nomineeGender, nomineeRelationship }) {
+    return `
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Health Insurance Details</title>
+        <style>
+            body {
+                font-family: Verdana, Geneva, Tahoma, sans-serif;
+                font-size: 14px;
+                line-height: 1.5;
+                color: #333;
+                padding: 5px;
+            }
+
+            table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+
+            th {
+                text-align: left;
+                padding: 8px;
+                background-color: #f2f2f2;
+                border: 1px solid #ddd
+            }
+
+            td {
+                padding: 8px;
+                border: 1px solid #ddd
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Health Insurance Details</h1>
+        <table>
+            <tr>
+                <th colspan="4">Booking Details</th>
+            </tr>
+            <tr>
+                <td>Name</td>
+                <td>${name}</td>
+                <td>Gender</td>
+                <td>${gender}</td>
+            </tr>
+            <tr>
+                <td>Date of Birth</td>
+                <td>${dateOfBirth}</td>
+                <td>Address</td>
+                <td>${address}</td>
+            </tr>
+            <tr>
+                <td>Contact No.</td>
+                <td>${contactNo}</td>
+                <td>Email</td>
+                <td>${email}</td>
+            </tr>
+            <tr>
+                <td>Pre-Existing Disease</td>
+                <td>${preExistingDisease}</td>
+                <td>Disease Name</td>
+                <td>${diseaseName}</td>
+            </tr>
+            <tr>
+                <td>Smoker</td>
+                <td>${smoker}</td>
+                <td>Nominee Name</td>
+                <td>${nomineeName}</td>
+            </tr>
+            <tr>
+                <td>Nominee Gender</td>
+                <td>${nomineeGender}</td>
+                <td>Nominee Relationship</td>
+                <td>${nomineeRelationship}</td>
+            </tr>
+        </table>
+    </body>
+    </html>
+`
+}
+
+export function travelInsuranceTemplate({name, gender, dateOfBirth, address, contactNo, email, tripType, startDate, endDate, preExistingDisease, diseaseName, smoker, passportNo, dateOfIssue, dateOfExpiry, nomineeName, nomineeGender, nomineeRelationship}) {
+    return `
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Travel Insurance Details</title>
+        <style>
+            body {
+                font-family: Verdana, Geneva, Tahoma, sans-serif;
+                font-size: 14px;
+                line-height: 1.5;
+                color: #333;
+                padding: 5px;
+            }
+
+            table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+
+            th {
+                text-align: left;
+                padding: 8px;
+                background-color: #f2f2f2;
+                border: 1px solid #ddd
+            }
+
+            td {
+                padding: 8px;
+                border: 1px solid #ddd
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Travel Insurance Details</h1>
+        <table>
+            <tr>
+                <th colspan="4">Booking Details</th>
+            </tr>
+            <tr>
+                <td>Name</td>
+                <td>${name}</td>
+                <td>Gender</td>
+                <td>${gender}</td>
+            </tr>
+            <tr>
+                <td>Date of Birth</td>
+                <td>${dateOfBirth}</td>
+                <td>Address</td>
+                <td>${address}</td>
+            </tr>
+            <tr>
+                <td>Contact No.</td>
+                <td>${contactNo}</td>
+                <td>Email</td>
+                <td>${email}</td>
+            </tr>
+            <tr>
+                <td>Trip Type</td>
+                <td>${tripType}</td>
+                <td>Start Date</td>
+                <td>${startDate}</td>
+            </tr>
+            <tr>
+                <td>End Date</td>
+                <td>${endDate}</td>
+                <td>Pre-Existing Disease</td>
+                <td>${preExistingDisease}</td>
+            </tr>
+            <tr>
+                <td>Disease Name</td>
+                <td>${diseaseName}</td>
+                <td>Smoker</td>
+                <td>${smoker}</td>
+            </tr>
+            <tr>
+                <td>Passport No.</td>
+                <td>${passportNo}</td>
+                <td>Date of Issue</td>
+                <td>${dateOfIssue}</td>
+            </tr>
+            <tr>
+                <td>Date of Expiry</td>
+                <td>${dateOfExpiry}</td>
+                <td>Nominee Name</td>
+                <td>${nomineeName}</td>
+            </tr>
+            <tr>
+                <td>Nominee Gender</td>
+                <td>${nomineeGender}</td>
+                <td>Nominee Relationship</td>
+                <td>${nomineeRelationship}</td>
             </tr>
         </table>
     </body>

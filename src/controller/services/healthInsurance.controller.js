@@ -1,6 +1,8 @@
 import connectToDb from "../../config/db.js";
+import { healthInsuranceTemplate } from "../../email/email-template.js";
 import ApiResponse from "../../utils/ApiResponse.js";
 import asyncHandler from "../../utils/asyncHandler.js";
+import { sendMail } from "../../utils/sendMail.js";
 
 let db = await connectToDb();
 
@@ -13,6 +15,13 @@ const createHealthInsurance = asyncHandler(async (req, res) => {
         const healthInsuranceParams = [req.user.id, name, gender, dateOfBirth, address, contactNo, email, preExistingDisease, diseaseName, smoker, nomineeName, nomineeGender, nomineeRelationship]
 
         const [insertResult, insertFields] = await db.query(healthInsurance, healthInsuranceParams);
+
+        // Send Mail
+        // sendMail(
+        //     req.user.email,
+        //     "Health Insurance Details",
+        //     healthInsuranceTemplate({ name, gender, dateOfBirth, address, contactNo, email, preExistingDisease, diseaseName, smoker, nomineeName, nomineeGender, nomineeRelationship })
+        // )
 
         return res.status(200).json(
             new ApiResponse(

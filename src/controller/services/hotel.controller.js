@@ -2,6 +2,8 @@ import ApiResponse from "../../utils/ApiResponse.js";
 import asyncHandler from "../../utils/asyncHandler.js";
 import connectToDb from "../../config/db.js";
 import { isValuePresent } from "../../utils/helper.js";
+import { sendMail } from "../../utils/sendMail.js";
+import { hotelBookingTemplate } from "../../email/email-template.js";
 
 let db = await connectToDb();
 
@@ -28,6 +30,13 @@ const createHotelBooking = asyncHandler(async (req, res) => {
         const hotelTravel = `INSERT INTO hotel (userId, nationality, name, contactNo1, contactNo2, email, country, state, city, roomCategory, mealPlan, hotelCategory, priceRange, checkInDate, checkOutDate, numberOfNights, numberOfRooms, adults, children, infants) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
         const hotelParams = [req.user.id, nationality, name, contactNo1, contactNo2, email, country, state, city, roomCategory, mealPlan, hotelCategory, priceRange, checkInDate, checkOutDate, numberOfNights, numberOfRooms, adults, children, infants];
         const [insertResult, insertFields] = await db.query(hotelTravel, hotelParams);
+
+        // Send Mail
+        // sendMail(
+        //     req.user.email,
+        //     "Hotel Booking Details",
+        //     hotelBookingTemplate({ nationality, name, contactNo1, contactNo2, email, country, state, city, roomCategory, mealPlan, hotelCategory, priceRange, checkInDate, checkOutDate, numberOfNights, numberOfRooms, adults, children, infants })
+        // )
 
         return res.status(200).json(
             new ApiResponse(
