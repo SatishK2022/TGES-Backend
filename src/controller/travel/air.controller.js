@@ -80,7 +80,45 @@ const deleteAirTravel = asyncHandler(async (req, res) => {
 })
 
 const getAirTravelDetails = asyncHandler(async (req, res) => {
-    // TODO: Implement get travel
+    const id = req.user.id;
+
+    try {
+        const sql = `SELECT * FROM air WHERE userId = ?`;
+        const params = [id];
+        const [result, fields] = await db.query(sql, params);
+
+        if (result.length === 0) {
+            return res.status(404).json(
+                new ApiResponse(
+                    404,
+                    null,
+                    "Air Travel Details not found"
+                )
+            )
+        }
+
+        const airData = result.map(user => {
+            const { userId, createdAt, updatedAt, ...rest } = user;
+            return rest;
+        });
+
+        return res.status(200).json(
+            new ApiResponse(
+                200,
+                airData,
+                "Air travel details fetched successfully"
+            )
+        )
+    } catch (error) {
+        console.log("Error getting air travel details:", error);
+        return res.status(500).json(
+            new ApiResponse(
+                500,
+                null,
+                "An error occurred while getting air travel details"
+            )
+        )
+    }
 })
 
 export {
