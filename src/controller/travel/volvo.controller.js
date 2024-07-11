@@ -76,7 +76,39 @@ const deleteVolvoBusTravel = asyncHandler(async (req, res) => {
 })
 
 const getVolvoBusTravelDetails = asyncHandler(async (req, res) => {
-    // TODO: Implement get travel
+    const id = req.user.id;
+
+    try {
+        const selectVolvoBus = `SELECT * FROM bus WHERE userId = ?`;
+        const [selectResult] = await db.query(selectVolvoBus, [id]);
+
+        if (selectResult.length === 0) {
+            return res.status(404).json(
+                new ApiResponse(
+                    404,
+                    null,
+                    "Volvo Bus Travel Details not found"
+                )
+            )
+        }
+
+        return res.status(200).json(
+            new ApiResponse(
+                200,
+                selectResult,
+                "Volvo bus travel details fetched successfully"
+            )
+        );
+    } catch (error) {
+        console.log("Error Fetching Volvo Bus Travel:", error);
+        return res.status(500).json(
+            new ApiResponse(
+                500,
+                null,
+                "An error occurred while fetching volvo bus travel"
+            )
+        );
+    }
 })
 
 export {
