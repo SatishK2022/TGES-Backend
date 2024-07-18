@@ -1,9 +1,9 @@
-import ApiResponse from "../../utils/ApiResponse.js";
-import asyncHandler from "../../utils/asyncHandler.js";
-import connectToDb from "../../config/db.js";
-import { isValuePresent } from "../../utils/helper.js";
-import { sendMail } from "../../utils/sendMail.js";
-import { hotelBookingTemplate } from "../../email/email-template.js";
+import ApiResponse from "../utils/ApiResponse.js";
+import asyncHandler from "../utils/asyncHandler.js";
+import connectToDb from "../config/db.js";
+import { isValuePresent } from "../utils/helper.js";
+import { sendMail } from "../utils/sendMail.js";
+import { hotelBookingTemplate } from "../email/email-template.js";
 
 let db = await connectToDb();
 
@@ -83,7 +83,7 @@ const getHotelBookings = asyncHandler(async (req, res) => {
             )
         }
 
-        
+
 
         return res.status(200).json(
             new ApiResponse(

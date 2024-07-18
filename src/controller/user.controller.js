@@ -3,7 +3,7 @@ import asyncHandler from "../utils/asyncHandler.js";
 import ApiResponse from "../utils/ApiResponse.js"
 import { sendMail } from "../utils/sendMail.js";
 import { corporateRegisterTemplate, forgotPasswordTemplate, retailRegisterTemplate, vendorRegisterTemplate } from "../email/email-template.js";
-import { comparePassword, generateOTP, generateToken, hashPassword } from "../utils/helper.js";
+import { comparePassword, generateCompanyId, generateOTP, generateToken, hashPassword } from "../utils/helper.js";
 
 let db = await connectToDb();
 
@@ -34,9 +34,11 @@ const retailRegister = asyncHandler(async (req, res) => {
             );
         }
 
-        const insertUserSql = `INSERT INTO user (email, zipCode, country, state, city, password) VALUES ( ?, ?, ?, ?, ?, ?)`;
+        const companyId = generateCompanyId(firstName);
+
+        const insertUserSql = `INSERT INTO user (email, zipCode, country, state, city, password, companyId) VALUES ( ?, ?, ?, ?, ?, ?, ?)`;
         const hashedPassword = await hashPassword(password);
-        const userParams = [email, zipCode, country, state, city, hashedPassword];
+        const userParams = [email, zipCode, country, state, city, hashedPassword, companyId];
         const [result, fields] = await db.query(insertUserSql, userParams);
 
         const userId = result.insertId;
@@ -56,7 +58,7 @@ const retailRegister = asyncHandler(async (req, res) => {
         sendMail(
             "tges@gmail.com",
             "Retail Registration",
-            retailRegisterTemplate({ fullName: `${firstName} ${lastName}`, email, residentialAddress, city, country, state, zipCode, phoneNumber1 }) 
+            retailRegisterTemplate({ fullName: `${firstName} ${lastName}`, email, residentialAddress, city, country, state, zipCode, phoneNumber1 })
         )
 
         return res.status(201).json(
@@ -105,15 +107,17 @@ const corporateRegister = asyncHandler(async (req, res) => {
             );
         }
 
-        const insertUserSql = `INSERT INTO user (email, zipCode, country, city, state, password) VALUES ( ?, ?, ?, ?, ?, ?)`;
+        const companyId = generateCompanyId(companyName);
+
+        const insertUserSql = `INSERT INTO user (email, zipCode, country, city, state, password, companyId) VALUES ( ?, ?, ?, ?, ?, ?, ?)`;
         const hashedPassword = await hashPassword(password);
-        const userParams = [email, zipCode, country, city, state, hashedPassword];
+        const userParams = [email, zipCode, country, city, state, hashedPassword, companyId];
         const [result, fields] = await db.query(insertUserSql, userParams);
 
         const userId = result.insertId;
 
         const insertCorprate = `INSERT INTO corporate_user (userId, industry, companyName, address1, address2, address3, address4, phoneNumber, countryCode, stateCode, landlineNumber, landlineCityCode, landlineCountryCode, contactDepartment, contactPersonFirstName, contactPersonSecondName, contactPersonLastName, contactPersonGender, website) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-        const corprateParams = [userId, industry, companyName, address1, address2, address3, address4, phoneNumber, countryCode, stateCode, landlineNumber, landlineCityCode, landlineCountryCode, contactDepartmentTitle, contactPersonFirstName, contactPersonSecondName, contactPersonLastName, contactPersonGender, website];
+        const corprateParams = [userId, industry, companyName, address1, address2, address3, address4, phoneNumber, countryCode, stateCode, landlineNumber, landlineCityCode, landlineCountryCode, contactDepartmentTitle, contactPersonFirstName, contactPersonSecondName, contactPersonLastName, contactPersonGender, website ];
         await db.query(insertCorprate, corprateParams);
 
         // Send Mail
@@ -174,9 +178,11 @@ const vendorRegister = asyncHandler(async (req, res) => {
             );
         }
 
-        const insertUserSql = `INSERT INTO user (email, zipCode, country, city, state, password) VALUES ( ?, ?, ?, ?, ?, ?)`;
+        const companyId = generateCompanyId(companyName);
+
+        const insertUserSql = `INSERT INTO user (email, zipCode, country, city, state, password, companyId) VALUES ( ?, ?, ?, ?, ?, ?, ?)`;
         const hashedPassword = await hashPassword(password);
-        const userParams = [email, zipCode, country, city, state, hashedPassword];
+        const userParams = [email, zipCode, country, city, state, hashedPassword, companyId];
         const [result, fields] = await db.query(insertUserSql, userParams);
 
         const userId = result.insertId;
@@ -237,7 +243,7 @@ const retailLogin = asyncHandler(async (req, res) => {
         );
     }
 
-    const sql = `SELECT retail_user.*,  user.id, user.password FROM retail_user INNER JOIN user ON retail_user.userId = user.id WHERE user.email = ?`;
+    const sql = `SELECT retail_user.*, user.* FROM retail_user INNER JOIN user ON retail_user.userId = user.id WHERE user.email = ?;`;
     const params = [email];
     const [result, fields] = await db.query(sql, params);
     if (result.length === 0) {

@@ -10,6 +10,7 @@ export const admin = `CREATE TABLE IF NOT EXISTS admin (
 // Users
 export const user = `CREATE TABLE IF NOT EXISTS user (
     id INT AUTO_INCREMENT PRIMARY KEY,
+    companyId VARCHAR(255) UNIQUE default "ABCD1234" NOT NULL,
     email VARCHAR(255) NOT NULL,
     zipCode VARCHAR(255) NOT NULL,
     country VARCHAR(255) NOT NULL,
@@ -286,6 +287,43 @@ export const healthInsurance = `CREATE TABLE IF NOT EXISTS healthInsurance (
     nomineeName VARCHAR(255) NOT NULL,
     nomineeGender VARCHAR(255) NOT NULL,
     nomineeRelationship VARCHAR(255) NOT NULL,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+)`
+
+export const branch = `CREATE TABLE IF NOT EXISTS branch (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    userId INT NOT NULL,
+    FOREIGN KEY (userId) REFERENCES user (id),
+    companyId VARCHAR(255) NOT NULL,
+    FOREIGN KEY (companyId) REFERENCES user (companyId),
+    name VARCHAR(255) NOT NULL,
+    address VARCHAR(255) NOT NULL,
+    contactNo VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+)`
+
+export const employee = `CREATE TABLE IF NOT EXISTS employee (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    userId INT NOT NULL,
+    FOREIGN KEY (userId) REFERENCES user (id),
+    branchId INT NOT NULL,
+    FOREIGN KEY (branchId) REFERENCES branch (id),
+    employeeId VARCHAR(255) NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    gender VARCHAR(255) NOT NULL,
+    dateOfBirth VARCHAR(255) NOT NULL,
+    zipCode VARCHAR(255) NOT NULL,
+    country VARCHAR(255) NOT NULL,
+    city VARCHAR(255) NOT NULL,
+    state VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    contactNo VARCHAR(255) NOT NULL,
+    department VARCHAR(255) NOT NULL,
+    position VARCHAR(255) NOT NULL,
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 )`

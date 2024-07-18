@@ -1,8 +1,8 @@
-import connectToDb from "../../config/db.js";
-import { healthInsuranceTemplate } from "../../email/email-template.js";
-import ApiResponse from "../../utils/ApiResponse.js";
-import asyncHandler from "../../utils/asyncHandler.js";
-import { sendMail } from "../../utils/sendMail.js";
+import connectToDb from "../config/db.js";
+import { healthInsuranceTemplate } from "../email/email-template.js";
+import ApiResponse from "../utils/ApiResponse.js";
+import asyncHandler from "../utils/asyncHandler.js";
+import { sendMail } from "../utils/sendMail.js";
 
 let db = await connectToDb();
 

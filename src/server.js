@@ -6,7 +6,7 @@ import cookieParser from "cookie-parser"
 import bodyParser from "body-parser";
 import morgan from "morgan"
 import connectToDb from "./config/db.js";
-import { user, retail_user, corporate_user, vendor, train, air, volvoBus, cab, hotel, passport, healthInsurance, travelInsurance, admin } from "./constants.js"
+import { user, retail_user, corporate_user, vendor, train, air, volvoBus, cab, hotel, passport, healthInsurance, travelInsurance, admin, branch, employee } from "./constants.js"
 
 const app = express();
 
@@ -21,8 +21,10 @@ dbConnection
         await db.query(admin)
         await db.query(user);
         await db.query(retail_user);
-        await db.query(vendor);
         await db.query(corporate_user);
+        await db.query(vendor);
+        await db.query(branch)
+        await db.query(employee)
         await db.query(train);
         await db.query(air);
         await db.query(cab);
@@ -53,12 +55,16 @@ import userRouter from "./routes/user.routes.js"
 import travelRouter from "./routes/travel.routes.js"
 import dashboardRouter from "./routes/dashboard.routes.js"
 import healthcheckRouter from "./routes/healthcheck.routes.js"
+import corporateDashboardRouter from "./routes/corporateDashboard.routes.js"
+import vendorDashboardRouter from "./routes/vendorDashboard.routes.js"
 
 // Routes Decleration
 app.use("/api/v1/status", healthcheckRouter)
 app.use("/api/v1/user", userRouter)
 app.use("/api/v1/travel", travelRouter)
 app.use("/api/v1/dashboard", dashboardRouter)
+app.use("/api/v1/corporate", corporateDashboardRouter)
+app.use("/api/v1/vendor", vendorDashboardRouter)
 
 // Home Route
 app.get("/", (req, res) => {

@@ -32,3 +32,10 @@ export const generateOTP = (length) => {
     }
     return parseInt(otp);
 }
+
+export function generateCompanyId(name) { 
+    const randomNumber = Math.floor(1000 + Math.random() * 9000);
+    const nameDigits = name.slice(0, 4).toUpperCase();
+    const id = `${nameDigits}${randomNumber}`;
+    return id;
+}
