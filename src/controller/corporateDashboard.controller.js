@@ -33,17 +33,32 @@ const addBranch = asyncHandler(async (req, res) => {
     }
 })
 
-const getBranches = asyncHandler(async (req, res) => {
+const getAllBranches = asyncHandler(async (req, res) => {
     try {
         const sql = `SELECT * FROM branch WHERE userId = ? AND companyId = ?`;
         const params = [req.user.id, req.user.companyId];
         const [result, fields] = await db.query(sql, params);
 
+        if (result.length === 0) {
+            return res.status(404).json(
+                new ApiResponse(
+                    404,
+                    null,
+                    "No branches found"
+                )
+            );
+        }
+
+        const branchData = result.map(branch => {
+            const { userId, createdAt, updatedAt, ...rest } = branch;
+            return rest;
+        });
+
         return res.status(200).json(
             new ApiResponse(
                 200,
-                "Branches fetched successfully",
-                result
+                branchData,
+                "Branches fetched successfully"
             )
         );
     } catch (error) {
@@ -61,23 +76,22 @@ const getBranches = asyncHandler(async (req, res) => {
 const addEmployee = asyncHandler(async (req, res) => {
     const reqBody = req.body || {};
     const { employeeId, name, gender, dateOfBirth, zipCode, country, city, state, email, password, contactNo, department, position } = reqBody;
+    const branchId = req.params.branchId;
 
     try {
-        const selectBranchSql = `SELECT id FROM branch WHERE userId = ? AND companyId = ?`;
-        const selectBranchParams = [req.user.id, req.user.companyId];
-        const [branchResult, branchFields] = await db.query(selectBranchSql, selectBranchParams);
+        const checkEmployeeIdSql = `SELECT * FROM employee WHERE employeeId = ?`;
+        const checkEmployeeIdParams = [employeeId];
+        const [checkEmployeeIdResult, checkEmployeeIdFields] = await db.query(checkEmployeeIdSql, checkEmployeeIdParams);
 
-        if (branchResult.length === 0) {
-            return res.status(404).json(
+        if (checkEmployeeIdResult.length > 0) {
+            return res.status(409).json(
                 new ApiResponse(
-                    404,
+                    409,
                     null,
-                    "Branch not found"
+                    "Employee Id already exists"
                 )
             );
         }
-
-        const branchId = branchResult[0].id;
 
         const employee = `INSERT INTO employee (userId, branchId, employeeId, name, gender, dateOfBirth, zipCode, country, city, state, email, password, contactNo, department, position) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
         const employeeParams = [req.user.id, branchId, employeeId, name, gender, dateOfBirth, zipCode, country, city, state, email, password, contactNo, department, position];
@@ -103,42 +117,162 @@ const addEmployee = asyncHandler(async (req, res) => {
     }
 });
 
-const getEmployees = asyncHandler(async (req, res) => {
-    try {
-        const selectBranchSql = `SELECT id FROM branch WHERE userId = ? AND companyId = ?`;
-        const selectBranchParams = [req.user.id, req.user.companyId];
-        const [branchResult, branchFields] = await db.query(selectBranchSql, selectBranchParams);
+const getEmployee = asyncHandler(async (req, res) => {
+    const reqBody = req.body || {};
+    const { employeeId, companyId } = reqBody;
 
-        if (branchResult.length === 0) {
+    try {
+        const selectEmployee = `SELECT branchId FROM employee WHERE employeeId = ?`;
+        const paramsEmployee = [employeeId];
+        const [resultEmployee, fieldsEmployee] = await db.query(selectEmployee, paramsEmployee);
+
+        if (resultEmployee.length === 0) {
             return res.status(404).json(
                 new ApiResponse(
                     404,
                     null,
-                    "Branch not found"
+                    "Employee not found"
+                )
+            );
+        }
+        const branchId = resultEmployee[0].branchId;
+
+        const selectBranch = `SELECT * FROM branch WHERE id = ? AND companyId = ?`;
+        const paramsBranch = [branchId, companyId];
+        const [resultBranch, fieldsBranch] = await db.query(selectBranch, paramsBranch);
+
+        if (resultBranch.length === 0) {
+            return res.status(404).json(
+                new ApiResponse(
+                    404,
+                    null,
+                    "Company not found"
                 )
             );
         }
 
-        const branchId = branchResult[0].id;
+        const selectEmployeeInfo = `SELECT * FROM employee WHERE employeeId = ? AND branchId = ?`;
+        const paramsEmployeeInfo = [employeeId, branchId];
+        const [resultEmployeeInfo, fieldsEmployeeInfo] = await db.query(selectEmployeeInfo, paramsEmployeeInfo);
 
-        const sql = `SELECT * FROM employee WHERE userId = ? AND branchId = ?`;
-        const params = [req.user.id, branchId];
-        const [result, fields] = await db.query(sql, params);
+        if (resultEmployeeInfo.length === 0) {
+            return res.status(404).json(
+                new ApiResponse(
+                    404,
+                    null,
+                    "Employee not found"
+                )
+            );
+        }
+
+        const employeeData = resultEmployeeInfo.map(employee => {
+            const { userId, branchId, createdAt, updatedAt, ...rest } = employee;
+            return rest;
+        });
 
         return res.status(200).json(
             new ApiResponse(
                 200,
-                "Employees fetched successfully",
-                result
+                employeeData,
+                "Employee fetched successfully"
             )
         );
     } catch (error) {
-        console.log("Error while getting employees: ", error);
+        console.log("Error while getting employee: ", error);
         return res.status(500).json(
             new ApiResponse(
                 500,
                 null,
-                "Error while getting employees"
+                "Error while getting employee"
+            )
+        );
+    }
+})
+
+const getBranchEmployees = asyncHandler(async (req, res) => {
+    const reqBody = req.body || {};
+    const branchId = req.params.branchId;
+
+    try {
+        const sql = `SELECT * FROM employee WHERE userId = ? AND branchId = ?`;
+        const params = [req.user.id, branchId];
+        const [result, fields] = await db.query(sql, params);
+
+        if (result.length === 0) {
+            return res.status(404).json(
+                new ApiResponse(
+                    404,
+                    null,
+                    "Employees not found"
+                )
+            );
+        }
+
+        const employeeData = result.map(employee => {
+            const { userId, branchId, createdAt, updatedAt, ...rest } = employee;
+            return rest;
+        });
+
+        return res.status(200).json(
+            new ApiResponse(
+                200,
+                employeeData,
+                "Employees fetched successfully"
+            )
+        );
+    } catch (error) {
+        console.log("Error while getting branch employees: ", error);
+        return res.status(500).json(
+            new ApiResponse(
+                500,
+                null,
+                "Error while getting branch employees"
+            )
+        );
+    }
+})
+
+const getAllEmployees = asyncHandler(async (req, res) => {
+    try {
+        const sqlBranches = `SELECT id FROM branch WHERE companyId = ?`;
+        const paramsBranches = [req.user.companyId];
+        const [resultBranches, fieldsBranches] = await db.query(sqlBranches, paramsBranches);
+
+        const ids = resultBranches.map(branch => branch.id);
+
+        const sqlEmployees = `SELECT * FROM employee WHERE branchId IN (${ids.map(id => '?').join(',')})`;
+        const paramsEmployees = ids;
+        const [resultEmployees, fieldsEmployees] = await db.query(sqlEmployees, paramsEmployees);
+
+        if (resultEmployees.length === 0) {
+            return res.status(404).json(
+                new ApiResponse(
+                    404,
+                    null,
+                    "Employees not found"
+                )
+            );
+        }
+
+        const employeeData = resultEmployees.map(employee => {
+            const { userId, branchId, createdAt, updatedAt, ...rest } = employee;
+            return rest;
+        });
+
+        return res.status(200).json(
+            new ApiResponse(
+                200,
+                employeeData,
+                "Employees fetched successfully"
+            )
+        );
+    } catch (error) {
+        console.log("Error while getting all employees: ", error);
+        return res.status(500).json(
+            new ApiResponse(
+                500,
+                null,
+                "Error while getting all employees"
             )
         );
     }
@@ -146,7 +280,9 @@ const getEmployees = asyncHandler(async (req, res) => {
 
 export {
     addBranch,
-    getBranches,
+    getAllBranches,
     addEmployee,
-    getEmployees
+    getEmployee,
+    getBranchEmployees,
+    getAllEmployees
 }
