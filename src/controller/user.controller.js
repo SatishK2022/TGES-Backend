@@ -397,7 +397,7 @@ const vendorLogin = asyncHandler(async (req, res) => {
         );
     }
 
-    const sql = `SELECT vendor.*, user.* FROM vendor INNER JOIN vendor ON vendor.userId = user.id WHERE user.email = ?`;
+    const sql = `SELECT vendor.*, user.* FROM vendor INNER JOIN user ON vendor.userId = user.id WHERE user.email = ?`;
     const params = [email];
     const [result, fields] = await db.query(sql, params);
     if (result.length === 0) {
