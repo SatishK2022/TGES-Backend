@@ -1,13 +1,12 @@
 import nodemailer from "nodemailer";
 
 const transporter = nodemailer.createTransport({
-  service: process.env.SMTP_SERVICE,
+  host: process.env.SMTP_HOST,
   port: process.env.SMTP_PORT,
-  secure: false,
   auth: {
     user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
-  },
+    pass: process.env.SMTP_PASS
+  }
 });
 
 export async function sendMail(to, subject, html) {
@@ -19,9 +18,9 @@ export async function sendMail(to, subject, html) {
       html,
     });
 
-    console.log("Message sent: %s", info.messageId);
+    console.log("Message sent:", info.messageId);
   } catch (error) {
-    console.error("Error sending mail: %s", error);
+    console.error("Error sending mail:", error);
     throw error;
   }
 }
