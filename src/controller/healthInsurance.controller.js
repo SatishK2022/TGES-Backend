@@ -17,11 +17,15 @@ const createHealthInsurance = asyncHandler(async (req, res) => {
         const [insertResult, insertFields] = await db.query(healthInsurance, healthInsuranceParams);
 
         // Send Mail
-        // sendMail(
-        //     req.user.email,
-        //     "Health Insurance Details",
-        //     healthInsuranceTemplate({ name, gender, dateOfBirth, address, contactNo, email, preExistingDisease, diseaseName, smoker, nomineeName, nomineeGender, nomineeRelationship })
-        // )
+        // try {
+        //     sendMail(
+        //         req.user.email,
+        //         "Health Insurance Details",
+        //         healthInsuranceTemplate({ name, gender, dateOfBirth, address, contactNo, email, preExistingDisease, diseaseName, smoker, nomineeName, nomineeGender, nomineeRelationship })
+        //     )
+        // } catch (error) {
+        //     console.log("Error sending health insurance email:", error);
+        // }
 
         return res.status(200).json(
             new ApiResponse(

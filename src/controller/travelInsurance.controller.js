@@ -17,11 +17,15 @@ const createTravelInsurance = asyncHandler(async (req, res) => {
         const [insertResult, insertFields] = await db.query(travelInsurance, travelInsuranceParams);
 
         // Send Mail
-        // sendMail(
-        //     req.user.email,
-        //     "Travel Insurance Details",
-        //     travelInsuranceTemplate({ name, gender, dateOfBirth, address, contactNo, email, tripType, startDate, endDate, preExistingDisease, diseaseName, smoker, passportNo, dateOfIssue, dateOfExpiry, nomineeName, nomineeGender, nomineeRelationship })
-        // )
+        // try {
+        //     sendMail(
+        //         req.user.email,
+        //         "Travel Insurance Details",
+        //         travelInsuranceTemplate({ name, gender, dateOfBirth, address, contactNo, email, tripType, startDate, endDate, preExistingDisease, diseaseName, smoker, passportNo, dateOfIssue, dateOfExpiry, nomineeName, nomineeGender, nomineeRelationship })
+        //     )
+        // } catch (error) {
+        //     console.log("Error sending travel insurance email:", error);
+        // }
 
         return res.status(200).json(
             new ApiResponse(

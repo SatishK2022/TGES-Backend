@@ -44,11 +44,15 @@ const createTrainTravel = asyncHandler(async (req, res) => {
         const [result, fields] = await db.query(insertTrain, [trainParams]);
 
         // Send Mail
-        // sendMail(
-        //     req.user.email,
-        //     "Train Booking Details",
-        //     trainBookingTemplate(reqBody)
-        // )
+        // try {
+        //     sendMail(
+        //         req.user.email,
+        //         "Train Booking Details",
+        //         trainBookingTemplate(reqBody)
+        //     )
+        // } catch (error) {
+        //     console.log("Error sending train booking email:", error);
+        // }
 
         return res.status(200).json(
             new ApiResponse(

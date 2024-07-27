@@ -32,11 +32,15 @@ const createHotelBooking = asyncHandler(async (req, res) => {
         const [insertResult, insertFields] = await db.query(hotelTravel, hotelParams);
 
         // Send Mail
-        // sendMail(
-        //     req.user.email,
-        //     "Hotel Booking Details",
-        //     hotelBookingTemplate({ nationality, name, contactNo1, contactNo2, email, country, state, city, roomCategory, mealPlan, hotelCategory, priceRange, checkInDate, checkOutDate, numberOfNights, numberOfRooms, adults, children, infants })
-        // )
+        // try {
+        //     sendMail(
+        //         req.user.email,
+        //         "Hotel Booking Details",
+        //         hotelBookingTemplate({ nationality, name, contactNo1, contactNo2, email, country, state, city, roomCategory, mealPlan, hotelCategory, priceRange, checkInDate, checkOutDate, numberOfNights, numberOfRooms, adults, children, infants })
+        //     )
+        // } catch (error) {
+        //     console.log("Error sending hotel booking email:", error);
+        // }
 
         return res.status(200).json(
             new ApiResponse(

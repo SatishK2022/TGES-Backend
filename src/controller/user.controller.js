@@ -47,19 +47,27 @@ const retailRegister = asyncHandler(async (req, res) => {
         const retailParams = [userId, firstName, secondName, lastName, username, gender, phoneNumber1, phoneNumber2, stateCode, countryCode, occupation, residentialAddress, companyName, designation, companyAddress, howDidYouKnow, preferredCurrency, website];
         await db.query(insertRetailUserSql, retailParams);
 
-        // Send Mail
-        sendMail(
-            email,
-            "Welcome to TGES",
-            retailRegisterTemplate({ fullName: `${firstName} ${lastName}`, email, residentialAddress, city, country, state, zipCode, phoneNumber1 })
-        )
+        // Send Mail to user
+        // try {
+        //     sendMail(
+        //         email,
+        //         "Welcome to TGES",
+        //         retailRegisterTemplate({ fullName: `${firstName} ${lastName}`, email, residentialAddress, city, country, state, zipCode, phoneNumber1 })
+        //     );
+        // } catch (error) {
+        //     console.error('Error sending welcome email:', error);
+        // }
 
         // Send Mail to admin
-        sendMail(
-            "tges@gmail.com",
-            "Retail Registration",
-            retailRegisterTemplate({ fullName: `${firstName} ${lastName}`, email, residentialAddress, city, country, state, zipCode, phoneNumber1 })
-        )
+        // try {
+        //     sendMail(
+        //         "tges@gmail.com",
+        //         "Retail Registration",
+        //         retailRegisterTemplate({ fullName: `${firstName} ${lastName}`, email, residentialAddress, city, country, state, zipCode, phoneNumber1 })
+        //     );
+        // } catch (error) {
+        //     console.error('Error sending admin notification email:', error);
+        // }
 
         return res.status(201).json(
             new ApiResponse(
@@ -117,22 +125,30 @@ const corporateRegister = asyncHandler(async (req, res) => {
         const userId = result.insertId;
 
         const insertCorprate = `INSERT INTO corporate_user (userId, industry, companyName, address1, address2, address3, address4, phoneNumber, countryCode, stateCode, landlineNumber, landlineCityCode, landlineCountryCode, contactDepartment, contactPersonFirstName, contactPersonSecondName, contactPersonLastName, contactPersonGender, website) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-        const corprateParams = [userId, industry, companyName, address1, address2, address3, address4, phoneNumber, countryCode, stateCode, landlineNumber, landlineCityCode, landlineCountryCode, contactDepartmentTitle, contactPersonFirstName, contactPersonSecondName, contactPersonLastName, contactPersonGender, website ];
+        const corprateParams = [userId, industry, companyName, address1, address2, address3, address4, phoneNumber, countryCode, stateCode, landlineNumber, landlineCityCode, landlineCountryCode, contactDepartmentTitle, contactPersonFirstName, contactPersonSecondName, contactPersonLastName, contactPersonGender, website];
         await db.query(insertCorprate, corprateParams);
 
         // Send Mail
-        // sendMail(
-        //     email,
-        //     "Welcome to TGES",
-        //     corporateRegisterTemplate({ companyName, address: `${address1} ${address2} ${address3} ${address4}`, city, country, state, zipCode, phoneNumber, contactPerson: `${contactPersonFirstName} ${contactPersonLastName}`, landlineNumber, email })
-        // )
+        // try {
+        //     sendMail(
+        //         email,
+        //         "Welcome to TGES",
+        //         corporateRegisterTemplate({ companyName, address: `${address1} ${address2} ${address3} ${address4}`, city, country, state, zipCode, phoneNumber, contactPerson: `${contactPersonFirstName} ${contactPersonLastName}`, landlineNumber, email })
+        //     )
+        // } catch (error) {
+        //     console.log("Error while sending welcome email: ", error);
+        // }
 
         // Send Mail to admin
-        // sendMail(
-        //     "tges@gmail.com",
-        //     "Corporate Registration",
-        //     corporateRegisterTemplate({ companyName, address: `${address1} ${address2} ${address3} ${address4}`, city, country, state, zipCode, phoneNumber, contactPerson: `${contactPersonFirstName} ${contactPersonLastName}`, landlineNumber, email })
-        // )
+        // try {
+        //     sendMail(
+        //         "tges@gmail.com",
+        //         "Corporate Registration",
+        //         corporateRegisterTemplate({ companyName, address: `${address1} ${address2} ${address3} ${address4}`, city, country, state, zipCode, phoneNumber, contactPerson: `${contactPersonFirstName} ${contactPersonLastName}`, landlineNumber, email })
+        //     )
+        // } catch (error) {
+        //     console.log("Error while sending admin notification email: ", error);
+        // }
 
         return res.status(201).json(
             new ApiResponse(
@@ -192,18 +208,26 @@ const vendorRegister = asyncHandler(async (req, res) => {
         await db.query(insertVendorSql, vendorParams);
 
         // Send Mail
-        // sendMail(
-        //     email,
-        //     "Welcome to TGES",
-        //     vendorRegisterTemplate({ companyName, address: `${address1} ${address2} ${address3} ${address4}`, city, country, state, zipCode, phoneNumber, contactPerson: `${contactPersonFirstName} ${contactPersonLastName}`, landlineNumber, email })
-        // )
+        // try {
+        //     sendMail(
+        //         email,
+        //         "Welcome to TGES",
+        //         vendorRegisterTemplate({ companyName, address: `${address1} ${address2} ${address3} ${address4}`, city, country, state, zipCode, phoneNumber, contactPerson: `${contactPersonFirstName} ${contactPersonLastName}`, landlineNumber, email })
+        //     )
+        // } catch (error) {
+        //     console.log("Error while sending welcome email: ", error);
+        // }
 
         // Send Mail to admin
-        // sendMail(
-        //     "tges@gmail.com",
-        //     "Vendor Registration",
-        //     vendorRegisterTemplate({ companyName, address: `${address1} ${address2} ${address3} ${address4}`, city, country, state, zipCode, phoneNumber, contactPerson: `${contactPersonFirstName} ${contactPersonLastName}`, landlineNumber, email })
-        // )
+        // try {
+        //     sendMail(
+        //         "tges@gmail.com",
+        //         "Vendor Registration",
+        //         vendorRegisterTemplate({ companyName, address: `${address1} ${address2} ${address3} ${address4}`, city, country, state, zipCode, phoneNumber, contactPerson: `${contactPersonFirstName} ${contactPersonLastName}`, landlineNumber, email })
+        //     )
+        // } catch (error) {
+        //     console.log("Error while sending admin notification email: ", error);
+        // }
 
         return res.status(201).json(
             new ApiResponse(
@@ -498,11 +522,15 @@ const forgotPassword = asyncHandler(async (req, res) => {
         await db.query('UPDATE user SET otp = ?, otpExpires = ? WHERE email = ?', [otp, otpExpires, email]);
 
         // Send OTP via email
-        sendMail(
-            email,
-            "Forgot Password OTP",
-            forgotPasswordTemplate(otp)
-        )
+        try {
+            await sendMail(
+                email,
+                "Forgot Password OTP",
+                forgotPasswordTemplate(otp)
+            )
+        } catch (error) {
+            console.log("Error while sending OTP: ", error);
+        }
 
         return res.status(200).json(
             new ApiResponse(

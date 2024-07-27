@@ -22,11 +22,15 @@ const createCabTravel = asyncHandler(async (req, res) => {
         const [result, fields] = await db.query(insertCab, cabParams);
 
         // Send Mail
-        // sendMail(
-        //     req.user.email,
-        //     "Cab Travel Details",
-        //     cabBookingTemplate({pickupCountry, nationality, tourPlan, name, contactNo, alternateContactNo, email, cabRequiredAt, cabRequiredFor, localTravelKmsLimit, pickupDateTime, pickupAddress, pickupLandmark, dropDateTime, dropAddress, dropLandmark, cabDuration, noOfCabsRequired, typeOfCabRequired, noOfPersonsTravelling, noOfInfants, noOfChildren, otherRequirements})
-        // )
+        // try {
+        //     sendMail(
+        //         req.user.email,
+        //         "Cab Travel Details",
+        //         cabBookingTemplate({pickupCountry, nationality, tourPlan, name, contactNo, alternateContactNo, email, cabRequiredAt, cabRequiredFor, localTravelKmsLimit, pickupDateTime, pickupAddress, pickupLandmark, dropDateTime, dropAddress, dropLandmark, cabDuration, noOfCabsRequired, typeOfCabRequired, noOfPersonsTravelling, noOfInfants, noOfChildren, otherRequirements})
+        //     )
+        // } catch (error) {
+        //     console.log("Error sending cab booking email:", error);
+        // }
 
         return res.status(200).json(
             new ApiResponse(

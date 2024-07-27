@@ -42,11 +42,15 @@ const createVolvoBusTravel = asyncHandler(async (req, res) => {
         const [insertResult, insertFields] = await db.query(insertBus, [busParams]);
 
         // Send Mail
-        // sendMail(
-        //     req.user.email,
-        //     "Volvo Bus Travel Details",
-        //     volvoBusBookingTemplate(reqBody)
-        // )
+        // try {
+        //     sendMail(
+        //         req.user.email,
+        //         "Volvo Bus Travel Details",
+        //         volvoBusBookingTemplate(reqBody)
+        //     )
+        // } catch (error) {
+        //     console.log("Error sending volvo bus booking email:", error);
+        // }
 
         return res.status(200).json(
             new ApiResponse(

@@ -46,11 +46,15 @@ const createAirTravel = asyncHandler(async (req, res) => {
         const [insertResult, insertFields] = await db.query(insertAir, [airParams]);
 
         // Send Mail
-        // sendMail(
-        //     req.user.email,
-        //     "Air Travel Details",
-        //     airBookingTemplate(reqBody)
-        // )
+        // try {
+        //     sendMail(
+        //         req.user.email,
+        //         "Air Travel Details",
+        //         airBookingTemplate(reqBody)
+        //     )
+        // } catch (error) {
+        //     console.log("Error while sending air travel mail:", error);
+        // }
 
         return res.status(200).json(
             new ApiResponse(

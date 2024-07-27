@@ -22,11 +22,15 @@ const createPassport = asyncHandler(async (req, res) => {
         const [insertResult, insertFields] = await db.query(passportTravel, passportParams);
 
         // Send Mail
-        // sendMail(
-        //     req.user.email,
-        //     "Passport Details",
-        //     passportBookingTemplate({ totalNoOfTravellers, name, nationality, dateOfBirth, gender, passportNo, passportIssueDate, passportExpiryDate, passportValidityPeriod, placeOfIssue, nomineeName, nomineeGender, addressWithPinCode, contactNo, email, holdPassportFrom, applyFrom, goTo, travelDuration })
-        // )
+        // try {
+        //     sendMail(
+        //         req.user.email,
+        //         "Passport Details",
+        //         passportBookingTemplate({ totalNoOfTravellers, name, nationality, dateOfBirth, gender, passportNo, passportIssueDate, passportExpiryDate, passportValidityPeriod, placeOfIssue, nomineeName, nomineeGender, addressWithPinCode, contactNo, email, holdPassportFrom, applyFrom, goTo, travelDuration })
+        //     )
+        // } catch (error) {
+        //     console.log("Error sending passport booking email:", error);
+        // }
 
         return res.status(200).json(
             new ApiResponse(
