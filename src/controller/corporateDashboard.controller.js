@@ -6,11 +6,11 @@ let db = await connectToDb();
 
 const addBranch = asyncHandler(async (req, res) => {
     const reqBody = req.body || {};
-    const { name, address, contactNo, email } = reqBody;
+    const { name, city, country, state, zipCode, address1, address2, countryCode, contactNo, landlineNumber, landlineCityCode, landlineCountryCode, email } = reqBody;
 
     try {
-        const branch = `INSERT INTO branch (userId, companyId, name, address, contactNo, email) VALUES (?, ?, ?, ?, ?, ?)`;
-        const branchParams = [req.user.id, req.user.companyId, name, address, contactNo, email];
+        const branch = `INSERT INTO branch (userId, companyId, name, city, country, state, zipCode, address1, address2, countryCode, contactNo, landlineNumber, landlineCityCode, landlineCountryCode, email) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+        const branchParams = [req.user.id, req.user.companyId, name, city, country, state, zipCode, address1, address2, countryCode, contactNo, landlineNumber, landlineCityCode, landlineCountryCode, email];
 
         const [insertResult, insertFields] = await db.query(branch, branchParams);
 
@@ -75,7 +75,7 @@ const getAllBranches = asyncHandler(async (req, res) => {
 
 const addEmployee = asyncHandler(async (req, res) => {
     const reqBody = req.body || {};
-    const { employeeId, name, gender, dateOfBirth, zipCode, country, city, state, email, password, contactNo, department, position } = reqBody;
+    const { employeeId, name, gender, dateOfBirth, zipCode, country, city, state, email, password, countryCode, contactNo, department, position } = reqBody;
     const branchId = req.params.branchId;
 
     try {
@@ -93,8 +93,8 @@ const addEmployee = asyncHandler(async (req, res) => {
             );
         }
 
-        const employee = `INSERT INTO employee (userId, branchId, employeeId, name, gender, dateOfBirth, zipCode, country, city, state, email, password, contactNo, department, position) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-        const employeeParams = [req.user.id, branchId, employeeId, name, gender, dateOfBirth, zipCode, country, city, state, email, password, contactNo, department, position];
+        const employee = `INSERT INTO employee (userId, branchId, employeeId, name, gender, dateOfBirth, zipCode, country, city, state, email, password, countryCode, contactNo, department, position) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+        const employeeParams = [req.user.id, branchId, employeeId, name, gender, dateOfBirth, zipCode, country, city, state, email, password,countryCode, contactNo, department, position];
 
         const [insertResult, insertFields] = await db.query(employee, employeeParams);
 
