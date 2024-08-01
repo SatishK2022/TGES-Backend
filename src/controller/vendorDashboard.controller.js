@@ -117,6 +117,78 @@ const addEmployee = asyncHandler(async (req, res) => {
     }
 });
 
+const updateEmployee = asyncHandler(async (req, res) => {
+    const reqBody = req.body || {};
+    const employeeId = req.params.employeeId;
+    const { name, gender, dateOfBirth, zipCode, country, city, state, email, password, countryCode, contactNo, department, position } = reqBody;
+
+    try {
+        const sql = `SELECT * FROM employee WHERE employeeId = ?`;
+        const params = [employeeId];
+        const [result, fields] = await db.query(sql, params);
+
+        if (result.length === 0) {
+            return res.status(404).json(
+                new ApiResponse(
+                    404,
+                    null,
+                    "Employee not found"
+                )
+            );
+        }
+
+        const updateSql = `UPDATE employee SET name = ?, gender = ?, dateOfBirth = ?, zipCode = ?, country = ?, city = ?, state = ?, email = ?, password = ?, countryCode = ?, contactNo = ?, department = ?, position = ? WHERE employeeId = ?`;
+        const updateParams = [name, gender, dateOfBirth, zipCode, country, city, state, email, password, countryCode, contactNo, department, position, employeeId];
+        const [updateResult, updateFields] = await db.query(updateSql, updateParams);
+
+        return res.status(200).json(
+            new ApiResponse(
+                200,
+                null,
+                "Employee updated successfully"
+            )
+        );
+    } catch (error) {
+        console.log("Error while updating employee: ", error);
+        return res.status(500).json(
+            new ApiResponse(
+                500,
+                null,
+                "Error while updating employee"
+            )
+        );
+    }
+
+})
+
+const deleteEmployee = asyncHandler(async (req, res) => {
+    const reqBody = req.body || {};
+    const employeeId = req.params.employeeId;
+
+    try {
+        const sql = `DELETE FROM employee WHERE employeeId = ?`;
+        const params = [employeeId];
+        const [result, fields] = await db.query(sql, params);
+
+        return res.status(200).json(
+            new ApiResponse(
+                200,
+                null,
+                "Employee deleted successfully"
+            )
+        );
+    } catch (error) {
+        console.log("Error while deleting employee: ", error);
+        return res.status(500).json(
+            new ApiResponse(
+                500,
+                null,
+                "Error while deleting employee"
+            )
+        );
+    }
+})
+
 const getEmployee = asyncHandler(async (req, res) => {
     const reqBody = req.body || {};
     const { employeeId, companyId } = reqBody;
@@ -282,6 +354,8 @@ export {
     addBranch,
     getAllBranches,
     addEmployee,
+    updateEmployee,
+    deleteEmployee,
     getEmployee,
     getBranchEmployees,
     getAllEmployees
