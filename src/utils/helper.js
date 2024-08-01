@@ -39,3 +39,10 @@ export function generateCompanyId(name) {
     const id = `${nameDigits}${randomNumber}`;
     return id;
 }
+
+export function generateBranchId(branchName) {
+    const randomNumber = Math.floor(1000 + Math.random() * 9000);
+    const nameDigits = branchName.slice(0, 4).toUpperCase();
+    const id = `${nameDigits}${randomNumber}`;
+    return id;
+}

@@ -1,6 +1,7 @@
 import asyncHandler from "../utils/asyncHandler.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import connectToDb from "../config/db.js";
+import { generateBranchId } from "../utils/helper.js";
 
 let db = await connectToDb();
 
@@ -9,8 +10,10 @@ const addBranch = asyncHandler(async (req, res) => {
     const { name, city, country, state, zipCode, address1, address2, countryCode, contactNo, landlineNumber, landlineCityCode, landlineCountryCode, email } = reqBody;
 
     try {
-        const branch = `INSERT INTO branch (userId, companyId, name, city, country, state, zipCode, address1, address2, countryCode, contactNo, landlineNumber, landlineCityCode, landlineCountryCode, email) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-        const branchParams = [req.user.id, req.user.companyId, name, city, country, state, zipCode, address1, address2, countryCode, contactNo, landlineNumber, landlineCityCode, landlineCountryCode, email];
+        const branchId = generateBranchId(name);
+
+        const branch = `INSERT INTO branch (userId, companyId, branchId, name, city, country, state, zipCode, address1, address2, countryCode, contactNo, landlineNumber, landlineCityCode, landlineCountryCode, email) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+        const branchParams = [req.user.id, req.user.companyId, branchId, name, city, country, state, zipCode, address1, address2, countryCode, contactNo, landlineNumber, landlineCityCode, landlineCountryCode, email];
 
         const [insertResult, insertFields] = await db.query(branch, branchParams);
 
@@ -94,7 +97,7 @@ const addEmployee = asyncHandler(async (req, res) => {
         }
 
         const employee = `INSERT INTO employee (userId, branchId, employeeId, name, gender, dateOfBirth, zipCode, country, city, state, email, password, countryCode, contactNo, department, position) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-        const employeeParams = [req.user.id, branchId, employeeId, name, gender, dateOfBirth, zipCode, country, city, state, email, password,countryCode, contactNo, department, position];
+        const employeeParams = [req.user.id, branchId, employeeId, name, gender, dateOfBirth, zipCode, country, city, state, email, password, countryCode, contactNo, department, position];
 
         const [insertResult, insertFields] = await db.query(employee, employeeParams);
 
@@ -209,7 +212,7 @@ const getEmployee = asyncHandler(async (req, res) => {
         }
         const branchId = resultEmployee[0].branchId;
 
-        const selectBranch = `SELECT * FROM branch WHERE id = ? AND companyId = ?`;
+        const selectBranch = `SELECT * FROM branch WHERE branchId = ? AND companyId = ?`;
         const paramsBranch = [branchId, companyId];
         const [resultBranch, fieldsBranch] = await db.query(selectBranch, paramsBranch);
 
@@ -238,7 +241,7 @@ const getEmployee = asyncHandler(async (req, res) => {
         }
 
         const employeeData = resultEmployeeInfo.map(employee => {
-            const { userId, branchId, createdAt, updatedAt, ...rest } = employee;
+            const { userId, createdAt, updatedAt, ...rest } = employee;
             return rest;
         });
 
@@ -306,11 +309,11 @@ const getBranchEmployees = asyncHandler(async (req, res) => {
 
 const getAllEmployees = asyncHandler(async (req, res) => {
     try {
-        const sqlBranches = `SELECT id FROM branch WHERE companyId = ?`;
+        const sqlBranches = `SELECT branchId FROM branch WHERE companyId = ?`;
         const paramsBranches = [req.user.companyId];
         const [resultBranches, fieldsBranches] = await db.query(sqlBranches, paramsBranches);
 
-        const ids = resultBranches.map(branch => branch.id);
+        const ids = resultBranches.map(branch => branch.branchId);
 
         const sqlEmployees = `SELECT * FROM employee WHERE branchId IN (${ids.map(id => '?').join(',')})`;
         const paramsEmployees = ids;
@@ -327,7 +330,7 @@ const getAllEmployees = asyncHandler(async (req, res) => {
         }
 
         const employeeData = resultEmployees.map(employee => {
-            const { userId, branchId, createdAt, updatedAt, ...rest } = employee;
+            const { userId, createdAt, updatedAt, ...rest } = employee;
             return rest;
         });
 

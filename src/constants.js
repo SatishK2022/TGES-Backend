@@ -292,7 +292,7 @@ export const healthInsurance = `CREATE TABLE IF NOT EXISTS healthInsurance (
 )`
 
 export const branch = `CREATE TABLE IF NOT EXISTS branch (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    branchId VARCHAR(255) PRIMARY KEY,
     userId INT NOT NULL,
     FOREIGN KEY (userId) REFERENCES user (id),
     companyId VARCHAR(255) NOT NULL,
@@ -318,8 +318,8 @@ export const employee = `CREATE TABLE IF NOT EXISTS employee (
     id INT AUTO_INCREMENT PRIMARY KEY,
     userId INT NOT NULL,
     FOREIGN KEY (userId) REFERENCES user (id),
-    branchId INT NOT NULL,
-    FOREIGN KEY (branchId) REFERENCES branch (id),
+    branchId VARCHAR(255) NOT NULL,
+    FOREIGN KEY (branchId) REFERENCES branch (branchId),
     employeeId VARCHAR(255) NOT NULL,
     name VARCHAR(255) NOT NULL,
     gender VARCHAR(255) NOT NULL,
