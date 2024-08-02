@@ -148,6 +148,11 @@ const loginAdmin = asyncHandler(async (req, res) => {
     }
 });
 
+/**
+ * @logoutAdmin
+ * @params req, res
+ * @Description : This function is used to logout admin data in the 'admin' table of the 'tges' database using the MySQL module
+*/
 const logoutAdmin = asyncHandler(async (req, res) => {
     return res
         .status(200)
@@ -167,14 +172,14 @@ const logoutAdmin = asyncHandler(async (req, res) => {
  * @Description : This function is used to get all retail users data in the 'retail_user' table of the 'tges' database using the MySQL module
 */
 const getAllRetailUsers = asyncHandler(async (req, res) => {
-    try {
-        const sql = `SELECT user.id, user.email, user.zipCode, user.country, user.city, user.state, user.password, retail_user.* FROM retail_user INNER JOIN user ON retail_user.userId = user.id`;
-        const [result, fields] = await db.query(sql);
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
 
-        const cleanedResult = result.map(user => {
-            const { userId, password, createdAt, updatedAt, ...rest } = user;
-            return rest;
-        });
+    try {
+        const sql = `SELECT SQL_CALC_FOUND_ROWS user.id, user.email, user.zipCode, user.country, user.city, user.state, user.password, retail_user.* FROM retail_user INNER JOIN user ON retail_user.userId = user.id LIMIT ? OFFSET ?`;
+        const params = [limit, skip];
+        const [result, fields] = await db.query(sql, params);
 
         if (result.length === 0) {
             return res.status(404).json(
@@ -186,10 +191,29 @@ const getAllRetailUsers = asyncHandler(async (req, res) => {
             )
         }
 
+        const totalCountSql = `SELECT FOUND_ROWS() as count`;
+        const [totalCountResult] = await db.query(totalCountSql);
+        const totalCount = totalCountResult[0].count;
+
+        const cleanedResult = result.map(user => {
+            const { userId, password, createdAt, updatedAt, ...rest } = user;
+            return rest;
+        });
+
         return res.status(200).json(
             new ApiResponse(
                 200,
-                cleanedResult,
+                {
+                    data: cleanedResult,
+                    pagination: {
+                        total_records: totalCount,
+                        total_pages: Math.ceil(totalCount / limit),
+                        limit: limit,
+                        current_page: page,
+                        next_page: page < Math.ceil(totalCount / limit) ? page + 1 : null,
+                        prev_page: page > 1 ? page - 1 : null
+                    }
+                },
                 "All retail users retrieved successfully"
             )
         )
@@ -211,14 +235,14 @@ const getAllRetailUsers = asyncHandler(async (req, res) => {
  * @Description : This function is used to get all corporate users data in the 'corporate_user' table of the 'tges' database using the MySQL module
 */
 const getAllCorporateUsers = asyncHandler(async (req, res) => {
-    try {
-        const sql = `SELECT user.id, user.email, user.zipCode, user.country, user.city, user.state, user.password, corporate_user.* FROM corporate_user INNER JOIN user ON corporate_user.userId = user.id`;
-        const [result, fields] = await db.query(sql);
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
 
-        const cleanedResult = result.map(user => {
-            const { userId, password, createdAt, updatedAt, ...rest } = user;
-            return rest;
-        });
+    try {
+        const sql = `SELECT SQL_CALC_FOUND_ROWS user.id, user.email, user.zipCode, user.country, user.city, user.state, user.password, corporate_user.* FROM corporate_user INNER JOIN user ON corporate_user.userId = user.id LIMIT ? OFFSET ?`;
+        const params = [limit, skip];
+        const [result, fields] = await db.query(sql, params);
 
         if (result.length === 0) {
             return res.status(404).json(
@@ -230,10 +254,29 @@ const getAllCorporateUsers = asyncHandler(async (req, res) => {
             )
         }
 
+        const totalCountSql = `SELECT FOUND_ROWS() as count`;
+        const [totalCountResult] = await db.query(totalCountSql);
+        const totalCount = totalCountResult[0].count;
+
+        const cleanedResult = result.map(user => {
+            const { userId, password, createdAt, updatedAt, ...rest } = user;
+            return rest;
+        });
+
         return res.status(200).json(
             new ApiResponse(
                 200,
-                cleanedResult,
+                {
+                    data: cleanedResult,
+                    pagination: {
+                        total_records: totalCount,
+                        total_pages: Math.ceil(totalCount / limit),
+                        limit: limit,
+                        current_page: page,
+                        next_page: page < Math.ceil(totalCount / limit) ? page + 1 : null,
+                        prev_page: page > 1 ? page - 1 : null
+                    }
+                },
                 "All corporate users retrieved successfully"
             )
         )
@@ -255,14 +298,14 @@ const getAllCorporateUsers = asyncHandler(async (req, res) => {
  * @Description : This function is used to get all vendors data in the 'vendor' table of the 'tges' database using the MySQL module
 */
 const getAllVendors = asyncHandler(async (req, res) => {
-    try {
-        const sql = `SELECT user.id, user.email, user.zipCode, user.country, user.city, user.state, user.password, vendor.* FROM vendor INNER JOIN user ON vendor.userId = user.id`;
-        const [result, fields] = await db.query(sql);
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
 
-        const cleanedResult = result.map(user => {
-            const { userId, password, createdAt, updatedAt, ...rest } = user;
-            return rest;
-        });
+    try {
+        const sql = `SELECT SQL_CALC_FOUND_ROWS user.id, user.email, user.zipCode, user.country, user.city, user.state, user.password, vendor.* FROM vendor INNER JOIN user ON vendor.userId = user.id LIMIT ? OFFSET ?`;
+        const params = [limit, skip];
+        const [result, fields] = await db.query(sql, params);
 
         if (result.length === 0) {
             return res.status(404).json(
@@ -274,10 +317,29 @@ const getAllVendors = asyncHandler(async (req, res) => {
             )
         }
 
+        const totalCountSql = `SELECT FOUND_ROWS() as count`;
+        const [totalCountResult] = await db.query(totalCountSql);
+        const totalCount = totalCountResult[0].count;
+
+        const cleanedResult = result.map(user => {
+            const { userId, password, createdAt, updatedAt, ...rest } = user;
+            return rest;
+        });
+
         return res.status(200).json(
             new ApiResponse(
                 200,
-                cleanedResult,
+                {
+                    data: cleanedResult,
+                    pagination: {
+                        total_records: totalCount,
+                        total_pages: Math.ceil(totalCount / limit),
+                        limit: limit,
+                        current_page: page,
+                        next_page: page < Math.ceil(totalCount / limit) ? page + 1 : null,
+                        prev_page: page > 1 ? page - 1 : null
+                    }  
+                },
                 "All vendors retrieved successfully"
             )
         )
@@ -299,14 +361,14 @@ const getAllVendors = asyncHandler(async (req, res) => {
  * @Description : This function is used to get all train details data in the 'train' table of the 'tges' database using the MySQL module
 */
 const getAllTrainDetails = asyncHandler(async (req, res) => {
-    try {
-        const sql = `SELECT * FROM train`
-        const [result, fields] = await db.query(sql);
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
 
-        const cleanedResult = result.map(user => {
-            const { userId, createdAt, updatedAt, ...rest } = user;
-            return rest;
-        });
+    try {
+        const sql = `SELECT SQL_CALC_FOUND_ROWS * FROM train LIMIT ? OFFSET ?`;
+        const params = [limit, skip];
+        const [result, fields] = await db.query(sql, params);
 
         if (result.length === 0) {
             return res.status(404).json(
@@ -318,10 +380,29 @@ const getAllTrainDetails = asyncHandler(async (req, res) => {
             )
         }
 
+        const totalCountSql = `SELECT FOUND_ROWS() as count`;
+        const [totalCountResult] = await db.query(totalCountSql);
+        const totalCount = totalCountResult[0].count;
+
+        const cleanedResult = result.map(user => {
+            const { userId, createdAt, updatedAt, ...rest } = user;
+            return rest;
+        });
+
         return res.status(200).json(
             new ApiResponse(
                 200,
-                cleanedResult,
+                {
+                    data: cleanedResult,
+                    pagination: {
+                        total_records: totalCount,
+                        total_pages: Math.ceil(totalCount / limit),
+                        limit: limit,
+                        current_page: page,
+                        next_page: page < Math.ceil(totalCount / limit) ? page + 1 : null,
+                        prev_page: page > 1 ? page - 1 : null
+                    }
+                },
                 "Train details fetched successfully"
             )
         )
@@ -343,14 +424,14 @@ const getAllTrainDetails = asyncHandler(async (req, res) => {
  * @Description : This function is used to get all air details data in the 'air' table of the 'tges' database using the MySQL module
 */
 const getAllAirDetails = asyncHandler(async (req, res) => {
-    try {
-        const sql = `SELECT * FROM air`
-        const [result, fields] = await db.query(sql);
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
 
-        const cleanedResult = result.map(user => {
-            const { userId, createdAt, updatedAt, ...rest } = user;
-            return rest;
-        });
+    try {
+        const sql = `SELECT SQL_CALC_FOUND_ROWS * FROM air LIMIT ? OFFSET ?`;
+        const params = [limit, skip];
+        const [result, fields] = await db.query(sql, params);
 
         if (result.length === 0) {
             return res.status(404).json(
@@ -362,10 +443,29 @@ const getAllAirDetails = asyncHandler(async (req, res) => {
             )
         }
 
+        const totalCountSql = `SELECT FOUND_ROWS() as count`;
+        const [totalCountResult] = await db.query(totalCountSql);
+        const totalCount = totalCountResult[0].count;
+
+        const cleanedResult = result.map(user => {
+            const { userId, createdAt, updatedAt, ...rest } = user;
+            return rest;
+        });
+
         return res.status(200).json(
             new ApiResponse(
                 200,
-                cleanedResult,
+                {
+                    data: cleanedResult,
+                    pagination: {
+                        total_records: totalCount,
+                        total_pages: Math.ceil(totalCount / limit),
+                        limit: limit,
+                        current_page: page,
+                        next_page: page < Math.ceil(totalCount / limit) ? page + 1 : null,
+                        prev_page: page > 1 ? page - 1 : null
+                    }
+                },
                 "Air details fetched successfully"
             )
         )
@@ -387,14 +487,14 @@ const getAllAirDetails = asyncHandler(async (req, res) => {
  * @Description : This function is used to get all cab details data in the 'cab' table of the 'tges' database using the MySQL module
 */
 const getAllCabDetails = asyncHandler(async (req, res) => {
-    try {
-        const sql = `SELECT * FROM cab`
-        const [result, fields] = await db.query(sql);
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
 
-        const cleanedResult = result.map(user => {
-            const { userId, createdAt, updatedAt, ...rest } = user;
-            return rest;
-        });
+    try {
+        const sql = `SELECT SQL_CALC_FOUND_ROWS * FROM cab LIMIT ? OFFSET ?`;
+        const params = [limit, skip];
+        const [result, fields] = await db.query(sql, params);
 
         if (result.length === 0) {
             return res.status(404).json(
@@ -406,10 +506,29 @@ const getAllCabDetails = asyncHandler(async (req, res) => {
             )
         }
 
+        const totalCountSql = `SELECT FOUND_ROWS() as count`;
+        const [totalCountResult] = await db.query(totalCountSql);
+        const totalCount = totalCountResult[0].count;
+
+        const cleanedResult = result.map(user => {
+            const { userId, createdAt, updatedAt, ...rest } = user;
+            return rest;
+        });
+
         return res.status(200).json(
             new ApiResponse(
                 200,
-                cleanedResult,
+                {
+                    data: cleanedResult,
+                    pagination: {
+                        total_records: totalCount,
+                        total_pages: Math.ceil(totalCount / limit),
+                        limit: limit,
+                        current_page: page,
+                        next_page: page < Math.ceil(totalCount / limit) ? page + 1 : null,
+                        prev_page: page > 1 ? page - 1 : null
+                    }
+                },
                 "Cab details fetched successfully"
             )
         )
@@ -431,14 +550,14 @@ const getAllCabDetails = asyncHandler(async (req, res) => {
  * @Description : This function is used to get all bus details data in the 'bus' table of the 'tges' database using the MySQL module
 */
 const getAllBusDetails = asyncHandler(async (req, res) => {
-    try {
-        const sql = `SELECT * FROM bus`
-        const [result, fields] = await db.query(sql);
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
 
-        const cleanedResult = result.map(user => {
-            const { userId, createdAt, updatedAt, ...rest } = user;
-            return rest;
-        });
+    try {
+        const sql = `SELECT SQL_CALC_FOUND_ROWS * FROM bus LIMIT ? OFFSET ?`;
+        const params = [limit, skip];
+        const [result, fields] = await db.query(sql, params);
 
         if (result.length === 0) {
             return res.status(404).json(
@@ -450,10 +569,29 @@ const getAllBusDetails = asyncHandler(async (req, res) => {
             )
         }
 
+        const totalCountSql = `SELECT FOUND_ROWS() as count`;
+        const [totalCountResult] = await db.query(totalCountSql);
+        const totalCount = totalCountResult[0].count;
+
+        const cleanedResult = result.map(user => {
+            const { userId, createdAt, updatedAt, ...rest } = user;
+            return rest;
+        });
+
         return res.status(200).json(
             new ApiResponse(
                 200,
-                cleanedResult,
+                {
+                    data: cleanedResult,
+                    pagination: {
+                        total_records: totalCount,
+                        total_pages: Math.ceil(totalCount / limit),
+                        limit: limit,
+                        current_page: page,
+                        next_page: page < Math.ceil(totalCount / limit) ? page + 1 : null,
+                        prev_page: page > 1 ? page - 1 : null
+                    }
+                },
                 "Volvo details fetched successfully"
             )
         )
@@ -475,14 +613,14 @@ const getAllBusDetails = asyncHandler(async (req, res) => {
  * @Description : This function is used to get all hotel details data in the 'hotel' table of the 'tges' database using the MySQL module
 */
 const getAllHotelDetails = asyncHandler(async (req, res) => {
-    try {
-        const sql = `SELECT * FROM hotel`
-        const [result, fields] = await db.query(sql);
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
 
-        const cleanedResult = result.map(user => {
-            const { userId, createdAt, updatedAt, ...rest } = user;
-            return rest;
-        });
+    try {
+        const sql = `SELECT SQL_CALC_FOUND_ROWS * FROM hotel LIMIT ? OFFSET ?`;
+        const params = [limit, skip];
+        const [result, fields] = await db.query(sql, params);
 
         if (result.length === 0) {
             return res.status(404).json(
@@ -494,10 +632,29 @@ const getAllHotelDetails = asyncHandler(async (req, res) => {
             )
         }
 
+        const totalCountSql = `SELECT FOUND_ROWS() as count`;
+        const [totalCountResult] = await db.query(totalCountSql);
+        const totalCount = totalCountResult[0].count;
+        
+        const cleanedResult = result.map(user => {
+            const { userId, createdAt, updatedAt, ...rest } = user;
+            return rest;
+        });
+
         return res.status(200).json(
             new ApiResponse(
                 200,
-                cleanedResult,
+                {
+                    data: cleanedResult,
+                    pagination: {
+                        total_records: totalCount,
+                        total_pages: Math.ceil(totalCount / limit),
+                        limit: limit,
+                        current_page: page,
+                        next_page: page < Math.ceil(totalCount / limit) ? page + 1 : null,
+                        prev_page: page > 1 ? page - 1 : null
+                    }
+                },
                 "Hotel details fetched successfully"
             )
         )
@@ -519,14 +676,14 @@ const getAllHotelDetails = asyncHandler(async (req, res) => {
  * @Description : This function is used to get all travel insurance details data in the 'travelInsurance' table of the 'tges' database using the MySQL module
 */
 const getAllTravelInsurance = asyncHandler(async (req, res) => {
-    try {
-        const sql = `SELECT * FROM travelInsurance`;
-        const [result, fields] = await db.query(sql);
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
 
-        const cleanedResult = result.map(user => {
-            const { userId, createdAt, updatedAt, ...rest } = user;
-            return rest;
-        });
+    try {
+        const sql = `SELECT SQL_CALC_FOUND_ROWS * FROM travelInsurance LIMIT ? OFFSET ?`;
+        const params = [limit, skip];
+        const [result, fields] = await db.query(sql, params);
 
         if (result.length === 0) {
             return res.status(404).json(
@@ -537,11 +694,30 @@ const getAllTravelInsurance = asyncHandler(async (req, res) => {
                 )
             )
         }
+        
+        const cleanedResult = result.map(user => {
+            const { userId, createdAt, updatedAt, ...rest } = user;
+            return rest;
+        });
+
+        const totalCountSql = `SELECT FOUND_ROWS() as count`;
+        const [totalCountResult] = await db.query(totalCountSql);
+        const totalCount = totalCountResult[0].count;
 
         return res.status(200).json(
             new ApiResponse(
                 200,
-                cleanedResult,
+                {
+                    data: cleanedResult,
+                    pagination: {
+                        total_records: totalCount,
+                        total_pages: Math.ceil(totalCount / limit),
+                        limit: limit,
+                        current_page: page,
+                        next_page: page < Math.ceil(totalCount / limit) ? page + 1 : null,
+                        prev_page: page > 1 ? page - 1 : null
+                    }
+                },
                 "Travel insurance details fetched successfully"
             )
         )
@@ -563,14 +739,14 @@ const getAllTravelInsurance = asyncHandler(async (req, res) => {
  * @Description : This function is used to get all health insurance details data in the 'healthInsurance' table of the 'tges' database using the MySQL module
 */
 const getAllHealthInsurance = asyncHandler(async (req, res) => {
-    try {
-        const sql = `SELECT * FROM healthInsurance`;
-        const [result, fields] = await db.query(sql);
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
 
-        const cleanedResult = result.map(user => {
-            const { userId, createdAt, updatedAt, ...rest } = user;
-            return rest;
-        });
+    try {
+        const sql = `SELECT SQL_CALC_FOUND_ROWS * FROM healthInsurance LIMIT ? OFFSET ?`;
+        const params = [limit, skip];
+        const [result, fields] = await db.query(sql, params);
 
         if (result.length === 0) {
             return res.status(404).json(
@@ -582,10 +758,29 @@ const getAllHealthInsurance = asyncHandler(async (req, res) => {
             )
         }
 
+        const cleanedResult = result.map(user => {
+            const { userId, createdAt, updatedAt, ...rest } = user;
+            return rest;
+        });
+
+        const totalCountSql = `SELECT FOUND_ROWS() as count`;
+        const [totalCountResult] = await db.query(totalCountSql);
+        const totalCount = totalCountResult[0].count;
+
         return res.status(200).json(
             new ApiResponse(
                 200,
-                cleanedResult,
+                {
+                    data: cleanedResult,
+                    pagination: {
+                        total_records: totalCount,
+                        total_pages: Math.ceil(totalCount / limit),
+                        limit: limit,
+                        current_page: page,
+                        next_page: page < Math.ceil(totalCount / limit) ? page + 1 : null,
+                        prev_page: page > 1 ? page - 1 : null
+                    }
+                },
                 "Health insurance details fetched successfully"
             )
         )
