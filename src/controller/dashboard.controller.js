@@ -176,10 +176,32 @@ const getAllRetailUsers = asyncHandler(async (req, res) => {
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
 
+    // Extract search criteria from the request body
+    const { firstName, email } = req.body || {};
+
     try {
-        const sql = `SELECT SQL_CALC_FOUND_ROWS user.id, user.email, user.zipCode, user.country, user.city, user.state, user.password, retail_user.* FROM retail_user INNER JOIN user ON retail_user.userId = user.id LIMIT ? OFFSET ?`;
-        const params = [limit, skip];
-        const [result, fields] = await db.query(sql, params);
+        // Initialize SQL query and parameters
+        let sql = `
+            SELECT SQL_CALC_FOUND_ROWS user.id, user.email, user.zipCode, user.country, user.city, user.state, user.password, retail_user.* 
+            FROM retail_user 
+            INNER JOIN user ON retail_user.userId = user.id`;
+        const params = [];
+
+        // Add search conditions if provided
+        if (firstName) {
+            sql += ` WHERE retail_user.firstName LIKE ?`;
+            params.push(`%${firstName}%`); // Use LIKE for partial matches
+        }
+        if (email) {
+            sql += ` AND user.email LIKE ?`;
+            params.push(`%${email}%`); // Use LIKE for partial matches
+        }
+
+        // Add pagination to the SQL query
+        sql += ` ORDER BY createdAt DESC LIMIT ? OFFSET ?`;
+        params.push(limit, skip);
+
+        const [result] = await db.query(sql, params);
 
         if (result.length === 0) {
             return res.status(404).json(
@@ -188,7 +210,7 @@ const getAllRetailUsers = asyncHandler(async (req, res) => {
                     null,
                     "No retail users found"
                 )
-            )
+            );
         }
 
         const totalCountSql = `SELECT FOUND_ROWS() as count`;
@@ -216,7 +238,7 @@ const getAllRetailUsers = asyncHandler(async (req, res) => {
                 },
                 "All retail users retrieved successfully"
             )
-        )
+        );
     } catch (error) {
         console.log("Error getting all retail users:", error);
         return res.status(500).json(
@@ -225,9 +247,9 @@ const getAllRetailUsers = asyncHandler(async (req, res) => {
                 null,
                 "An error occurred while getting all retail users"
             )
-        )
+        );
     }
-})
+});
 
 /**
  * @getAllCorporateUsers
@@ -239,10 +261,32 @@ const getAllCorporateUsers = asyncHandler(async (req, res) => {
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
 
+    // Extract search criteria from the request body
+    const { companyName, email } = req.body || {};
+
     try {
-        const sql = `SELECT SQL_CALC_FOUND_ROWS user.id, user.email, user.zipCode, user.country, user.city, user.state, user.password, corporate_user.* FROM corporate_user INNER JOIN user ON corporate_user.userId = user.id LIMIT ? OFFSET ?`;
-        const params = [limit, skip];
-        const [result, fields] = await db.query(sql, params);
+        // Initialize SQL query and parameters
+        let sql = `
+            SELECT SQL_CALC_FOUND_ROWS user.id, user.email, user.zipCode, user.country, user.city, user.state, user.password, corporate_user.* 
+            FROM corporate_user 
+            INNER JOIN user ON corporate_user.userId = user.id`;
+        const params = [];
+
+        // Add search conditions if provided
+        if (companyName) {
+            sql += ` WHERE corporate_user.companyName LIKE ?`;
+            params.push(`%${companyName}%`); // Use LIKE for partial matches
+        }
+        if (email) {
+            sql += ` AND user.email LIKE ?`;
+            params.push(`%${email}%`); // Use LIKE for partial matches
+        }
+
+        // Add ordering and pagination to the SQL query
+        sql += ` ORDER BY corporate_user.createdAt DESC LIMIT ? OFFSET ?`;
+        params.push(limit, skip);
+
+        const [result] = await db.query(sql, params);
 
         if (result.length === 0) {
             return res.status(404).json(
@@ -251,7 +295,7 @@ const getAllCorporateUsers = asyncHandler(async (req, res) => {
                     null,
                     "No corporate users found"
                 )
-            )
+            );
         }
 
         const totalCountSql = `SELECT FOUND_ROWS() as count`;
@@ -279,7 +323,7 @@ const getAllCorporateUsers = asyncHandler(async (req, res) => {
                 },
                 "All corporate users retrieved successfully"
             )
-        )
+        );
     } catch (error) {
         console.log("Error getting all corporate users:", error);
         return res.status(500).json(
@@ -288,9 +332,9 @@ const getAllCorporateUsers = asyncHandler(async (req, res) => {
                 null,
                 "An error occurred while getting all corporate users"
             )
-        )
+        );
     }
-})
+});
 
 /**
  * @getAllVendors
@@ -302,10 +346,32 @@ const getAllVendors = asyncHandler(async (req, res) => {
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
 
+    // Extract search criteria from the request body
+    const { companyName, email } = req.body || {};
+
     try {
-        const sql = `SELECT SQL_CALC_FOUND_ROWS user.id, user.email, user.zipCode, user.country, user.city, user.state, user.password, vendor.* FROM vendor INNER JOIN user ON vendor.userId = user.id LIMIT ? OFFSET ?`;
-        const params = [limit, skip];
-        const [result, fields] = await db.query(sql, params);
+        // Initialize SQL query and parameters
+        let sql = `
+            SELECT SQL_CALC_FOUND_ROWS user.id, user.email, user.zipCode, user.country, user.city, user.state, user.password, vendor.* 
+            FROM vendor 
+            INNER JOIN user ON vendor.userId = user.id`;
+        const params = [];
+
+        // Add search conditions if provided
+        if (companyName) {
+            sql += ` WHERE vendor.companyName LIKE ?`;
+            params.push(`%${companyName}%`); // Use LIKE for partial matches
+        }
+        if (email) {
+            sql += ` AND user.email LIKE ?`;
+            params.push(`%${email}%`); // Use LIKE for partial matches
+        }
+
+        // Add ordering and pagination to the SQL query
+        sql += ` ORDER BY vendor.createdAt DESC LIMIT ? OFFSET ?`;
+        params.push(limit, skip);
+
+        const [result] = await db.query(sql, params);
 
         if (result.length === 0) {
             return res.status(404).json(
@@ -314,7 +380,7 @@ const getAllVendors = asyncHandler(async (req, res) => {
                     null,
                     "No vendors found"
                 )
-            )
+            );
         }
 
         const totalCountSql = `SELECT FOUND_ROWS() as count`;
@@ -338,11 +404,11 @@ const getAllVendors = asyncHandler(async (req, res) => {
                         current_page: page,
                         next_page: page < Math.ceil(totalCount / limit) ? page + 1 : null,
                         prev_page: page > 1 ? page - 1 : null
-                    }  
+                    }
                 },
                 "All vendors retrieved successfully"
             )
-        )
+        );
     } catch (error) {
         console.log("Error getting all vendors:", error);
         return res.status(500).json(
@@ -351,9 +417,9 @@ const getAllVendors = asyncHandler(async (req, res) => {
                 null,
                 "An error occurred while getting all vendors"
             )
-        )
+        );
     }
-})
+});
 
 /**
  * @getAllTrainDetails
@@ -366,7 +432,7 @@ const getAllTrainDetails = asyncHandler(async (req, res) => {
     const skip = (page - 1) * limit;
 
     try {
-        const sql = `SELECT SQL_CALC_FOUND_ROWS * FROM train LIMIT ? OFFSET ?`;
+        const sql = `SELECT SQL_CALC_FOUND_ROWS * FROM train ORDER BY createdAt DESC LIMIT ? OFFSET ?`;
         const params = [limit, skip];
         const [result, fields] = await db.query(sql, params);
 
@@ -429,7 +495,7 @@ const getAllAirDetails = asyncHandler(async (req, res) => {
     const skip = (page - 1) * limit;
 
     try {
-        const sql = `SELECT SQL_CALC_FOUND_ROWS * FROM air LIMIT ? OFFSET ?`;
+        const sql = `SELECT SQL_CALC_FOUND_ROWS * FROM air ORDER BY createdAt DESC LIMIT ? OFFSET ?`;
         const params = [limit, skip];
         const [result, fields] = await db.query(sql, params);
 
@@ -492,7 +558,7 @@ const getAllCabDetails = asyncHandler(async (req, res) => {
     const skip = (page - 1) * limit;
 
     try {
-        const sql = `SELECT SQL_CALC_FOUND_ROWS * FROM cab LIMIT ? OFFSET ?`;
+        const sql = `SELECT SQL_CALC_FOUND_ROWS * FROM cab ORDER BY createdAt DESC LIMIT ? OFFSET ?`;
         const params = [limit, skip];
         const [result, fields] = await db.query(sql, params);
 
@@ -555,7 +621,7 @@ const getAllBusDetails = asyncHandler(async (req, res) => {
     const skip = (page - 1) * limit;
 
     try {
-        const sql = `SELECT SQL_CALC_FOUND_ROWS * FROM bus LIMIT ? OFFSET ?`;
+        const sql = `SELECT SQL_CALC_FOUND_ROWS * FROM bus ORDER BY createdAt DESC LIMIT ? OFFSET ?`;
         const params = [limit, skip];
         const [result, fields] = await db.query(sql, params);
 
@@ -618,7 +684,7 @@ const getAllHotelDetails = asyncHandler(async (req, res) => {
     const skip = (page - 1) * limit;
 
     try {
-        const sql = `SELECT SQL_CALC_FOUND_ROWS * FROM hotel LIMIT ? OFFSET ?`;
+        const sql = `SELECT SQL_CALC_FOUND_ROWS * FROM hotel ORDER BY createdAt DESC LIMIT ? OFFSET ?`;
         const params = [limit, skip];
         const [result, fields] = await db.query(sql, params);
 
@@ -681,7 +747,7 @@ const getAllTravelInsurance = asyncHandler(async (req, res) => {
     const skip = (page - 1) * limit;
 
     try {
-        const sql = `SELECT SQL_CALC_FOUND_ROWS * FROM travelInsurance LIMIT ? OFFSET ?`;
+        const sql = `SELECT SQL_CALC_FOUND_ROWS * FROM travelInsurance ORDER BY createdAt DESC LIMIT ? OFFSET ?`;
         const params = [limit, skip];
         const [result, fields] = await db.query(sql, params);
 
@@ -744,7 +810,7 @@ const getAllHealthInsurance = asyncHandler(async (req, res) => {
     const skip = (page - 1) * limit;
 
     try {
-        const sql = `SELECT SQL_CALC_FOUND_ROWS * FROM healthInsurance LIMIT ? OFFSET ?`;
+        const sql = `SELECT SQL_CALC_FOUND_ROWS * FROM healthInsurance ORDER BY createdAt DESC LIMIT ? OFFSET ?`;
         const params = [limit, skip];
         const [result, fields] = await db.query(sql, params);
 

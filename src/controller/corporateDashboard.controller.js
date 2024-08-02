@@ -37,19 +37,10 @@ const addBranch = asyncHandler(async (req, res) => {
 })
 
 const getAllBranches = asyncHandler(async (req, res) => {
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
-    const skip = (page - 1) * limit;
-
     try {
-        const sql = `SELECT SQL_CALC_FOUND_ROWS * FROM branch WHERE userId = ? AND companyId = ? LIMIT ? OFFSET ?`;
-        const params = [req.user.id, req.user.companyId, limit, skip];
+        const sql = `SELECT * FROM branch WHERE userId = ? AND companyId = ? ORDER BY createdAt DESC`;
+        const params = [req.user.id, req.user.companyId];
         const [result, fields] = await db.query(sql, params);
-
-        const totalCountSql = `SELECT FOUND_ROWS() as count`;
-        const [totalCountResult] = await db.query(totalCountSql);
-
-        const totalCount = totalCountResult[0].count;
 
         if (result.length === 0) {
             return res.status(404).json(
@@ -69,17 +60,7 @@ const getAllBranches = asyncHandler(async (req, res) => {
         return res.status(200).json(
             new ApiResponse(
                 200,
-                {
-                    data: branchData,
-                    pagination: {
-                        total_records: totalCount,
-                        total_pages: Math.ceil(totalCount / limit),
-                        limit,
-                        current_page: page,
-                        next_page: page < Math.ceil(totalCount / limit) ? page + 1 : null,
-                        prev_page: page > 1 ? page - 1 : null
-                    }
-                },
+                branchData,
                 "Branches fetched successfully"
             )
         );
@@ -285,15 +266,33 @@ const getEmployee = asyncHandler(async (req, res) => {
 
 const getBranchEmployees = asyncHandler(async (req, res) => {
     const reqBody = req.body || {};
+
+    const { employeeId, name } = reqBody;
+
     const branchId = req.params.branchId;
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
 
+    let sql = `SELECT SQL_CALC_FOUND_ROWS * FROM employee WHERE userId = ? AND branchId = ?`;
+    const params = [req.user.id, branchId];
+
+    // Check for search criteria in the request body
+    if (employeeId) {
+        sql += ` AND employeeId = ?`;
+        params.push(employeeId);
+    }
+    if (name) {
+        sql += ` AND name LIKE ?`;
+        params.push(`%${name}%`);
+    }
+
+    // Add pagination to the SQL query
+    sql += ` ORDER BY createdAt DESC LIMIT ? OFFSET ?`;
+    params.push(limit, skip);
+
     try {
-        const sql = `SELECT SQL_CALC_FOUND_ROWS * FROM employee WHERE userId = ? AND branchId = ? LIMIT ? OFFSET ?`;
-        const params = [req.user.id, branchId, limit, skip];
-        const [result, fields] = await db.query(sql, params);
+        const [result] = await db.query(sql, params);
 
         if (result.length === 0) {
             return res.status(404).json(
@@ -307,7 +306,6 @@ const getBranchEmployees = asyncHandler(async (req, res) => {
 
         const totalCountSql = `SELECT FOUND_ROWS() as count`;
         const [totalCountResult] = await db.query(totalCountSql);
-
         const totalCount = totalCountResult[0].count;
 
         const employeeData = result.map(employee => {
@@ -342,29 +340,69 @@ const getBranchEmployees = asyncHandler(async (req, res) => {
             )
         );
     }
-})
+});
 
 const getAllEmployees = asyncHandler(async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
 
+    // Extract search criteria from the request body
+    const { name, email, employeeId } = req.body || {};
+
     try {
+        // Fetch branch IDs for the user's company
         const sqlBranches = `SELECT branchId FROM branch WHERE companyId = ?`;
         const paramsBranches = [req.user.companyId];
         const [resultBranches] = await db.query(sqlBranches, paramsBranches);
 
+        // Check if any branches were found
+        if (resultBranches.length === 0) {
+            return res.status(404).json(
+                new ApiResponse(
+                    404,
+                    null,
+                    "No branches found for this company"
+                )
+            );
+        }
+
         const ids = resultBranches.map(branch => branch.branchId);
 
-        const sqlEmployees = `SELECT SQL_CALC_FOUND_ROWS * FROM employee WHERE branchId IN (${ids.map(id => '?').join(',')}) LIMIT ? OFFSET ?`;
-        const paramsEmployees = [...ids, limit, skip];
+        // Initialize SQL query and parameters for employees
+        let sqlEmployees = `
+            SELECT SQL_CALC_FOUND_ROWS * 
+            FROM employee 
+            WHERE branchId IN (${ids.map(() => '?').join(',')})`;
+        const paramsEmployees = [...ids];
+
+        // Add search conditions if provided
+        if (name) {
+            sqlEmployees += ` AND name LIKE ?`;
+            paramsEmployees.push(`%${name}%`); // Use LIKE for partial matches
+        }
+        if (email) {
+            sqlEmployees += ` AND email LIKE ?`;
+            paramsEmployees.push(`%${email}%`); // Use LIKE for partial matches
+        }
+        if (employeeId) {
+            sqlEmployees += ` AND employeeId = ?`;
+            paramsEmployees.push(employeeId);
+        }
+
+        // Add pagination to the SQL query
+        sqlEmployees += ` ORDER BY createdAt DESC LIMIT ? OFFSET ?`;
+        paramsEmployees.push(limit, skip);
+
+        // Fetch employees based on the constructed query
         const [resultEmployees] = await db.query(sqlEmployees, paramsEmployees);
 
+        // Get the total count of employees
         const totalCountSql = `SELECT FOUND_ROWS() as count`;
         const [totalCountResult] = await db.query(totalCountSql);
-
         const totalCount = totalCountResult[0].count;
 
+        // Check if any employees were found
         if (resultEmployees.length === 0) {
             return res.status(404).json(
                 new ApiResponse(
@@ -375,11 +413,13 @@ const getAllEmployees = asyncHandler(async (req, res) => {
             );
         }
 
+        // Clean up employee data by removing sensitive fields
         const employeeData = resultEmployees.map(employee => {
             const { userId, createdAt, updatedAt, ...rest } = employee;
             return rest;
         });
 
+        // Return the fetched employee data with pagination info
         return res.status(200).json(
             new ApiResponse(
                 200,
@@ -398,7 +438,7 @@ const getAllEmployees = asyncHandler(async (req, res) => {
             )
         );
     } catch (error) {
-        console.log("Error while getting all employees: ", error);
+        console.error("Error while getting all employees: ", error);
         return res.status(500).json(
             new ApiResponse(
                 500,
