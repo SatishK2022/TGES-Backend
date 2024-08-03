@@ -36,6 +36,85 @@ const addBranch = asyncHandler(async (req, res) => {
     }
 })
 
+const updateBranch = asyncHandler(async (req, res) => {
+    const reqBody = req.body || {};
+    const branchId = req.params.branchId;
+    const { name, city, country, state, zipCode, address1, address2, countryCode, contactNo, landlineNumber, landlineCityCode, landlineCountryCode, email } = reqBody;
+
+    try {
+        const sql = `SELECT * FROM branch WHERE branchId = ?`
+        const params = [branchId];
+        const [result, fields] = await db.query(sql, params);
+
+        if (result.length === 0) {
+            return res.status(404).json(
+                new ApiResponse(
+                    404,
+                    null,
+                    "Branch not found"
+                )
+            )
+        }
+
+        const updateSql = `UPDATE branch SET name = ?, city = ?, country = ?, state = ?, zipCode = ?, address1 = ?, address2 = ?, countryCode = ?, contactNo = ?, landlineNumber = ?, landlineCityCode = ?, landlineCountryCode = ?, email = ? WHERE branchId = ?`;
+        const updateParams = [name, city, country, state, zipCode, address1, address2, countryCode, contactNo, landlineNumber, landlineCityCode, landlineCountryCode, email, branchId];
+        const [updateResult, updateFields] = await db.query(updateSql, updateParams);
+
+        return res.status(200).json(
+            new ApiResponse(
+                200,
+                null,
+                "Branch updated successfully"
+            )
+        )
+    } catch(error) {
+        console.log("Error while updating branch: ", error);
+        return res.status(500).json(
+            new ApiResponse(
+                500,
+                null,
+                "Error while updating branch"
+            )
+        )
+    }
+})
+
+const deleteBranch = asyncHandler(async (req, res) => {
+    const branchId = req.params.branchId;
+
+    if (!branchId) {
+        return res.status(400).json(
+            new ApiResponse(400, null, "Branch ID is required")
+        );
+    }
+
+    try {
+        const employeeSql = "UPDATE employee SET branchId = NULL WHERE branchId = ?";
+        const employeeParams = [branchId];
+        await db.query(employeeSql, employeeParams);
+
+        const sql = `DELETE FROM branch WHERE branchId = ?`;
+        const queryParams = [branchId];
+        const [result] = await db.query(sql, queryParams);
+
+        // Check if any rows were affected
+        if (result.affectedRows === 0) {
+            return res.status(404).json(
+                new ApiResponse(404, null, "Branch not found")
+            );
+        }
+
+        return res.status(200).json(
+            new ApiResponse(200, null, "Branch deleted successfully")
+        );
+    } catch (error) {
+        console.error(`Error while deleting branch with ID ${branchId}:`, error);
+        return res.status(500).json(
+            new ApiResponse(500, null, "Error while deleting branch")
+        );
+    }
+});
+
 const getAllBranches = asyncHandler(async (req, res) => {
     try {
         const sql = `SELECT * FROM branch WHERE userId = ? AND companyId = ? ORDER BY createdAt DESC`;
@@ -165,32 +244,35 @@ const updateEmployee = asyncHandler(async (req, res) => {
 })
 
 const deleteEmployee = asyncHandler(async (req, res) => {
-    const reqBody = req.body || {};
     const employeeId = req.params.employeeId;
+
+    if (!employeeId) {
+        return res.status(400).json(
+            new ApiResponse(400, null, "Employee ID is required")
+        );
+    }
 
     try {
         const sql = `DELETE FROM employee WHERE employeeId = ?`;
         const params = [employeeId];
-        const [result, fields] = await db.query(sql, params);
+        const [result] = await db.query(sql, params);
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json(
+                new ApiResponse(404, null, "Employee not found")
+            );
+        }
 
         return res.status(200).json(
-            new ApiResponse(
-                200,
-                null,
-                "Employee deleted successfully"
-            )
+            new ApiResponse(200, null, "Employee deleted successfully")
         );
     } catch (error) {
-        console.log("Error while deleting employee: ", error);
+        console.error(`Error while deleting employee with ID ${employeeId}:`, error);
         return res.status(500).json(
-            new ApiResponse(
-                500,
-                null,
-                "Error while deleting employee"
-            )
+            new ApiResponse(500, null, "Error while deleting employee")
         );
     }
-})
+});
 
 const getEmployee = asyncHandler(async (req, res) => {
     const reqBody = req.body || {};
@@ -265,10 +347,7 @@ const getEmployee = asyncHandler(async (req, res) => {
 })
 
 const getBranchEmployees = asyncHandler(async (req, res) => {
-    const reqBody = req.body || {};
-
-    const { employeeId, name } = reqBody;
-
+    const { employeeId, name } = req.query;
     const branchId = req.params.branchId;
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
@@ -343,12 +422,10 @@ const getBranchEmployees = asyncHandler(async (req, res) => {
 });
 
 const getAllEmployees = asyncHandler(async (req, res) => {
+    const { name, email, employeeId } = req.query;
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
-
-    // Extract search criteria from the request body
-    const { name, email, employeeId } = req.body || {};
 
     try {
         // Fetch branch IDs for the user's company
@@ -451,6 +528,8 @@ const getAllEmployees = asyncHandler(async (req, res) => {
 
 export {
     addBranch,
+    updateBranch,
+    deleteBranch,
     getAllBranches,
     addEmployee,
     updateEmployee,

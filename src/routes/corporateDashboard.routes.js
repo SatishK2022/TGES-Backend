@@ -1,11 +1,16 @@
 import express from "express";
 import { isLoggedIn } from "../middlewares/auth.middleware.js";
-import { addBranch, addEmployee, deleteEmployee, getAllBranches, getAllEmployees, getBranchEmployees, getEmployee, updateEmployee } from "../controller/corporateDashboard.controller.js";
+import { addBranch, addEmployee, deleteBranch, deleteEmployee, getAllBranches, getAllEmployees, getBranchEmployees, getEmployee, updateBranch, updateEmployee } from "../controller/corporateDashboard.controller.js";
 const router = express.Router();
 
 router
     .route("/branch")
     .post(isLoggedIn, addBranch);
+
+router
+    .route("/branch/:branchId")
+    .put(isLoggedIn, updateBranch)
+    .delete(isLoggedIn, deleteBranch)
 
 router
     .route("/branch/all")

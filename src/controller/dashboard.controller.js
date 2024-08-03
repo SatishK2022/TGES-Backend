@@ -172,12 +172,10 @@ const logoutAdmin = asyncHandler(async (req, res) => {
  * @Description : This function is used to get all retail users data in the 'retail_user' table of the 'tges' database using the MySQL module
 */
 const getAllRetailUsers = asyncHandler(async (req, res) => {
+    const { firstName, email } = req.query;
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
-
-    // Extract search criteria from the request body
-    const { firstName, email } = req.body || {};
 
     try {
         // Initialize SQL query and parameters
@@ -257,12 +255,10 @@ const getAllRetailUsers = asyncHandler(async (req, res) => {
  * @Description : This function is used to get all corporate users data in the 'corporate_user' table of the 'tges' database using the MySQL module
 */
 const getAllCorporateUsers = asyncHandler(async (req, res) => {
+    const { companyName, email } = req.query;
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
-
-    // Extract search criteria from the request body
-    const { companyName, email } = req.body || {};
 
     try {
         // Initialize SQL query and parameters
@@ -342,12 +338,10 @@ const getAllCorporateUsers = asyncHandler(async (req, res) => {
  * @Description : This function is used to get all vendors data in the 'vendor' table of the 'tges' database using the MySQL module
 */
 const getAllVendors = asyncHandler(async (req, res) => {
+    const { companyName, email } = req.query;
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
-
-    // Extract search criteria from the request body
-    const { companyName, email } = req.body || {};
 
     try {
         // Initialize SQL query and parameters
