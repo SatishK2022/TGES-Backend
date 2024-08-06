@@ -44,12 +44,20 @@ const createTrainTravel = asyncHandler(async (req, res) => {
 
         const [result, fields] = await db.query(insertTrain, [trainParams]);
 
+        // const emailContent = reqBody.map(data => {
+        //     const age = calculateAge(data.dob);
+        //     return {
+        //         ...data,
+        //         age
+        //     };
+        // });
+
         // Send Mail
         // try {
         //     sendMail(
         //         req.user.email,
         //         "Train Booking Details",
-        //         trainBookingTemplate(reqBody)
+        //         trainBookingTemplate(emailContent)
         //     )
         // } catch (error) {
         //     console.log("Error sending train booking email:", error);
@@ -100,11 +108,13 @@ const getTrainTravelDetails = asyncHandler(async (req, res) => {
             )
         }
 
-        // Calculate age for each entry
         const trainData = result.map(user => {
             const { userId, createdAt, updatedAt, ...rest } = user;
-            const calculatedAge = calculateAge(user.dob);
-            return { ...rest, age: calculatedAge };
+            if (!user.dob) {
+                const calculatedAge = calculateAge(user.dob);
+                return { ...rest, age: calculatedAge };
+            }
+            return rest;
         });
 
         return res.status(200).json(

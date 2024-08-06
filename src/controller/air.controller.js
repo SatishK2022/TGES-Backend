@@ -46,12 +46,20 @@ const createAirTravel = asyncHandler(async (req, res) => {
 
         const [insertResult, insertFields] = await db.query(insertAir, [airParams]);
 
+        // const emailContent = reqBody.map(data => {
+        //     const age = calculateAge(data.dob);
+        //     return {
+        //         ...data,
+        //         age
+        //     };
+        // });
+
         // Send Mail
         // try {
         //     sendMail(
         //         req.user.email,
         //         "Air Travel Details",
-        //         airBookingTemplate(reqBody)
+        //         airBookingTemplate(emailContent)
         //     )
         // } catch (error) {
         //     console.log("Error while sending air travel mail:", error);
@@ -104,8 +112,11 @@ const getAirTravelDetails = asyncHandler(async (req, res) => {
 
         const airData = result.map(user => {
             const { userId, createdAt, updatedAt, ...rest } = user;
-            const calculatedAge = calculateAge(user.dob)
-            return {...rest, age: calculatedAge};
+            if (!user.age) {
+                const calculatedAge = calculateAge(user.dob)
+                return { ...rest, age: calculatedAge };
+            }
+            return rest;
         });
 
         return res.status(200).json(

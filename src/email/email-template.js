@@ -307,41 +307,23 @@ export function trainBookingTemplate(data) {
 
     data.forEach(passenger => {
         passengerTable += `
-            <table>
-                <tr>
-                    <th colspan="4">Passenger ${passengerTable.split('</table>').length}</th>
-                </tr>
-                <tr>
-                    <td>Full Name</td>
-                    <td>${passenger.fullName}</td>
-                    <td>Date of Birth</td>
-                    <td>${passenger.dob}</td>
-                </tr>
-                <tr>
-                    <td>Gender</td>
-                    <td>${passenger.gender}</td>
-                    <td>Contact Number</td>
-                    <td>${passenger.contactNo}</td>
-                </tr>
-                <tr>
-                    <td>Travel From</td>
-                    <td>${passenger.travelFrom}</td>
-                    <td>Class of Travel</td>
-                    <td>${passenger.classOfTravel}</td>
-                </tr>
-                <tr>
-                    <td>Travel To</td>
-                    <td>${passenger.travelTo}</td>
-                    <td>Travel Date</td>
-                    <td>${passenger.travelDate}</td>
-                </tr>
-                <tr>
-                    <td>Train Number</td>
-                    <td>${passenger?.trainNo || "N/A"}</td>
-                    <td>Time Preference</td>
-                    <td>${passenger?.timePreference || "N/A"}</td>
-                </tr>
-            </table>`
+        <tr>
+                <td>${data.indexOf(passenger) + 1}</td>
+                <td>${passenger.fullName}</td>
+                <td>${passenger.age}</td>
+                <td>${passenger.gender}</td>
+                <td>${passenger.contactNo}</td>
+                <td>${passenger.email}</td>
+                <td>${passenger.travelFrom}</td>
+                <td>${passenger.travelTo}</td>
+                <td>Train</td>
+                <td>${passenger.classOfTravel}</td>
+                <td>${passenger.travelDate}</td>
+                <td>${passenger?.trainNo || "N/A"}</td>
+                <td>${passenger?.timePreference || "N/A"}</td>
+                <td>${passenger?.seatPreference || "N/A"}</td>
+                <td>${passenger?.mealPreference || "N/A"}</td>
+            </tr>`
     })
 
     return `
@@ -352,7 +334,7 @@ export function trainBookingTemplate(data) {
         <style>
             body {
                 font-family: Verdana, Geneva, Tahoma, sans-serif;
-                font-size: 14px;
+                font-size: 12px;
                 line-height: 1.5;
                 color: #333;
                 padding: 5px;
@@ -368,7 +350,8 @@ export function trainBookingTemplate(data) {
                 text-align: left;
                 padding: 8px;
                 background-color: #f2f2f2;
-                border: 1px solid #ddd
+                border: 1px solid #ddd;
+                text-align: center;
             }
 
             td {
@@ -378,8 +361,32 @@ export function trainBookingTemplate(data) {
         </style>
     </head>
     <body>
-        <h1>Train Booking Confirmation</h1>
-        ${passengerTable}
+        <h1>Train Booking Details</h1>
+        <table>
+            <tr>
+                <th rowspan="2">S. No.</th>
+                <th rowspan="2">Name</th>
+                <th rowspan="2">Age</th>
+                <th rowspan="2">Gender</th>
+                <th rowspan="2">Contact No</th>
+                <th rowspan="2">Email</th>
+                <th colspan="2">Travel Itinary</th>
+                <th rowspan="2">Travel Mode</th>
+                <th colspan="2">Travel Details</th>
+                <th colspan="4">Remarks</th>
+            </tr>
+            <tr>
+                <th>From</th>
+                <th>To</th>
+                <th>Class Of Travel</th>
+                <th>Travel Date</th>
+                <th>Train No</th>
+                <th>Time Preferred</th>
+                <th>Seat Preference</th>
+                <th>Preferred Meal</th>
+            </tr>
+            ${passengerTable}
+        </table>
     </body>
     </html>`
 }
@@ -389,56 +396,34 @@ export function airBookingTemplate(data) {
 
     data.forEach(passenger => {
         passengerTable += `
-            <table>
-                <tr>
-                    <th colspan="4">Passenger ${passengerTable.split('</table>').length}</th>
-                </tr>
-                <tr>
-                    <td>Full Name</td>
-                    <td>${passenger.fullName}</td>
-                    <td>Date of Birth</td>
-                    <td>${passenger.dob}</td>
-                </tr>
-                <tr>
-                    <td>Gender</td>
-                    <td>${passenger.gender}</td>
-                    <td>Contact Number</td>
-                    <td>${passenger.contactNo}</td>
-                </tr>
-                <tr>
-                    <td>Travel From</td>
-                    <td>${passenger.travelFrom}</td>
-                    <td>Class of Travel</td>
-                    <td>${passenger.classOfTravel}</td>
-                </tr>
-                <tr>
-                    <td>Travel To</td>
-                    <td>${passenger.travelTo}</td>
-                    <td>Travel Date</td>
-                    <td>${passenger.travelDate}</td>
-                </tr>
-                <tr>
-                    <td>Flight Number</td>
-                    <td>${passenger?.flightNo || "N/A"}</td>
-                    <td>Time Preference</td>
-                    <td>${passenger?.timePreference || "N/A"}</td>
-                </tr>
-                <tr>
-                    <td>Remarks</td>
-                    <td>${passenger?.remarks || "N/A"}</td>
-                </tr>
-            </table>`
+            <tr>
+                <td>${data.indexOf(passenger) + 1}</td>
+                <td>${passenger.fullName}</td>
+                <td>${passenger.age}</td>
+                <td>${passenger.gender}</td>
+                <td>${passenger.contactNo}</td>
+                <td>${passenger.email}</td>
+                <td>${passenger.travelFrom}</td>
+                <td>${passenger.travelTo}</td>
+                <td>Flight</td>
+                <td>${passenger.classOfTravel}</td>
+                <td>${passenger.travelDate}</td>
+                <td>${passenger?.flightNo || "N/A"}</td>
+                <td>${passenger?.timePreference || "N/A"}</td>
+                <td>${passenger?.seatPreference || "N/A"}</td>
+                <td>${passenger?.mealPreference || "N/A"}</td>
+            </tr>`
     })
 
     return `
     <!DOCTYPE html>
     <html>
     <head>
-        <title>Train Booking Confirmation</title>
+        <title>Flight Booking Details</title>
         <style>
             body {
                 font-family: Verdana, Geneva, Tahoma, sans-serif;
-                font-size: 14px;
+                font-size: 12px;
                 line-height: 1.5;
                 color: #333;
                 padding: 5px;
@@ -454,7 +439,8 @@ export function airBookingTemplate(data) {
                 text-align: left;
                 padding: 8px;
                 background-color: #f2f2f2;
-                border: 1px solid #ddd
+                border: 1px solid #ddd;
+                text-align: center;
             }
 
             td {
@@ -464,8 +450,32 @@ export function airBookingTemplate(data) {
         </style>
     </head>
     <body>
-        <h1>Flight Booking Confirmation</h1>
-        ${passengerTable}
+        <h1>Flight Booking Details</h1>
+        <table>
+            <tr>
+                <th rowspan="2">S. No.</th>
+                <th rowspan="2">Name</th>
+                <th rowspan="2">Age</th>
+                <th rowspan="2">Gender</th>
+                <th rowspan="2">Contact No</th>
+                <th rowspan="2">Email</th>
+                <th colspan="2">Travel Itinary</th>
+                <th rowspan="2">Travel Mode</th>
+                <th colspan="2">Travel Details</th>
+                <th colspan="4">Remarks</th>
+            </tr>
+            <tr>
+                <th>From</th>
+                <th>To</th>
+                <th>Class Of Travel</th>
+                <th>Travel Date</th>
+                <th>Flight No</th>
+                <th>Time Preferred</th>
+                <th>Seat Preference</th>
+                <th>Preferred Meal</th>
+            </tr>
+            ${passengerTable}
+        </table>
     </body>
     </html>`
 }
@@ -475,50 +485,34 @@ export function volvoBusBookingTemplate(data) {
 
     data.forEach(passenger => {
         passengerTable += `
-            <table>
-                <tr>
-                    <th colspan="4">Passenger ${passengerTable.split('</table>').length}</th>
-                </tr>
-                <tr>
-                    <td>Full Name</td>
-                    <td>${passenger.fullName}</td>
-                    <td>Date of Birth</td>
-                    <td>${passenger.dob}</td>
-                </tr>
-                <tr>
-                    <td>Gender</td>
-                    <td>${passenger.gender}</td>
-                    <td>Contact Number</td>
-                    <td>${passenger.contactNo}</td>
-                </tr>
-                <tr>
-                    <td>Pickup Location</td>
-                    <td>${passenger.pickupLocation}</td>
-                    <td>Seat Type</td>
-                    <td>${passenger.seatType}</td>
-                </tr>
-                <tr>
-                    <td>Destination</td>
-                    <td>${passenger.destination}</td>
-                    <td>Travel Date</td>
-                    <td>${passenger.travelDate}</td>
-                </tr>
-                <tr>
-                    <td>Bus Number</td>
-                    <td>${passenger?.busNo || "N/A"}</td>
-                </tr>
-            </table>`
+            <tr>
+                <td>${data.indexOf(passenger) + 1}</td>
+                <td>${passenger.fullName}</td>
+                <td>${passenger.age}</td>
+                <td>${passenger.gender}</td>
+                <td>${passenger.contactNo}</td>
+                <td>${passenger.email}</td>
+                <td>${passenger.pickupLocation}</td>
+                <td>${passenger.destination}</td>
+                <td>Bus</td>
+                <td>${passenger?.classOfTravel || "N/A"}</td>
+                <td>${passenger.travelDate}</td>
+                <td>${passenger?.busNo || "N/A"}</td>
+                <td>${passenger?.timePreference || "N/A"}</td>
+                <td>${passenger?.seatType || "N/A"}</td>
+                <td>${passenger?.mealPreference || "N/A"}</td>
+            </tr>`
     })
 
     return `
     <!DOCTYPE html>
     <html>
     <head>
-        <title>Volvo Bus Booking Confirmation</title>
+        <title>Volvo Bus Booking Details</title>
         <style>
             body {
                 font-family: Verdana, Geneva, Tahoma, sans-serif;
-                font-size: 14px;
+                font-size: 12px;
                 line-height: 1.5;
                 color: #333;
                 padding: 5px;
@@ -534,7 +528,8 @@ export function volvoBusBookingTemplate(data) {
                 text-align: left;
                 padding: 8px;
                 background-color: #f2f2f2;
-                border: 1px solid #ddd
+                border: 1px solid #ddd;
+                text-align: center;
             }
 
             td {
@@ -544,8 +539,32 @@ export function volvoBusBookingTemplate(data) {
         </style>
     </head>
     <body>
-        <h1>Volvo Bus Booking Confirmation</h1>
-        ${passengerTable}
+        <h1>Volvo Bus Booking Details</h1>
+        <table>
+            <tr>
+                <th rowspan="2">S. No.</th>
+                <th rowspan="2">Name</th>
+                <th rowspan="2">Age</th>
+                <th rowspan="2">Gender</th>
+                <th rowspan="2">Contact No</th>
+                <th rowspan="2">Email</th>
+                <th colspan="2">Travel Itinary</th>
+                <th rowspan="2">Travel Mode</th>
+                <th colspan="2">Travel Details</th>
+                <th colspan="4">Remarks</th>
+            </tr>
+            <tr>
+                <th>From</th>
+                <th>To</th>
+                <th>Class Of Travel</th>
+                <th>Travel Date</th>
+                <th>Bus No</th>
+                <th>Time Preferred</th>
+                <th>Seat Preference</th>
+                <th>Preferred Meal</th>
+            </tr>
+            ${passengerTable}
+        </table>
     </body>
     </html>`
 }
@@ -766,7 +785,7 @@ export function hotelBookingTemplate({ nationality, name, contactNo1, contactNo2
     </html>`
 }
 
-export function passportBookingTemplate({ totalNoOfTravellers, name, nationality, dateOfBirth, gender, passportNo, passportIssueDate, passportExpiryDate, passportValidityPeriod, placeOfIssue, nomineeName, nomineeGender, addressWithPinCode, contactNo, email, holdPassportFrom, applyFrom, goTo, travelDuration }) {
+export function passportBookingTemplate({ totalNoOfTravellers, name, nationality, dob, age,  gender, passportNo, passportIssueDate, passportExpiryDate, passportValidityPeriod, placeOfIssue, nomineeName, nomineeGender, addressWithPinCode, contactNo, email, holdPassportFrom, applyFrom, goTo, travelDuration }) {
     return `
     <!DOCTYPE html>
     <html>
@@ -815,7 +834,7 @@ export function passportBookingTemplate({ totalNoOfTravellers, name, nationality
                 <td>Nationality</td>
                 <td>${nationality}</td>
                 <td>Date of Birth</td>
-                <td>${dateOfBirth}</td>
+                <td>${dob}</td>
             </tr>
             <tr>
                 <td>Gender</td>
@@ -860,6 +879,8 @@ export function passportBookingTemplate({ totalNoOfTravellers, name, nationality
                 <td>${goTo}</td>
             </tr>
             <tr>
+                <td>Age</td>
+                <td>${age}</td>
                 <td>Travel Duration</td>
                 <td>${travelDuration}</td>
             </tr>
@@ -869,7 +890,7 @@ export function passportBookingTemplate({ totalNoOfTravellers, name, nationality
 `
 }
 
-export function healthInsuranceTemplate({ name, gender, dateOfBirth, address, contactNo, email, preExistingDisease, diseaseName, smoker, nomineeName, nomineeGender, nomineeRelationship }) {
+export function healthInsuranceTemplate({ name, gender, dob, address, contactNo, email, preExistingDisease, diseaseName, smoker, nomineeName, nomineeGender, nomineeRelationship }) {
     return `
     <!DOCTYPE html>
     <html>
@@ -916,7 +937,7 @@ export function healthInsuranceTemplate({ name, gender, dateOfBirth, address, co
             </tr>
             <tr>
                 <td>Date of Birth</td>
-                <td>${dateOfBirth}</td>
+                <td>${dob}</td>
                 <td>Address</td>
                 <td>${address}</td>
             </tr>
@@ -950,7 +971,7 @@ export function healthInsuranceTemplate({ name, gender, dateOfBirth, address, co
 `
 }
 
-export function travelInsuranceTemplate({ name, gender, dateOfBirth, address, contactNo, email, tripType, startDate, endDate, preExistingDisease, diseaseName, smoker, passportNo, dateOfIssue, dateOfExpiry, nomineeName, nomineeGender, nomineeRelationship }) {
+export function travelInsuranceTemplate({ name, gender, dob, address, contactNo, email, tripType, startDate, endDate, preExistingDisease, diseaseName, smoker, passportNo, dateOfIssue, dateOfExpiry, nomineeName, nomineeGender, nomineeRelationship }) {
     return `
     <!DOCTYPE html>
     <html>
@@ -997,7 +1018,7 @@ export function travelInsuranceTemplate({ name, gender, dateOfBirth, address, co
             </tr>
             <tr>
                 <td>Date of Birth</td>
-                <td>${dateOfBirth}</td>
+                <td>${dob}</td>
                 <td>Address</td>
                 <td>${address}</td>
             </tr>
@@ -1535,7 +1556,7 @@ export function cancelHotelBookingTemplate({ nationality, name, contactNo1, cont
     `
 }
 
-export function cancelPassportBookingTemplate({ totalNoOfTravellers, name, nationality, dateOfBirth, gender, passportNo, passportIssueDate, passportExpiryDate, passportValidityPeriod, placeOfIssue, nomineeName, nomineeGender, addressWithPinCode, contactNo, email, holdPassportFrom, applyFrom, goTo, travelEntryDate, travelExitDate }) {
+export function cancelPassportBookingTemplate({ totalNoOfTravellers, name, nationality, dob, gender, passportNo, passportIssueDate, passportExpiryDate, passportValidityPeriod, placeOfIssue, nomineeName, nomineeGender, addressWithPinCode, contactNo, email, holdPassportFrom, applyFrom, goTo, travelEntryDate, travelExitDate }) {
     return `
     <!DOCTYPE html>
     <html>
@@ -1592,7 +1613,7 @@ export function cancelPassportBookingTemplate({ totalNoOfTravellers, name, natio
                 <td>Nationality</td>
                 <td>${nationality}</td>
                 <td>Date of Birth</td>
-                <td>${dateOfBirth}</td>
+                <td>${dob}</td>
             </tr>
             <tr>
                 <td>Gender</td>
@@ -1646,7 +1667,7 @@ export function cancelPassportBookingTemplate({ totalNoOfTravellers, name, natio
     `
 }
 
-export function cancelHealthInsuranceTemplate({ name, gender, dateOfBirth, address, contactNo, email, preExistingDisease, diseaseName, smoker, nomineeName, nomineeGender, nomineeRelationship }) {
+export function cancelHealthInsuranceTemplate({ name, gender, dob, address, contactNo, email, preExistingDisease, diseaseName, smoker, nomineeName, nomineeGender, nomineeRelationship }) {
     return `
     <!DOCTYPE html>
     <html>
@@ -1701,7 +1722,7 @@ export function cancelHealthInsuranceTemplate({ name, gender, dateOfBirth, addre
             </tr>
             <tr>
                 <td>Date of Birth</td>
-                <td>${dateOfBirth}</td>
+                <td>${dob}</td>
                 <td>Address</td>
                 <td>${address}</td>
             </tr>
@@ -1735,7 +1756,7 @@ export function cancelHealthInsuranceTemplate({ name, gender, dateOfBirth, addre
     `
 }
 
-export function cancelTravelInsuranceTemplate({ name, gender, dateOfBirth, address, contactNo, email, tripType, startDate, endDate, preExistingDisease, diseaseName, smoker, passportNo, dateOfIssue, dateOfExpiry, nomineeName, nomineeGender, nomineeRelationship }) {
+export function cancelTravelInsuranceTemplate({ name, gender, dob, address, contactNo, email, tripType, startDate, endDate, preExistingDisease, diseaseName, smoker, passportNo, dateOfIssue, dateOfExpiry, nomineeName, nomineeGender, nomineeRelationship }) {
     return `
     <!DOCTYPE html>
     <html>
@@ -1790,7 +1811,7 @@ export function cancelTravelInsuranceTemplate({ name, gender, dateOfBirth, addre
             </tr>
             <tr>
                 <td>Date of Birth</td>
-                <td>${dateOfBirth}</td>
+                <td>${dob}</td>
                 <td>Address</td>
                 <td>${address}</td>
             </tr>

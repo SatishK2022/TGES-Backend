@@ -27,7 +27,7 @@ const createPassport = asyncHandler(async (req, res) => {
         //     sendMail(
         //         req.user.email,
         //         "Passport Details",
-        //         passportBookingTemplate({ totalNoOfTravellers, name, nationality, dob, gender, passportNo, passportIssueDate, passportExpiryDate, passportValidityPeriod, placeOfIssue, nomineeName, nomineeGender, addressWithPinCode, contactNo, email, holdPassportFrom, applyFrom, goTo, travelDuration })
+        //         passportBookingTemplate({ totalNoOfTravellers, name, nationality, dob, age: calculateAge(dob) , gender, passportNo, passportIssueDate, passportExpiryDate, passportValidityPeriod, placeOfIssue, nomineeName, nomineeGender, addressWithPinCode, contactNo, email, holdPassportFrom, applyFrom, goTo, travelDuration })
         //     )
         // } catch (error) {
         //     console.log("Error sending passport booking email:", error);
