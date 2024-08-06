@@ -1,7 +1,7 @@
 import asyncHandler from "../utils/asyncHandler.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import connectToDb from "../config/db.js";
-import { comparePassword, generateToken, hashPassword } from "../utils/helper.js";
+import { calculateAge, comparePassword, generateToken, hashPassword } from "../utils/helper.js";
 
 let db = await connectToDb();
 
@@ -204,7 +204,7 @@ const getAllRetailUsers = asyncHandler(async (req, res) => {
         if (result.length === 0) {
             return res.status(404).json(
                 new ApiResponse(
-                    404,
+                    200,
                     null,
                     "No retail users found"
                 )
@@ -287,7 +287,7 @@ const getAllCorporateUsers = asyncHandler(async (req, res) => {
         if (result.length === 0) {
             return res.status(404).json(
                 new ApiResponse(
-                    404,
+                    200,
                     null,
                     "No corporate users found"
                 )
@@ -370,7 +370,7 @@ const getAllVendors = asyncHandler(async (req, res) => {
         if (result.length === 0) {
             return res.status(404).json(
                 new ApiResponse(
-                    404,
+                    200,
                     null,
                     "No vendors found"
                 )
@@ -433,7 +433,7 @@ const getAllTrainDetails = asyncHandler(async (req, res) => {
         if (result.length === 0) {
             return res.status(404).json(
                 new ApiResponse(
-                    404,
+                    200,
                     null,
                     "No train details found"
                 )
@@ -446,6 +446,10 @@ const getAllTrainDetails = asyncHandler(async (req, res) => {
 
         const cleanedResult = result.map(user => {
             const { userId, createdAt, updatedAt, ...rest } = user;
+            if (!user.age) {
+                let calculatedAge = calculateAge(user.dob);
+                return { ...rest, age: calculatedAge };
+            }
             return rest;
         });
 
@@ -496,7 +500,7 @@ const getAllAirDetails = asyncHandler(async (req, res) => {
         if (result.length === 0) {
             return res.status(404).json(
                 new ApiResponse(
-                    404,
+                    200,
                     null,
                     "No air details found"
                 )
@@ -509,6 +513,11 @@ const getAllAirDetails = asyncHandler(async (req, res) => {
 
         const cleanedResult = result.map(user => {
             const { userId, createdAt, updatedAt, ...rest } = user;
+            let calculatedAge;
+            if (!user.age) {
+                calculatedAge = calculateAge(user.dob);
+                return { ...rest, age: calculatedAge };
+            }
             return rest;
         });
 
@@ -559,7 +568,7 @@ const getAllCabDetails = asyncHandler(async (req, res) => {
         if (result.length === 0) {
             return res.status(404).json(
                 new ApiResponse(
-                    404,
+                    200,
                     null,
                     "No cab details found"
                 )
@@ -622,7 +631,7 @@ const getAllBusDetails = asyncHandler(async (req, res) => {
         if (result.length === 0) {
             return res.status(404).json(
                 new ApiResponse(
-                    404,
+                    200,
                     null,
                     "No bus details found"
                 )
@@ -635,6 +644,10 @@ const getAllBusDetails = asyncHandler(async (req, res) => {
 
         const cleanedResult = result.map(user => {
             const { userId, createdAt, updatedAt, ...rest } = user;
+            if (!user.dob) {
+                let calculatedAge = calculateAge(user.dob);
+                return { ...rest, age: calculatedAge };
+            }
             return rest;
         });
 
@@ -685,7 +698,7 @@ const getAllHotelDetails = asyncHandler(async (req, res) => {
         if (result.length === 0) {
             return res.status(404).json(
                 new ApiResponse(
-                    404,
+                    200,
                     null,
                     "No hotel details found"
                 )
@@ -695,7 +708,7 @@ const getAllHotelDetails = asyncHandler(async (req, res) => {
         const totalCountSql = `SELECT FOUND_ROWS() as count`;
         const [totalCountResult] = await db.query(totalCountSql);
         const totalCount = totalCountResult[0].count;
-        
+
         const cleanedResult = result.map(user => {
             const { userId, createdAt, updatedAt, ...rest } = user;
             return rest;
@@ -748,15 +761,19 @@ const getAllTravelInsurance = asyncHandler(async (req, res) => {
         if (result.length === 0) {
             return res.status(404).json(
                 new ApiResponse(
-                    404,
+                    200,
                     null,
                     "No travel insurance details found"
                 )
             )
         }
-        
+
         const cleanedResult = result.map(user => {
             const { userId, createdAt, updatedAt, ...rest } = user;
+            if (!user.dob) {
+                const calculatedAge = calculateAge(user.dob);
+                return { ...rest, age: calculatedAge };
+            }
             return rest;
         });
 
@@ -811,7 +828,7 @@ const getAllHealthInsurance = asyncHandler(async (req, res) => {
         if (result.length === 0) {
             return res.status(404).json(
                 new ApiResponse(
-                    404,
+                    200,
                     null,
                     "No health insurance details found"
                 )
@@ -820,6 +837,10 @@ const getAllHealthInsurance = asyncHandler(async (req, res) => {
 
         const cleanedResult = result.map(user => {
             const { userId, createdAt, updatedAt, ...rest } = user;
+            if (!user.dob) {
+                const calculatedAge = calculateAge(user.dob);
+                return { ...rest, age: calculatedAge };
+            }
             return rest;
         });
 

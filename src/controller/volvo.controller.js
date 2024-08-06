@@ -3,6 +3,7 @@ import asyncHandler from "../utils/asyncHandler.js";
 import connectToDb from "../config/db.js";
 import { volvoBusBookingTemplate } from "../email/email-template.js";
 import { sendMail } from "../utils/sendMail.js";
+import { calculateAge } from "../utils/helper.js";
 
 let db = await connectToDb();
 
@@ -89,17 +90,24 @@ const getVolvoBusTravelDetails = asyncHandler(async (req, res) => {
         if (selectResult.length === 0) {
             return res.status(404).json(
                 new ApiResponse(
-                    404,
+                    200,
                     null,
                     "Volvo Bus Travel Details not found"
                 )
             )
         }
 
+        // Calculate age for each entry
+        const busTravelData = selectResult.map(user => {
+            const { userId, createdAt, updatedAt, ...rest } = user;
+            const calculatedAge = calculateAge(user.dob);
+            return { ...rest, age: calculatedAge };
+        });
+
         return res.status(200).json(
             new ApiResponse(
                 200,
-                selectResult,
+                busTravelData,
                 "Volvo bus travel details fetched successfully"
             )
         );

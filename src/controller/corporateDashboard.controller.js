@@ -1,7 +1,7 @@
 import asyncHandler from "../utils/asyncHandler.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import connectToDb from "../config/db.js";
-import { generateBranchId } from "../utils/helper.js";
+import { calculateAge, generateBranchId } from "../utils/helper.js";
 
 let db = await connectToDb();
 
@@ -124,7 +124,7 @@ const getAllBranches = asyncHandler(async (req, res) => {
         if (result.length === 0) {
             return res.status(404).json(
                 new ApiResponse(
-                    404,
+                    200,
                     null,
                     "No branches found"
                 )
@@ -157,7 +157,7 @@ const getAllBranches = asyncHandler(async (req, res) => {
 
 const addEmployee = asyncHandler(async (req, res) => {
     const reqBody = req.body || {};
-    const { employeeId, name, gender, dateOfBirth, zipCode, country, city, state, email, password, countryCode, contactNo, department, position } = reqBody;
+    const { employeeId, name, gender, dob, zipCode, country, city, state, email, password, countryCode, contactNo, department, position } = reqBody;
     const branchId = req.params.branchId;
 
     try {
@@ -175,8 +175,8 @@ const addEmployee = asyncHandler(async (req, res) => {
             );
         }
 
-        const employee = `INSERT INTO employee (userId, branchId, employeeId, name, gender, dateOfBirth, zipCode, country, city, state, email, password, countryCode, contactNo, department, position) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-        const employeeParams = [req.user.id, branchId, employeeId, name, gender, dateOfBirth, zipCode, country, city, state, email, password, countryCode, contactNo, department, position];
+        const employee = `INSERT INTO employee (userId, branchId, employeeId, name, gender, dob, zipCode, country, city, state, email, password, countryCode, contactNo, department, position) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+        const employeeParams = [req.user.id, branchId, employeeId, name, gender, dob, zipCode, country, city, state, email, password, countryCode, contactNo, department, position];
 
         const [insertResult, insertFields] = await db.query(employee, employeeParams);
 
@@ -202,7 +202,7 @@ const addEmployee = asyncHandler(async (req, res) => {
 const updateEmployee = asyncHandler(async (req, res) => {
     const reqBody = req.body || {};
     const employeeId = req.params.employeeId;
-    const { name, gender, dateOfBirth, zipCode, country, city, state, email, password, countryCode, contactNo, department, position } = reqBody;
+    const { name, gender, dob, zipCode, country, city, state, email, password, countryCode, contactNo, department, position } = reqBody;
 
     try {
         const sql = `SELECT * FROM employee WHERE employeeId = ?`;
@@ -219,8 +219,8 @@ const updateEmployee = asyncHandler(async (req, res) => {
             );
         }
 
-        const updateSql = `UPDATE employee SET name = ?, gender = ?, dateOfBirth = ?, zipCode = ?, country = ?, city = ?, state = ?, email = ?, password = ?, countryCode = ?, contactNo = ?, department = ?, position = ? WHERE employeeId = ?`;
-        const updateParams = [name, gender, dateOfBirth, zipCode, country, city, state, email, password, countryCode, contactNo, department, position, employeeId];
+        const updateSql = `UPDATE employee SET name = ?, gender = ?, dob = ?, zipCode = ?, country = ?, city = ?, state = ?, email = ?, password = ?, countryCode = ?, contactNo = ?, department = ?, position = ? WHERE employeeId = ?`;
+        const updateParams = [name, gender, dob, zipCode, country, city, state, email, password, countryCode, contactNo, department, position, employeeId];
         const [updateResult, updateFields] = await db.query(updateSql, updateParams);
 
         return res.status(200).json(
@@ -324,7 +324,8 @@ const getEmployee = asyncHandler(async (req, res) => {
 
         const employeeData = resultEmployeeInfo.map(employee => {
             const { userId, createdAt, updatedAt, ...rest } = employee;
-            return rest;
+            const calculatedAge = calculateAge(employee.age);
+            return { ...rest, age: calculatedAge };
         });
 
         return res.status(200).json(
@@ -389,7 +390,8 @@ const getBranchEmployees = asyncHandler(async (req, res) => {
 
         const employeeData = result.map(employee => {
             const { userId, branchId, createdAt, updatedAt, ...rest } = employee;
-            return rest;
+            const calculatedAge = calculateAge(employee.age);
+            return { ...rest, age: calculatedAge };
         });
 
         return res.status(200).json(
@@ -493,7 +495,8 @@ const getAllEmployees = asyncHandler(async (req, res) => {
         // Clean up employee data by removing sensitive fields
         const employeeData = resultEmployees.map(employee => {
             const { userId, createdAt, updatedAt, ...rest } = employee;
-            return rest;
+            const calculatedAge = calculateAge(employee.age);
+            return { ...rest, age: calculatedAge };
         });
 
         // Return the fetched employee data with pagination info

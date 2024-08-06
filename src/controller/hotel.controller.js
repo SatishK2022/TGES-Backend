@@ -80,19 +80,22 @@ const getHotelBookings = asyncHandler(async (req, res) => {
         if (result.length === 0) {
             return res.status(404).json(
                 new ApiResponse(
-                    404,
+                    200,
                     null,
                     "Hotel Travel Details not found"
                 )
             )
         }
 
-
+        const hotelData = result.map(user => {
+            const {userId, createdAt, updatedAt, ...rest} = user;
+            return rest
+        })
 
         return res.status(200).json(
             new ApiResponse(
                 200,
-                result,
+                hotelData,
                 "Hotel Details fetched successfully"
             )
         )

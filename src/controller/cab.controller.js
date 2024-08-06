@@ -70,7 +70,7 @@ const getCabTravelDetails = asyncHandler(async (req, res) => {
         if (result.length === 0) {
             return res.status(404).json(
                 new ApiResponse(
-                    404,
+                    200,
                     null,
                     "Cab Travel Details not found"
                 )
@@ -78,7 +78,7 @@ const getCabTravelDetails = asyncHandler(async (req, res) => {
         }
 
         const cabData = result.map(user => {
-            const { userId, password, createdAt, updatedAt, ...rest } = user;
+            const { userId, createdAt, updatedAt, ...rest } = user;
             return rest;
         });
 

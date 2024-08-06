@@ -3,6 +3,7 @@ import asyncHandler from "../utils/asyncHandler.js";
 import connectToDb from "../config/db.js";
 import { sendMail } from "../utils/sendMail.js";
 import { trainBookingTemplate } from "../email/email-template.js";
+import { calculateAge } from "../utils/helper.js";
 
 let db = await connectToDb();
 
@@ -92,16 +93,18 @@ const getTrainTravelDetails = asyncHandler(async (req, res) => {
         if (result.length === 0) {
             return res.status(404).json(
                 new ApiResponse(
-                    404,
+                    200,
                     null,
                     "Train Travel Details not found"
                 )
             )
         }
 
+        // Calculate age for each entry
         const trainData = result.map(user => {
             const { userId, createdAt, updatedAt, ...rest } = user;
-            return rest;
+            const calculatedAge = calculateAge(user.dob);
+            return { ...rest, age: calculatedAge };
         });
 
         return res.status(200).json(

@@ -5,9 +5,9 @@ import { createAirTravel, deleteAirTravel, getAirTravelDetails, updateAirTravel 
 import { createVolvoBusTravel, deleteVolvoBusTravel, getVolvoBusTravelDetails, updateVolvoBusTravel } from "../controller/volvo.controller.js";
 import { createCabTravel, deleteCabTravel, getCabTravelDetails, updateCabTravel } from "../controller/cab.controller.js";
 import { createHotelBooking, deleteHotelBooking, getHotelBookings, updateHotelBooking } from "../controller/hotel.controller.js";
-import { createPassport } from "../controller/passport.controller.js"
-import { createTravelInsurance } from "../controller/travelInsurance.controller.js"
-import { createHealthInsurance } from "../controller/healthInsurance.controller.js"
+import { createPassport, getPassportDetails } from "../controller/passport.controller.js"
+import { createTravelInsurance, getTravelInsuranceDetails } from "../controller/travelInsurance.controller.js"
+import { createHealthInsurance, getHealthInsuranceDetails } from "../controller/healthInsurance.controller.js"
 const router = express.Router()
 
 // Train Routes
@@ -58,13 +58,16 @@ router.route("/hotel/:id")
 // Passport Routes
 router.route("/passport")
     .post(isLoggedIn, createPassport)
+    .get(isLoggedIn, getPassportDetails)
 
 // travelInsurance Routes
 router.route("/travelInsurance")
     .post(isLoggedIn, createTravelInsurance)
+    .get(isLoggedIn, getTravelInsuranceDetails)
 
 // healthInsurance Routes
 router.route("/healthInsurance")
     .post(isLoggedIn, createHealthInsurance)
+    .get(isLoggedIn, getHealthInsuranceDetails)
 
 export default router;

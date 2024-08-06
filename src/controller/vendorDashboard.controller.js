@@ -1,7 +1,7 @@
 import asyncHandler from "../utils/asyncHandler.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import connectToDb from "../config/db.js";
-import { generateBranchId } from "../utils/helper.js";
+import { calculateAge, generateBranchId } from "../utils/helper.js";
 
 let db = await connectToDb();
 
@@ -36,25 +36,95 @@ const addBranch = asyncHandler(async (req, res) => {
     }
 })
 
-const getAllBranches = asyncHandler(async (req, res) => {
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
-    const skip = (page - 1) * limit;
+const updateBranch = asyncHandler(async (req, res) => {
+    const reqBody = req.body || {};
+    const branchId = req.params.branchId;
+    const { name, city, country, state, zipCode, address1, address2, countryCode, contactNo, landlineNumber, landlineCityCode, landlineCountryCode, email } = reqBody;
 
     try {
-        const sql = `SELECT SQL_CALC_FOUND_ROWS * FROM branch WHERE userId = ? AND companyId = ? LIMIT ? OFFSET ?`;
-        const params = [req.user.id, req.user.companyId, limit, skip];
+        const sql = `SELECT * FROM branch WHERE branchId = ?`
+        const params = [branchId];
         const [result, fields] = await db.query(sql, params);
-
-        const totalCountSql = `SELECT FOUND_ROWS() as count`;
-        const [totalCountResult] = await db.query(totalCountSql);
-
-        const totalCount = totalCountResult[0].count;
 
         if (result.length === 0) {
             return res.status(404).json(
                 new ApiResponse(
                     404,
+                    null,
+                    "Branch not found"
+                )
+            )
+        }
+
+        const updateSql = `UPDATE branch SET name = ?, city = ?, country = ?, state = ?, zipCode = ?, address1 = ?, address2 = ?, countryCode = ?, contactNo = ?, landlineNumber = ?, landlineCityCode = ?, landlineCountryCode = ?, email = ? WHERE branchId = ?`;
+        const updateParams = [name, city, country, state, zipCode, address1, address2, countryCode, contactNo, landlineNumber, landlineCityCode, landlineCountryCode, email, branchId];
+        const [updateResult, updateFields] = await db.query(updateSql, updateParams);
+
+        return res.status(200).json(
+            new ApiResponse(
+                200,
+                null,
+                "Branch updated successfully"
+            )
+        )
+    } catch(error) {
+        console.log("Error while updating branch: ", error);
+        return res.status(500).json(
+            new ApiResponse(
+                500,
+                null,
+                "Error while updating branch"
+            )
+        )
+    }
+})
+
+const deleteBranch = asyncHandler(async (req, res) => {
+    const branchId = req.params.branchId;
+
+    if (!branchId) {
+        return res.status(400).json(
+            new ApiResponse(400, null, "Branch ID is required")
+        );
+    }
+
+    try {
+        const employeeSql = "UPDATE employee SET branchId = NULL WHERE branchId = ?";
+        const employeeParams = [branchId];
+        await db.query(employeeSql, employeeParams);
+
+        const sql = `DELETE FROM branch WHERE branchId = ?`;
+        const queryParams = [branchId];
+        const [result] = await db.query(sql, queryParams);
+
+        // Check if any rows were affected
+        if (result.affectedRows === 0) {
+            return res.status(404).json(
+                new ApiResponse(404, null, "Branch not found")
+            );
+        }
+
+        return res.status(200).json(
+            new ApiResponse(200, null, "Branch deleted successfully")
+        );
+    } catch (error) {
+        console.error(`Error while deleting branch with ID ${branchId}:`, error);
+        return res.status(500).json(
+            new ApiResponse(500, null, "Error while deleting branch")
+        );
+    }
+});
+
+const getAllBranches = asyncHandler(async (req, res) => {
+    try {
+        const sql = `SELECT * FROM branch WHERE userId = ? AND companyId = ? ORDER BY createdAt DESC`;
+        const params = [req.user.id, req.user.companyId];
+        const [result, fields] = await db.query(sql, params);
+
+        if (result.length === 0) {
+            return res.status(404).json(
+                new ApiResponse(
+                    200,
                     null,
                     "No branches found"
                 )
@@ -69,17 +139,7 @@ const getAllBranches = asyncHandler(async (req, res) => {
         return res.status(200).json(
             new ApiResponse(
                 200,
-                {
-                    data: branchData,
-                    pagination: {
-                        total_records: totalCount,
-                        total_pages: Math.ceil(totalCount / limit),
-                        limit,
-                        current_page: page,
-                        next_page: page < Math.ceil(totalCount / limit) ? page + 1 : null,
-                        prev_page: page > 1 ? page - 1 : null
-                    }
-                },
+                branchData,
                 "Branches fetched successfully"
             )
         );
@@ -97,7 +157,7 @@ const getAllBranches = asyncHandler(async (req, res) => {
 
 const addEmployee = asyncHandler(async (req, res) => {
     const reqBody = req.body || {};
-    const { employeeId, name, gender, dateOfBirth, zipCode, country, city, state, email, password, countryCode, contactNo, department, position } = reqBody;
+    const { employeeId, name, gender, dob, zipCode, country, city, state, email, password, countryCode, contactNo, department, position } = reqBody;
     const branchId = req.params.branchId;
 
     try {
@@ -115,8 +175,8 @@ const addEmployee = asyncHandler(async (req, res) => {
             );
         }
 
-        const employee = `INSERT INTO employee (userId, branchId, employeeId, name, gender, dateOfBirth, zipCode, country, city, state, email, password, countryCode, contactNo, department, position) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-        const employeeParams = [req.user.id, branchId, employeeId, name, gender, dateOfBirth, zipCode, country, city, state, email, password, countryCode, contactNo, department, position];
+        const employee = `INSERT INTO employee (userId, branchId, employeeId, name, gender, dob, zipCode, country, city, state, email, password, countryCode, contactNo, department, position) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+        const employeeParams = [req.user.id, branchId, employeeId, name, gender, dob, zipCode, country, city, state, email, password, countryCode, contactNo, department, position];
 
         const [insertResult, insertFields] = await db.query(employee, employeeParams);
 
@@ -142,7 +202,7 @@ const addEmployee = asyncHandler(async (req, res) => {
 const updateEmployee = asyncHandler(async (req, res) => {
     const reqBody = req.body || {};
     const employeeId = req.params.employeeId;
-    const { name, gender, dateOfBirth, zipCode, country, city, state, email, password, countryCode, contactNo, department, position } = reqBody;
+    const { name, gender, dob, zipCode, country, city, state, email, password, countryCode, contactNo, department, position } = reqBody;
 
     try {
         const sql = `SELECT * FROM employee WHERE employeeId = ?`;
@@ -159,8 +219,8 @@ const updateEmployee = asyncHandler(async (req, res) => {
             );
         }
 
-        const updateSql = `UPDATE employee SET name = ?, gender = ?, dateOfBirth = ?, zipCode = ?, country = ?, city = ?, state = ?, email = ?, password = ?, countryCode = ?, contactNo = ?, department = ?, position = ? WHERE employeeId = ?`;
-        const updateParams = [name, gender, dateOfBirth, zipCode, country, city, state, email, password, countryCode, contactNo, department, position, employeeId];
+        const updateSql = `UPDATE employee SET name = ?, gender = ?, dob = ?, zipCode = ?, country = ?, city = ?, state = ?, email = ?, password = ?, countryCode = ?, contactNo = ?, department = ?, position = ? WHERE employeeId = ?`;
+        const updateParams = [name, gender, dob, zipCode, country, city, state, email, password, countryCode, contactNo, department, position, employeeId];
         const [updateResult, updateFields] = await db.query(updateSql, updateParams);
 
         return res.status(200).json(
@@ -184,32 +244,35 @@ const updateEmployee = asyncHandler(async (req, res) => {
 })
 
 const deleteEmployee = asyncHandler(async (req, res) => {
-    const reqBody = req.body || {};
     const employeeId = req.params.employeeId;
+
+    if (!employeeId) {
+        return res.status(400).json(
+            new ApiResponse(400, null, "Employee ID is required")
+        );
+    }
 
     try {
         const sql = `DELETE FROM employee WHERE employeeId = ?`;
         const params = [employeeId];
-        const [result, fields] = await db.query(sql, params);
+        const [result] = await db.query(sql, params);
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json(
+                new ApiResponse(404, null, "Employee not found")
+            );
+        }
 
         return res.status(200).json(
-            new ApiResponse(
-                200,
-                null,
-                "Employee deleted successfully"
-            )
+            new ApiResponse(200, null, "Employee deleted successfully")
         );
     } catch (error) {
-        console.log("Error while deleting employee: ", error);
+        console.error(`Error while deleting employee with ID ${employeeId}:`, error);
         return res.status(500).json(
-            new ApiResponse(
-                500,
-                null,
-                "Error while deleting employee"
-            )
+            new ApiResponse(500, null, "Error while deleting employee")
         );
     }
-})
+});
 
 const getEmployee = asyncHandler(async (req, res) => {
     const reqBody = req.body || {};
@@ -252,7 +315,7 @@ const getEmployee = asyncHandler(async (req, res) => {
         if (resultEmployeeInfo.length === 0) {
             return res.status(404).json(
                 new ApiResponse(
-                    404,
+                    200,
                     null,
                     "Employee not found"
                 )
@@ -261,7 +324,8 @@ const getEmployee = asyncHandler(async (req, res) => {
 
         const employeeData = resultEmployeeInfo.map(employee => {
             const { userId, createdAt, updatedAt, ...rest } = employee;
-            return rest;
+            const calculatedAge = calculateAge(employee.age);
+            return { ...rest, age: calculatedAge };
         });
 
         return res.status(200).json(
@@ -284,21 +348,36 @@ const getEmployee = asyncHandler(async (req, res) => {
 })
 
 const getBranchEmployees = asyncHandler(async (req, res) => {
-    const reqBody = req.body || {};
+    const { employeeId, name } = req.query;
     const branchId = req.params.branchId;
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
 
+    let sql = `SELECT SQL_CALC_FOUND_ROWS * FROM employee WHERE userId = ? AND branchId = ?`;
+    const params = [req.user.id, branchId];
+
+    // Check for search criteria in the request body
+    if (employeeId) {
+        sql += ` AND employeeId = ?`;
+        params.push(employeeId);
+    }
+    if (name) {
+        sql += ` AND name LIKE ?`;
+        params.push(`%${name}%`);
+    }
+
+    // Add pagination to the SQL query
+    sql += ` ORDER BY createdAt DESC LIMIT ? OFFSET ?`;
+    params.push(limit, skip);
+
     try {
-        const sql = `SELECT SQL_CALC_FOUND_ROWS * FROM employee WHERE userId = ? AND branchId = ? LIMIT ? OFFSET ?`;
-        const params = [req.user.id, branchId, limit, skip];
-        const [result, fields] = await db.query(sql, params);
+        const [result] = await db.query(sql, params);
 
         if (result.length === 0) {
             return res.status(404).json(
                 new ApiResponse(
-                    404,
+                    200,
                     null,
                     "Employees not found"
                 )
@@ -307,12 +386,12 @@ const getBranchEmployees = asyncHandler(async (req, res) => {
 
         const totalCountSql = `SELECT FOUND_ROWS() as count`;
         const [totalCountResult] = await db.query(totalCountSql);
-
         const totalCount = totalCountResult[0].count;
 
         const employeeData = result.map(employee => {
             const { userId, branchId, createdAt, updatedAt, ...rest } = employee;
-            return rest;
+            const calculatedAge = calculateAge(employee.age);
+            return { ...rest, age: calculatedAge };
         });
 
         return res.status(200).json(
@@ -342,44 +421,85 @@ const getBranchEmployees = asyncHandler(async (req, res) => {
             )
         );
     }
-})
+});
 
 const getAllEmployees = asyncHandler(async (req, res) => {
+    const { name, email, employeeId } = req.query;
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
 
     try {
+        // Fetch branch IDs for the user's company
         const sqlBranches = `SELECT branchId FROM branch WHERE companyId = ?`;
         const paramsBranches = [req.user.companyId];
         const [resultBranches] = await db.query(sqlBranches, paramsBranches);
 
-        const ids = resultBranches.map(branch => branch.branchId);
-
-        const sqlEmployees = `SELECT SQL_CALC_FOUND_ROWS * FROM employee WHERE branchId IN (${ids.map(id => '?').join(',')}) LIMIT ? OFFSET ?`;
-        const paramsEmployees = [...ids, limit, skip];
-        const [resultEmployees] = await db.query(sqlEmployees, paramsEmployees);
-
-        const totalCountSql = `SELECT FOUND_ROWS() as count`;
-        const [totalCountResult] = await db.query(totalCountSql);
-
-        const totalCount = totalCountResult[0].count;
-
-        if (resultEmployees.length === 0) {
+        // Check if any branches were found
+        if (resultBranches.length === 0) {
             return res.status(404).json(
                 new ApiResponse(
                     404,
+                    null,
+                    "No branches found for this company"
+                )
+            );
+        }
+
+        const ids = resultBranches.map(branch => branch.branchId);
+
+        // Initialize SQL query and parameters for employees
+        let sqlEmployees = `
+            SELECT SQL_CALC_FOUND_ROWS * 
+            FROM employee 
+            WHERE branchId IN (${ids.map(() => '?').join(',')})`;
+        const paramsEmployees = [...ids];
+
+        // Add search conditions if provided
+        if (name) {
+            sqlEmployees += ` AND name LIKE ?`;
+            paramsEmployees.push(`%${name}%`); // Use LIKE for partial matches
+        }
+        if (email) {
+            sqlEmployees += ` AND email LIKE ?`;
+            paramsEmployees.push(`%${email}%`); // Use LIKE for partial matches
+        }
+        if (employeeId) {
+            sqlEmployees += ` AND employeeId = ?`;
+            paramsEmployees.push(employeeId);
+        }
+
+        // Add pagination to the SQL query
+        sqlEmployees += ` ORDER BY createdAt DESC LIMIT ? OFFSET ?`;
+        paramsEmployees.push(limit, skip);
+
+        // Fetch employees based on the constructed query
+        const [resultEmployees] = await db.query(sqlEmployees, paramsEmployees);
+
+        // Get the total count of employees
+        const totalCountSql = `SELECT FOUND_ROWS() as count`;
+        const [totalCountResult] = await db.query(totalCountSql);
+        const totalCount = totalCountResult[0].count;
+
+        // Check if any employees were found
+        if (resultEmployees.length === 0) {
+            return res.status(404).json(
+                new ApiResponse(
+                    200,
                     null,
                     "Employees not found"
                 )
             );
         }
 
+        // Clean up employee data by removing sensitive fields
         const employeeData = resultEmployees.map(employee => {
             const { userId, createdAt, updatedAt, ...rest } = employee;
-            return rest;
+            const calculatedAge = calculateAge(employee.age);
+            return { ...rest, age: calculatedAge };
         });
 
+        // Return the fetched employee data with pagination info
         return res.status(200).json(
             new ApiResponse(
                 200,
@@ -398,7 +518,7 @@ const getAllEmployees = asyncHandler(async (req, res) => {
             )
         );
     } catch (error) {
-        console.log("Error while getting all employees: ", error);
+        console.error("Error while getting all employees: ", error);
         return res.status(500).json(
             new ApiResponse(
                 500,
@@ -411,6 +531,8 @@ const getAllEmployees = asyncHandler(async (req, res) => {
 
 export {
     addBranch,
+    updateBranch,
+    deleteBranch,
     getAllBranches,
     addEmployee,
     updateEmployee,

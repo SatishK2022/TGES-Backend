@@ -46,3 +46,21 @@ export function generateBranchId(branchName) {
     const id = `${nameDigits}${randomNumber}`;
     return id;
 }
+
+export function calculateAge(dob) {
+    const dateOfBirth = typeof dob === 'string' ? new Date(dob) : dob;
+
+    if (isNaN(dateOfBirth.getTime())) {
+        return "Invalid date of birth";
+    }
+
+    const currentDate = new Date();
+    let age = currentDate.getFullYear() - dateOfBirth.getFullYear();
+    const monthDiff = currentDate.getMonth() - dateOfBirth.getMonth();
+
+    if (monthDiff < 0 || (monthDiff === 0 && currentDate.getDate() < dateOfBirth.getDate())) {
+        age--;
+    }
+
+    return age;
+}
