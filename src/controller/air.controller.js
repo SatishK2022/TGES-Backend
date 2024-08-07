@@ -3,7 +3,9 @@ import asyncHandler from "../utils/asyncHandler.js";
 import connectToDb from "../config/db.js";
 import { sendMail } from "../utils/sendMail.js"
 import { airBookingTemplate } from "../email/email-template.js";
-import { calculateAge } from "../utils/helper.js";
+import { calculateAge, generateExcelSheet } from "../utils/helper.js";
+import { v4 as uuidv4 } from "uuid"
+import path from "path";
 
 let db = await connectToDb();
 
@@ -46,24 +48,52 @@ const createAirTravel = asyncHandler(async (req, res) => {
 
         const [insertResult, insertFields] = await db.query(insertAir, [airParams]);
 
-        // const emailContent = reqBody.map(data => {
-        //     const age = calculateAge(data.dob);
-        //     return {
-        //         ...data,
-        //         age
-        //     };
-        // });
+        const emailContent = reqBody.map(data => {
+            const age = calculateAge(data.dob);
+            return {
+                ...data,
+                age
+            };
+        });
+
+        const excelContent = emailContent.map((data) => {
+            return {
+                "Full Name": data.fullName,
+                "Age": data.age,
+                "DOB": data.dob,
+                "Gender": data.gender,
+                "Contact No": data.contactNo,
+                "Email": data.email,
+                "Travel From": data.travelFrom,
+                "Travel To": data.travelTo,
+                "Travel Mode": "Air",
+                "Class Of Travel": data.classOfTravel,
+                "Travel Date": data.travelDate,
+                "Flight No": data.flightNo,
+                "Time Preference": data.timePreference,
+                "Remarks": data.remarks
+            };
+        });
+
+        console.log(emailContent);
+
+        const uniqueFilename = `air_${uuidv4()}.xlsx`;
+        const uploadPath = path.join('public', 'excel', uniqueFilename);
+
+        generateExcelSheet(excelContent, uploadPath, "Flight No");
 
         // Send Mail
-        // try {
-        //     sendMail(
-        //         req.user.email,
-        //         "Air Travel Details",
-        //         airBookingTemplate(emailContent)
-        //     )
-        // } catch (error) {
-        //     console.log("Error while sending air travel mail:", error);
-        // }
+        try {
+            sendMail(
+                req.user.email,
+                "Air Travel Details",
+                airBookingTemplate(emailContent),
+                uniqueFilename,
+                uploadPath
+            )
+        } catch (error) {
+            console.log("Error while sending air travel mail:", error);
+        }
 
         return res.status(200).json(
             new ApiResponse(

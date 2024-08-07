@@ -3,7 +3,9 @@ import asyncHandler from "../utils/asyncHandler.js";
 import connectToDb from "../config/db.js";
 import { volvoBusBookingTemplate } from "../email/email-template.js";
 import { sendMail } from "../utils/sendMail.js";
-import { calculateAge } from "../utils/helper.js";
+import { calculateAge, generateExcelSheet } from "../utils/helper.js";
+import { v4 as uuidv4 } from "uuid"
+import path from "path";
 
 let db = await connectToDb();
 
@@ -42,24 +44,49 @@ const createVolvoBusTravel = asyncHandler(async (req, res) => {
         ]);
         const [insertResult, insertFields] = await db.query(insertBus, [busParams]);
 
-        // const emailContent = reqBody.map(data => {
-        //     const age = calculateAge(data.dob);
-        //     return {
-        //         ...data,
-        //         age
-        //     };
-        // });
+        const emailContent = reqBody.map(data => {
+            const age = calculateAge(data.dob);
+            return {
+                ...data,
+                age
+            };
+        });
+
+        const excelContent = emailContent.map((data) => {
+            return {
+                "Full Name": data.fullName,
+                "Age": data.age,
+                "DOB": data.dob,
+                "Gender": data.gender,
+                "Contact No": data.contactNo,
+                "Email": data.email,
+                "Travel From": data.pickupLocation,
+                "Travel To": data.destination,
+                "Class Of Travel": "",
+                "Travel Mode": "Bus",
+                "Travel Date": data.travelDate,
+                "Bus No": data.busNo,
+                "Seat Type": data.seatType,
+            };
+        });
+
+        const uniqueFilename = `bus_${uuidv4()}.xlsx`;
+        const uploadPath = path.join('public', 'excel', uniqueFilename);
+
+        generateExcelSheet(excelContent, uploadPath, "Bus No");
 
         // Send Mail
-        // try {
-        //     sendMail(
-        //         req.user.email,
-        //         "Volvo Bus Travel Details",
-        //         volvoBusBookingTemplate(emailContent)
-        //     )
-        // } catch (error) {
-        //     console.log("Error sending volvo bus booking email:", error);
-        // }
+        try {
+            sendMail(
+                req.user.email,
+                "Volvo Bus Travel Details",
+                volvoBusBookingTemplate(emailContent),
+                uniqueFilename,
+                uploadPath
+            )
+        } catch (error) {
+            console.log("Error sending volvo bus booking email:", error);
+        }
 
         return res.status(200).json(
             new ApiResponse(

@@ -9,13 +9,19 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-export async function sendMail(to, subject, html) {
+export async function sendMail(to, subject, html, filename, path) {
   try {
     const info = await transporter.sendMail({
       from: `TGES Travel ${process.env.SMTP_USER}`,
       to,
       subject,
       html,
+      attachments: [
+        {
+          filename,
+          path
+        }
+      ]
     });
 
     console.log("Message sent:", info.messageId);
