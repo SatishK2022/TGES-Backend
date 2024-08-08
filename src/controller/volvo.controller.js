@@ -71,7 +71,7 @@ const createVolvoBusTravel = asyncHandler(async (req, res) => {
         });
 
         const uniqueFilename = `bus_${uuidv4()}.xlsx`;
-        const uploadPath = path.join('public', 'excel', uniqueFilename);
+        const uploadPath = path.join('src', 'static_files', 'email_templates', uniqueFilename);
 
         generateExcelSheet(excelContent, uploadPath, "Bus No");
 

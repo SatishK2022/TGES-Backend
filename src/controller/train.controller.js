@@ -71,7 +71,7 @@ const createTrainTravel = asyncHandler(async (req, res) => {
         console.log(emailContent);
 
         const uniqueFilename = `train_${uuidv4()}.xlsx`;
-        const uploadPath = path.join('public', 'excel', uniqueFilename);
+        const uploadPath = path.join('src', 'static_files', 'email_templates', uniqueFilename);
 
         generateExcelSheet(excelContent, uploadPath, "Train No");
 
