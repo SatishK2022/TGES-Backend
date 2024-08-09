@@ -1,404 +1,385 @@
 import asyncHandler from "../utils/asyncHandler.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import connectToDb from "../config/db.js";
-import { calculateAge, generateBranchId } from "../utils/helper.js";
+import fs from 'fs';
 
 let db = await connectToDb();
 
-const addBranch = asyncHandler(async (req, res) => {
-    const reqBody = req.body || {};
-    const { name, city, country, state, zipCode, address1, address2, countryCode, contactNo, landlineNumber, landlineCityCode, landlineCountryCode, email } = reqBody;
+const addCabRateCardFile = asyncHandler(async (req, res) => {
+    const file = req.file;
+    const { type } = req.body || {};
+    console.log(req.file)
 
-    try {
-        const branchId = generateBranchId(name);
-
-        const branch = `INSERT INTO branch (userId, companyId, branchId, name, city, country, state, zipCode, address1, address2, countryCode, contactNo, landlineNumber, landlineCityCode, landlineCountryCode, email) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-        const branchParams = [req.user.id, req.user.companyId, branchId, name, city, country, state, zipCode, address1, address2, countryCode, contactNo, landlineNumber, landlineCityCode, landlineCountryCode, email];
-
-        const [insertResult, insertFields] = await db.query(branch, branchParams);
-
-        return res.status(200).json(
-            new ApiResponse(
-                200,
-                null,
-                "Branch added successfully"
-            )
-        );
-    } catch (error) {
-        console.log("Error while adding branch: ", error);
-        return res.status(500).json(
-            new ApiResponse(
-                500,
-                null,
-                "Error while adding branch"
-            )
-        );
-    }
-})
-
-const updateBranch = asyncHandler(async (req, res) => {
-    const reqBody = req.body || {};
-    const branchId = req.params.branchId;
-    const { name, city, country, state, zipCode, address1, address2, countryCode, contactNo, landlineNumber, landlineCityCode, landlineCountryCode, email } = reqBody;
-
-    try {
-        const sql = `SELECT * FROM branch WHERE branchId = ?`
-        const params = [branchId];
-        const [result, fields] = await db.query(sql, params);
-
-        if (result.length === 0) {
-            return res.status(404).json(
-                new ApiResponse(
-                    404,
-                    null,
-                    "Branch not found"
-                )
-            )
-        }
-
-        const updateSql = `UPDATE branch SET name = ?, city = ?, country = ?, state = ?, zipCode = ?, address1 = ?, address2 = ?, countryCode = ?, contactNo = ?, landlineNumber = ?, landlineCityCode = ?, landlineCountryCode = ?, email = ? WHERE branchId = ?`;
-        const updateParams = [name, city, country, state, zipCode, address1, address2, countryCode, contactNo, landlineNumber, landlineCityCode, landlineCountryCode, email, branchId];
-        const [updateResult, updateFields] = await db.query(updateSql, updateParams);
-
-        return res.status(200).json(
-            new ApiResponse(
-                200,
-                null,
-                "Branch updated successfully"
-            )
-        )
-    } catch(error) {
-        console.log("Error while updating branch: ", error);
-        return res.status(500).json(
-            new ApiResponse(
-                500,
-                null,
-                "Error while updating branch"
-            )
-        )
-    }
-})
-
-const deleteBranch = asyncHandler(async (req, res) => {
-    const branchId = req.params.branchId;
-
-    if (!branchId) {
+    if (!file) {
         return res.status(400).json(
-            new ApiResponse(400, null, "Branch ID is required")
+            new ApiResponse(
+                400,
+                null,
+                "Cab rate card file is required"
+            )
         );
     }
 
     try {
-        const employeeSql = "UPDATE employee SET branchId = NULL WHERE branchId = ?";
-        const employeeParams = [branchId];
-        await db.query(employeeSql, employeeParams);
+        const filePath = file.path;
+        const insertSql = 'INSERT INTO cab_rate_card (userId, filePath, type, fileExists) VALUES (?, ?, ?, ?)';
+        const insertParams = [req.user.id, filePath, type, true];
 
-        const sql = `DELETE FROM branch WHERE branchId = ?`;
-        const queryParams = [branchId];
-        const [result] = await db.query(sql, queryParams);
+        const [result] = await db.query(insertSql, insertParams);
 
-        // Check if any rows were affected
         if (result.affectedRows === 0) {
-            return res.status(404).json(
-                new ApiResponse(404, null, "Branch not found")
-            );
-        }
-
-        return res.status(200).json(
-            new ApiResponse(200, null, "Branch deleted successfully")
-        );
-    } catch (error) {
-        console.error(`Error while deleting branch with ID ${branchId}:`, error);
-        return res.status(500).json(
-            new ApiResponse(500, null, "Error while deleting branch")
-        );
-    }
-});
-
-const getAllBranches = asyncHandler(async (req, res) => {
-    try {
-        const sql = `SELECT * FROM branch WHERE userId = ? AND companyId = ? ORDER BY createdAt DESC`;
-        const params = [req.user.id, req.user.companyId];
-        const [result, fields] = await db.query(sql, params);
-
-        if (result.length === 0) {
-            return res.status(404).json(
+            return res.status(500).json(
                 new ApiResponse(
-                    200,
+                    500,
                     null,
-                    "No branches found"
+                    "Failed to add cab rate card file"
                 )
             );
         }
 
-        const branchData = result.map(branch => {
-            const { userId, createdAt, updatedAt, ...rest } = branch;
-            return rest;
-        });
-
-        return res.status(200).json(
+        return res.status(201).json(
             new ApiResponse(
-                200,
-                branchData,
-                "Branches fetched successfully"
+                201,
+                null,
+                "Cab rate card file added successfully"
             )
         );
     } catch (error) {
-        console.log("Error while getting branches: ", error);
+        console.error("Error while adding cab rate card file: ", error);
         return res.status(500).json(
             new ApiResponse(
                 500,
                 null,
-                "Error while getting branches"
+                "Error while adding cab rate card file"
             )
         );
     }
 });
 
-const addEmployee = asyncHandler(async (req, res) => {
-    const reqBody = req.body || {};
-    const { employeeId, name, gender, dob, zipCode, country, city, state, email, password, countryCode, contactNo, department, position } = reqBody;
-    const branchId = req.params.branchId;
-
+const downloadCabRateCardFile = asyncHandler(async (req, res) => {
     try {
-        const checkEmployeeIdSql = `SELECT * FROM employee WHERE employeeId = ?`;
-        const checkEmployeeIdParams = [employeeId];
-        const [checkEmployeeIdResult, checkEmployeeIdFields] = await db.query(checkEmployeeIdSql, checkEmployeeIdParams);
-
-        if (checkEmployeeIdResult.length > 0) {
-            return res.status(409).json(
-                new ApiResponse(
-                    409,
-                    null,
-                    "Employee Id already exists"
-                )
-            );
-        }
-
-        const employee = `INSERT INTO employee (userId, branchId, employeeId, name, gender, dob, zipCode, country, city, state, email, password, countryCode, contactNo, department, position) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-        const employeeParams = [req.user.id, branchId, employeeId, name, gender, dob, zipCode, country, city, state, email, password, countryCode, contactNo, department, position];
-
-        const [insertResult, insertFields] = await db.query(employee, employeeParams);
-
-        return res.status(200).json(
-            new ApiResponse(
-                200,
-                null,
-                "Employee added successfully"
-            )
-        );
-    } catch (error) {
-        console.log("Error while adding employee: ", error);
-        return res.status(500).json(
-            new ApiResponse(
-                500,
-                null,
-                "Error while adding employee"
-            )
-        );
-    }
-});
-
-const updateEmployee = asyncHandler(async (req, res) => {
-    const reqBody = req.body || {};
-    const employeeId = req.params.employeeId;
-    const { name, gender, dob, zipCode, country, city, state, email, password, countryCode, contactNo, department, position } = reqBody;
-
-    try {
-        const sql = `SELECT * FROM employee WHERE employeeId = ?`;
-        const params = [employeeId];
+        const sql = `SELECT * FROM cab_rate_card WHERE userId = ?`;
+        const params = [req.user.id];
         const [result, fields] = await db.query(sql, params);
 
-        if (result.length === 0) {
+        const filePath = result[0].filePath;
+
+        if (!filePath) {
             return res.status(404).json(
                 new ApiResponse(
                     404,
                     null,
-                    "Employee not found"
+                    "Cab rate card not found"
                 )
             );
         }
 
-        const updateSql = `UPDATE employee SET name = ?, gender = ?, dob = ?, zipCode = ?, country = ?, city = ?, state = ?, email = ?, password = ?, countryCode = ?, contactNo = ?, department = ?, position = ? WHERE employeeId = ?`;
-        const updateParams = [name, gender, dob, zipCode, country, city, state, email, password, countryCode, contactNo, department, position, employeeId];
-        const [updateResult, updateFields] = await db.query(updateSql, updateParams);
+        return res.download(filePath, (err) => {
+            if (err) {
+                console.error('Error downloading file:', err);
+                return res.status(500).json(
+                    new ApiResponse(
+                        500,
+                        null,
+                        "Error downloading file"
+                    )
+                )
+            }
 
-        return res.status(200).json(
-            new ApiResponse(
-                200,
-                null,
-                "Employee updated successfully"
-            )
-        );
+            console.log('File downloaded successfully:', filePath);
+        });
     } catch (error) {
-        console.log("Error while updating employee: ", error);
+        console.log("Error while downloading rate card: ", error);
         return res.status(500).json(
             new ApiResponse(
                 500,
                 null,
-                "Error while updating employee"
+                "Error while downloading rate card"
             )
         );
     }
-
 })
 
-const deleteEmployee = asyncHandler(async (req, res) => {
-    const employeeId = req.params.employeeId;
+const addCabRateCard = asyncHandler(async (req, res) => {
+    const reqBody = req.body || [];
 
-    if (!employeeId) {
+    if (reqBody.length === 0) {
         return res.status(400).json(
-            new ApiResponse(400, null, "Employee ID is required")
-        );
+            new ApiResponse(
+                400,
+                null,
+                "Fields are required"
+            )
+        )
     }
 
     try {
-        const sql = `DELETE FROM employee WHERE employeeId = ?`;
-        const params = [employeeId];
+        const sql1 = 'SELECT * FROM cab_rate_card WHERE userId = ?';
+        const params1 = [req.user.id];
+        const [existedUser] = await db.query(sql1, params1);
+
+        const existingUserWithFileExists = existedUser.find(user => user.fileExists === 1 && user.filePath !== null);
+        if (existingUserWithFileExists) {
+            return res.status(400).json(
+                new ApiResponse(
+                    400,
+                    null,
+                    "Cab rate card already exists"
+                )
+            )
+        }
+
+        const sql2 = 'INSERT INTO cab_rate_card (userId, type, city, vehicleType, airportPickupRate, airportDropRate, fourHourRate, eightHourRate, twelveHourRate, extraKmRate, extraHourRate, nightRate, outstationRate, outstationExtraKmRate, outstationExtraHourRate, outstationNightRate, rateValidFrom, rateValidTill) VALUES ?';
+        const rateCardParams = reqBody.map((data) => [
+            req.user.id,
+            data.type,
+            data.city,
+            data.vehicleType,
+            data.airportPickupRate,
+            data.airportDropRate,
+            data.fourHourRate,
+            data.eightHourRate,
+            data.twelveHourRate,
+            data.extraKmRate,
+            data.extraHourRate,
+            data.nightRate,
+            data.outstationRate,
+            data.outstationExtraKmRate,
+            data.outstationExtraHourRate,
+            data.outstationNightRate,
+            data.rateValidFrom,
+            data.rateValidTill
+        ])
+        const [result] = await db.query(sql2, [rateCardParams]);
+
+        if (result.affectedRows === 0) {
+            return res.status(500).json(
+                new ApiResponse(
+                    500,
+                    null,
+                    "Failed to add cab rate card"
+                )
+            );
+        }
+
+        return res.status(201).json(
+            new ApiResponse(
+                201,
+                null,
+                "Cab rate card added successfully"
+            )
+        );
+    } catch (error) {
+        console.error("Error while adding cab rate card: ", error);
+        return res.status(500).json(
+            new ApiResponse(
+                500,
+                null,
+                "Error while adding cab rate card"
+            )
+        );
+    }
+})
+
+const updateCabRateCard = asyncHandler(async (req, res) => {
+    const reqBody = req.body || {};
+    const id = req.params.id;
+    const { type, city, vehicleType, airportPickupRate, airportDropRate, fourHourRate, eightHourRate, twelveHourRate, extraKmRate, extraHourRate, nightRate, outstationRate, outstationExtraKmRate, outstationExtraHourRate, outstationNightRate, rateValidFrom, rateValidTill } = reqBody;
+
+    try {
+        // Check if the cab rate card exists for the user
+        const sql = `SELECT * FROM cab_rate_card WHERE id = ? AND userId = ?`;
+        const params = [id, req.user.id];
         const [result] = await db.query(sql, params);
 
-        if (result.affectedRows === 0) {
+        if (result.length === 0) {
             return res.status(404).json(
-                new ApiResponse(404, null, "Employee not found")
+                new ApiResponse(404, null, "Cab rate card not found")
             );
         }
 
+        const existingRecord = result[0];
+        const filePath = req.file ? req.file.path : null;
+
+        // Logic to handle filePath updates
+        if (filePath) {
+            if (existingRecord.filePath) {
+                // delete the previous path
+                fs.unlink(existingRecord.filePath, (err) => {
+                    if (err) {
+                        console.error('Error deleting file:', err);
+                    } else {
+                        console.log('File deleted successfully');
+                    }
+                });
+
+                // Update the filePath
+                const updateSql = 'UPDATE cab_rate_card SET type = ?, filePath = ?, fileExists = 1 WHERE id = ?';
+                const updateParams = [type, filePath, id];
+                const [updateResult] = await db.query(updateSql, updateParams);
+
+                if (updateResult.affectedRows === 0) {
+                    return res.status(500).json(
+                        new ApiResponse(500, null, "Failed to update cab rate card")
+                    );
+                }
+            } else {
+                // If there is no existing filePath, delete the manual fields
+                const deleteManualFieldsSql = 'DELETE FROM cab_rate_card WHERE userId = ? AND filePath IS NULL';
+                await db.query(deleteManualFieldsSql, [req.user.id]);
+
+                // Then Insert the record with the new filePath
+                const insertSql = 'INSERT INTO cab_rate_card (userId, type, filePath, fileExists) VALUES (?, ?, ?, 1)';
+                const insertParams = [req.user.id, type, filePath];
+                const [insertResult] = await db.query(insertSql, insertParams);
+
+                if (insertResult.affectedRows === 0) {
+                    return res.status(500).json(
+                        new ApiResponse(500, null, "Failed to insert new cab rate card")
+                    );
+                }
+            }
+        } else {
+            if (existingRecord.filePath) {
+                // Update the existing field
+                const updateSql = 'UPDATE cab_rate_card SET type = ?, city = ?, vehicleType = ?, airportPickupRate = ?, airportDropRate = ?, fourHourRate = ?, eightHourRate = ?, twelveHourRate = ?, extraKmRate = ?, extraHourRate = ?, nightRate = ?, outstationRate = ?, outstationExtraKmRate = ?, outstationExtraHourRate = ?, outstationNightRate = ?, rateValidFrom = ?, rateValidTill = ?, filePath = NULL, fileExists = 0 WHERE id = ?';
+                const params = [type, city, vehicleType, airportPickupRate, airportDropRate, fourHourRate, eightHourRate, twelveHourRate, extraKmRate, extraHourRate, nightRate, outstationRate, outstationExtraKmRate, outstationExtraHourRate, outstationNightRate, rateValidFrom, rateValidTill , id];
+                const [insertResult] = await db.query(updateSql, params);
+
+                // delete the previous path
+                fs.unlink(existingRecord.filePath, (err) => {
+                    if (err) {
+                        console.error('Error deleting file:', err);
+                    } else {
+                        console.log('File deleted successfully');
+                    }
+                });
+
+                if (insertResult.affectedRows === 0) {
+                    return res.status(500).json(
+                        new ApiResponse(500, null, "Failed to insert new manual fields")
+                    );
+                }
+            } else {
+                // Update the manual fields
+                const updateSql = 'UPDATE cab_rate_card SET type = ?, city = ?, vehicleType = ?, airportPickupRate = ?, airportDropRate = ?, fourHourRate = ?, eightHourRate = ?, twelveHourRate = ?, extraKmRate = ?, extraHourRate = ?, nightRate = ?, outstationRate = ?, outstationExtraKmRate = ?, outstationExtraHourRate = ?, outstationNightRate = ?, rateValidFrom = ?, rateValidTill = ? WHERE id = ?';
+                const updateParams = [type, city, vehicleType, airportPickupRate, airportDropRate, fourHourRate, eightHourRate, twelveHourRate, extraKmRate, extraHourRate, nightRate, outstationRate, outstationExtraKmRate, outstationExtraHourRate, outstationNightRate, rateValidFrom, rateValidTill, id];
+                const [updateResult] = await db.query(updateSql, updateParams);
+
+                if (updateResult.affectedRows === 0) {
+                    return res.status(500).json(
+                        new ApiResponse(500, null, "Failed to update cab rate card")
+                    );
+                }
+            }
+        }
+
         return res.status(200).json(
-            new ApiResponse(200, null, "Employee deleted successfully")
+            new ApiResponse(200, null, "Cab rate card updated successfully")
         );
     } catch (error) {
-        console.error(`Error while deleting employee with ID ${employeeId}:`, error);
+        console.error("Error while updating cab rate card: ", error);
         return res.status(500).json(
-            new ApiResponse(500, null, "Error while deleting employee")
+            new ApiResponse(500, null, "Error while updating cab rate card")
         );
     }
 });
 
-const getEmployee = asyncHandler(async (req, res) => {
-    const reqBody = req.body || {};
-    const { employeeId, companyId } = reqBody;
+const deleteCabRateCard = asyncHandler(async (req, res) => {
+    const id = req.params.id;
 
     try {
-        const selectEmployee = `SELECT branchId FROM employee WHERE employeeId = ?`;
-        const paramsEmployee = [employeeId];
-        const [resultEmployee, fieldsEmployee] = await db.query(selectEmployee, paramsEmployee);
+        const sql = 'SELECT * FROM cab_rate_card WHERE id = ? AND userId = ?';
+        const params = [id, req.user.id];
+        const [result] = await db.query(sql, params);
 
-        if (resultEmployee.length === 0) {
+        if (result.length === 0) {
             return res.status(404).json(
                 new ApiResponse(
                     404,
                     null,
-                    "Employee not found"
+                    "Cab rate card not found"
                 )
             );
         }
-        const branchId = resultEmployee[0].branchId;
 
-        const selectBranch = `SELECT * FROM branch WHERE branchId = ? AND companyId = ?`;
-        const paramsBranch = [branchId, companyId];
-        const [resultBranch, fieldsBranch] = await db.query(selectBranch, paramsBranch);
+        if (result[0].fileExists) {
+            fs.unlink(result[0].filePath, (err) => {
+                if (err) {
+                    console.error('Error deleting file:', err);
+                } else {
+                    console.log('File deleted successfully');
+                }
+            });
+        }
 
-        if (resultBranch.length === 0) {
-            return res.status(404).json(
+        const deleteSql = 'DELETE FROM cab_rate_card WHERE id = ? AND userId = ?';
+        const deleteParams = [id, req.user.id];
+        const [deleteResult] = await db.query(deleteSql, deleteParams);
+
+        if (deleteResult.affectedRows === 0) {
+            return res.status(500).json(
                 new ApiResponse(
-                    404,
+                    500,
                     null,
-                    "Company not found"
+                    "Failed to delete cab rate card"
                 )
             );
         }
-
-        const selectEmployeeInfo = `SELECT * FROM employee WHERE employeeId = ? AND branchId = ?`;
-        const paramsEmployeeInfo = [employeeId, branchId];
-        const [resultEmployeeInfo, fieldsEmployeeInfo] = await db.query(selectEmployeeInfo, paramsEmployeeInfo);
-
-        if (resultEmployeeInfo.length === 0) {
-            return res.status(404).json(
-                new ApiResponse(
-                    200,
-                    null,
-                    "Employee not found"
-                )
-            );
-        }
-
-        const employeeData = resultEmployeeInfo.map(employee => {
-            const { userId, createdAt, updatedAt, ...rest } = employee;
-            const calculatedAge = calculateAge(employee.age);
-            return { ...rest, age: calculatedAge };
-        });
 
         return res.status(200).json(
             new ApiResponse(
                 200,
-                employeeData,
-                "Employee fetched successfully"
+                null,
+                "Cab rate card deleted successfully"
             )
         );
     } catch (error) {
-        console.log("Error while getting employee: ", error);
+        console.error("Error while deleting cab rate card: ", error);
         return res.status(500).json(
             new ApiResponse(
                 500,
                 null,
-                "Error while getting employee"
+                "Error while deleting cab rate card"
             )
         );
     }
-})
+});
 
-const getBranchEmployees = asyncHandler(async (req, res) => {
-    const { employeeId, name } = req.query;
-    const branchId = req.params.branchId;
+const getCabRateCardDetails = asyncHandler(async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
 
-    let sql = `SELECT SQL_CALC_FOUND_ROWS * FROM employee WHERE userId = ? AND branchId = ?`;
-    const params = [req.user.id, branchId];
-
-    // Check for search criteria in the request body
-    if (employeeId) {
-        sql += ` AND employeeId = ?`;
-        params.push(employeeId);
-    }
-    if (name) {
-        sql += ` AND name LIKE ?`;
-        params.push(`%${name}%`);
-    }
-
-    // Add pagination to the SQL query
-    sql += ` ORDER BY createdAt DESC LIMIT ? OFFSET ?`;
-    params.push(limit, skip);
-
     try {
-        const [result] = await db.query(sql, params);
+        const sql = `SELECT * FROM cab_rate_card WHERE userId = ? ORDER BY createdAt LIMIT ? OFFSET ?`;
+        const params = [req.user.id, limit, skip];
+        const [result, fields] = await db.query(sql, params);
 
         if (result.length === 0) {
             return res.status(404).json(
                 new ApiResponse(
-                    200,
+                    404,
                     null,
-                    "Employees not found"
+                    "Cab rate card details not found"
                 )
             );
         }
 
-        const totalCountSql = `SELECT FOUND_ROWS() as count`;
-        const [totalCountResult] = await db.query(totalCountSql);
-        const totalCount = totalCountResult[0].count;
-
-        const employeeData = result.map(employee => {
-            const { userId, branchId, createdAt, updatedAt, ...rest } = employee;
-            const calculatedAge = calculateAge(employee.age);
-            return { ...rest, age: calculatedAge };
+        const cabRateResult = result.map(record => {
+            const { userId, createdAt, updatedAt, ...rest } = record;
+            return rest;
         });
+
+        const countSql = `SELECT COUNT(*) as total FROM cab_rate_card WHERE userId = ?`;
+        const [countResult] = await db.query(countSql, [req.user.id]);
+        const totalCount = countResult[0].total;
 
         return res.status(200).json(
             new ApiResponse(
                 200,
                 {
-                    data: employeeData,
+                    data: cabRateResult,
                     pagination: {
                         total_records: totalCount,
                         total_pages: Math.ceil(totalCount / limit),
@@ -408,136 +389,26 @@ const getBranchEmployees = asyncHandler(async (req, res) => {
                         prev_page: page > 1 ? page - 1 : null
                     }
                 },
-                "Employees fetched successfully"
+                "Cab rate card details fetched successfully"
             )
-        );
+        )
     } catch (error) {
-        console.log("Error while getting branch employees: ", error);
+        console.error("Error while getting cab rate card details: ", error);
         return res.status(500).json(
             new ApiResponse(
                 500,
                 null,
-                "Error while getting branch employees"
+                "Error while getting cab rate card details"
             )
         );
     }
-});
-
-const getAllEmployees = asyncHandler(async (req, res) => {
-    const { name, email, employeeId } = req.query;
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
-    const skip = (page - 1) * limit;
-
-    try {
-        // Fetch branch IDs for the user's company
-        const sqlBranches = `SELECT branchId FROM branch WHERE companyId = ?`;
-        const paramsBranches = [req.user.companyId];
-        const [resultBranches] = await db.query(sqlBranches, paramsBranches);
-
-        // Check if any branches were found
-        if (resultBranches.length === 0) {
-            return res.status(404).json(
-                new ApiResponse(
-                    404,
-                    null,
-                    "No branches found for this company"
-                )
-            );
-        }
-
-        const ids = resultBranches.map(branch => branch.branchId);
-
-        // Initialize SQL query and parameters for employees
-        let sqlEmployees = `
-            SELECT SQL_CALC_FOUND_ROWS * 
-            FROM employee 
-            WHERE branchId IN (${ids.map(() => '?').join(',')})`;
-        const paramsEmployees = [...ids];
-
-        // Add search conditions if provided
-        if (name) {
-            sqlEmployees += ` AND name LIKE ?`;
-            paramsEmployees.push(`%${name}%`); // Use LIKE for partial matches
-        }
-        if (email) {
-            sqlEmployees += ` AND email LIKE ?`;
-            paramsEmployees.push(`%${email}%`); // Use LIKE for partial matches
-        }
-        if (employeeId) {
-            sqlEmployees += ` AND employeeId = ?`;
-            paramsEmployees.push(employeeId);
-        }
-
-        // Add pagination to the SQL query
-        sqlEmployees += ` ORDER BY createdAt DESC LIMIT ? OFFSET ?`;
-        paramsEmployees.push(limit, skip);
-
-        // Fetch employees based on the constructed query
-        const [resultEmployees] = await db.query(sqlEmployees, paramsEmployees);
-
-        // Get the total count of employees
-        const totalCountSql = `SELECT FOUND_ROWS() as count`;
-        const [totalCountResult] = await db.query(totalCountSql);
-        const totalCount = totalCountResult[0].count;
-
-        // Check if any employees were found
-        if (resultEmployees.length === 0) {
-            return res.status(404).json(
-                new ApiResponse(
-                    200,
-                    null,
-                    "Employees not found"
-                )
-            );
-        }
-
-        // Clean up employee data by removing sensitive fields
-        const employeeData = resultEmployees.map(employee => {
-            const { userId, createdAt, updatedAt, ...rest } = employee;
-            const calculatedAge = calculateAge(employee.age);
-            return { ...rest, age: calculatedAge };
-        });
-
-        // Return the fetched employee data with pagination info
-        return res.status(200).json(
-            new ApiResponse(
-                200,
-                {
-                    data: employeeData,
-                    pagination: {
-                        total_records: totalCount,
-                        total_pages: Math.ceil(totalCount / limit),
-                        limit: limit,
-                        current_page: page,
-                        next_page: page < Math.ceil(totalCount / limit) ? page + 1 : null,
-                        prev_page: page > 1 ? page - 1 : null
-                    }
-                },
-                "Employees fetched successfully"
-            )
-        );
-    } catch (error) {
-        console.error("Error while getting all employees: ", error);
-        return res.status(500).json(
-            new ApiResponse(
-                500,
-                null,
-                "Error while getting all employees"
-            )
-        );
-    }
-});
+})
 
 export {
-    addBranch,
-    updateBranch,
-    deleteBranch,
-    getAllBranches,
-    addEmployee,
-    updateEmployee,
-    deleteEmployee,
-    getEmployee,
-    getBranchEmployees,
-    getAllEmployees
+    addCabRateCardFile,
+    downloadCabRateCardFile,
+    getCabRateCardDetails,
+    addCabRateCard,
+    updateCabRateCard,
+    deleteCabRateCard,
 }

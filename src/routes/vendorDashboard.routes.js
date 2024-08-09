@@ -1,32 +1,25 @@
 import express from "express";
 import { isLoggedIn } from "../middlewares/auth.middleware.js";
-import { addBranch, addEmployee, deleteEmployee, getAllBranches, getAllEmployees, getBranchEmployees, getEmployee, updateEmployee } from "../controller/vendorDashboard.controller.js";
+import { addCabRateCard, addCabRateCardFile, deleteCabRateCard, downloadCabRateCardFile, getCabRateCardDetails, updateCabRateCard } from "../controller/vendorDashboard.controller.js";
+import { checkCabRateCardExists, checkFileExists, upload } from "../middlewares/multer.middleware.js";
 const router = express.Router();
 
 router
-    .route("/branch")
-    .post(isLoggedIn, addBranch);
+    .route("/ratecard")
+    .post(isLoggedIn, addCabRateCard)
+    .get(isLoggedIn, getCabRateCardDetails)
 
 router
-    .route("/branch/all")
-    .get(isLoggedIn, getAllBranches);
+    .route("/ratecard/:id")
+    .put(isLoggedIn, checkCabRateCardExists, upload.single("cabRateCard"), updateCabRateCard)
+    .delete(isLoggedIn, deleteCabRateCard)
 
 router
-    .route("/employee/:branchId")
-    .post(isLoggedIn, addEmployee)
-    .get(isLoggedIn, getBranchEmployees);
+    .route("/ratecard/upload")
+    .post(isLoggedIn, checkFileExists, upload.single("cabRateCard"), addCabRateCardFile)
 
 router
-    .route("/employee/:employeeId")
-    .put(isLoggedIn, updateEmployee)
-    .delete(isLoggedIn, deleteEmployee)
-
-router
-    .route("/employee")
-    .get(isLoggedIn, getEmployee);
-
-router
-    .route("/employees")
-    .get(isLoggedIn, getAllEmployees);
+    .route("/ratecard/download")
+    .get(isLoggedIn, downloadCabRateCardFile);
 
 export default router;

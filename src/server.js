@@ -6,7 +6,7 @@ import cookieParser from "cookie-parser"
 import bodyParser from "body-parser";
 import morgan from "morgan"
 import connectToDb from "./config/db.js";
-import { user, retail_user, corporate_user, vendor, train, air, volvoBus, cab, hotel, passport, healthInsurance, travelInsurance, admin, branch, employee } from "./constants.js"
+import { user, retail_user, corporate_user, vendor, train, air, volvoBus, cab, hotel, passport, healthInsurance, travelInsurance, admin, branch, employee, cab_rate_card } from "./constants.js"
 
 const app = express();
 
@@ -33,6 +33,7 @@ dbConnection
         await db.query(passport)
         await db.query(healthInsurance)
         await db.query(travelInsurance)
+        await db.query(cab_rate_card)
 
         console.log("✅ Database connected successfully");
     })

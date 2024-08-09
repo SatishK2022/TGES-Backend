@@ -344,3 +344,30 @@ export const employee = `CREATE TABLE IF NOT EXISTS employee (
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 )`
+
+export const cab_rate_card = `CREATE TABLE IF NOT EXISTS cab_rate_card (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    userId INT NOT NULL,
+    FOREIGN KEY (userId) REFERENCES user (id),
+    filePath VARCHAR(255),
+    fileExists BOOLEAN DEFAULT FALSE,
+    type VARCHAR(255),
+    city VARCHAR(255),
+    vehicleType VARCHAR(255),
+    airportPickupRate VARCHAR(255),
+    airportDropRate VARCHAR(255),
+    fourHourRate VARCHAR(255),
+    eightHourRate VARCHAR(255),
+    twelveHourRate VARCHAR(255),
+    extraKmRate VARCHAR(255),
+    extraHourRate VARCHAR(255),
+    nightRate VARCHAR(255),
+    outstationRate VARCHAR(255),
+    outstationExtraKmRate VARCHAR(255),
+    outstationExtraHourRate VARCHAR(255),
+    outstationNightRate VARCHAR(255),
+    rateValidFrom VARCHAR(255),
+    rateValidTill VARCHAR(255),
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+)`
