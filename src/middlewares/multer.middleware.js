@@ -54,19 +54,16 @@ const checkCabRateCardExists = asyncHandler(async (req, res, next) => {
     const id = req.params.id;
 
     try {
-        // Check if the cab rate card exists for the user
         const sql = `SELECT * FROM cab_rate_card WHERE id = ? AND userId = ?`;
         const params = [id, req.user.id];
         const [result] = await db.query(sql, params);
 
         if (result.length === 0) {
-            // If the cab rate card is not found, return an error
             return res.status(404).json(
                 new ApiResponse(404, null, "Cab rate card not found")
             );
         }
 
-        // If the cab rate card exists, proceed to the next middleware (Multer)
         next();
     } catch (error) {
         console.error("Error checking cab rate card existence: ", error);
@@ -75,40 +72,6 @@ const checkCabRateCardExists = asyncHandler(async (req, res, next) => {
         );
     }
 });
-
-// Combined checkFileExists and checkCabRateCardExists middleware
-// const checkCabRateCard = asyncHandler(async (req, res, next) => {
-//     const id = req.params.id;
-
-//     try {
-//         // Check if the cab rate card exists for the user
-//         const sql = `SELECT * FROM cab_rate_card WHERE id = ? AND userId = ?`;
-//         const params = [id, req.user.id];
-//         const [result] = await db.query(sql, params);
-
-//         // If the cab rate card is not found, return an error
-//         if (result.length === 0) {
-//             return res.status(404).json(
-//                 new ApiResponse(404, null, "Cab rate card not found")
-//             );
-//         }
-
-//         // Check if the file already exists
-//         if (result[0].fileExists) {
-//             return res.status(400).json(
-//                 new ApiResponse(400, null, "Cab rate card file already exists")
-//             );
-//         }
-
-//         // If both checks pass, proceed to the next middleware
-//         next();
-//     } catch (error) {
-//         console.error("Error checking cab rate card: ", error);
-//         return res.status(500).json(
-//             new ApiResponse(500, null, "Error checking cab rate card")
-//         );
-//     }
-// });
 
 export {
     upload,

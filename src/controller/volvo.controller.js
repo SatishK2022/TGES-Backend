@@ -117,9 +117,12 @@ const deleteVolvoBusTravel = asyncHandler(async (req, res) => {
 
 const getVolvoBusTravelDetails = asyncHandler(async (req, res) => {
     const id = req.user.id;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
 
     try {
-        const selectVolvoBus = `SELECT * FROM bus WHERE userId = ?`;
+        const selectVolvoBus = `SELECT SQL_CALC_FOUND_ROWS * FROM bus WHERE userId = ?`;
         const [selectResult] = await db.query(selectVolvoBus, [id]);
 
         if (selectResult.length === 0) {
@@ -132,6 +135,10 @@ const getVolvoBusTravelDetails = asyncHandler(async (req, res) => {
             )
         }
 
+        const totalCountSql = `SELECT FOUND_ROWS() as count`;
+        const [totalCountResult] = await db.query(totalCountSql);
+        const totalCount = totalCountResult[0].count;
+
         // Calculate age for each entry
         const busTravelData = selectResult.map(user => {
             const { userId, createdAt, updatedAt, ...rest } = user;
@@ -142,7 +149,17 @@ const getVolvoBusTravelDetails = asyncHandler(async (req, res) => {
         return res.status(200).json(
             new ApiResponse(
                 200,
-                busTravelData,
+                {
+                    data: busTravelData,
+                    pagination: {
+                        total_records: totalCount,
+                        total_pages: Math.ceil(totalCount / limit),
+                        limit: limit,
+                        current_page: page,
+                        next_page: page < Math.ceil(totalCount / limit) ? page + 1 : null,
+                        prev_page: page > 1 ? page - 1 : null
+                    }
+                },
                 "Volvo bus travel details fetched successfully"
             )
         );

@@ -8,7 +8,6 @@ let db = await connectToDb();
 const addCabRateCardFile = asyncHandler(async (req, res) => {
     const file = req.file;
     const { type } = req.body || {};
-    console.log(req.file)
 
     if (!file) {
         return res.status(400).json(

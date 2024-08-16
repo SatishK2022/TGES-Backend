@@ -60,10 +60,13 @@ const deleteCabTravel = asyncHandler(async (req, res) => {
 })
 
 const getCabTravelDetails = asyncHandler(async (req, res) => {
-    try {
-        const id = req.user.id;
+    const id = req.user.id;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
 
-        const sql = `SELECT * FROM cab WHERE userId = ?`;
+    try {
+        const sql = `SELECT SQL_CALC_FOUND_ROWS * FROM cab WHERE userId = ? ORDER BY createdAt DESC LIMIT ? OFFSET ?`;
         const params = [id];
         const [result, fields] = await db.query(sql, params);
 
@@ -77,6 +80,10 @@ const getCabTravelDetails = asyncHandler(async (req, res) => {
             )
         }
 
+        const totalCountSql = `SELECT FOUND_ROWS() as count`;
+        const [totalCountResult] = await db.query(totalCountSql);
+        const totalCount = totalCountResult[0].count;
+
         const cabData = result.map(user => {
             const { userId, createdAt, updatedAt, ...rest } = user;
             return rest;
@@ -85,7 +92,17 @@ const getCabTravelDetails = asyncHandler(async (req, res) => {
         return res.status(200).json(
             new ApiResponse(
                 200,
-                cabData,
+                {
+                    data: cabData,
+                    pagination: {
+                        total_records: totalCount,
+                        total_pages: Math.ceil(totalCount / limit),
+                        limit: limit,
+                        current_page: page,
+                        next_page: page < Math.ceil(totalCount / limit) ? page + 1 : null,
+                        prev_page: page > 1 ? page - 1 : null
+                    }
+                },
                 "Cab Travel Details Fetched Successfully"
             )
         )
