@@ -5,6 +5,11 @@ import fs from 'fs';
 
 let db = await connectToDb();
 
+/**
+ * @addCabRateCard
+ * @params req, res
+ * @Description : This function is used to add cab rate card data in the 'cab_rate_card' table of the 'tges' database using the MySQL module
+ */
 const addCabRateCardFile = asyncHandler(async (req, res) => {
     const file = req.file;
     const { type } = req.body || {};
@@ -55,6 +60,11 @@ const addCabRateCardFile = asyncHandler(async (req, res) => {
     }
 });
 
+/**
+ * @downloadCabRateCardFile
+ * @params req, res
+ * @Description : This function is used to download cab rate card data in the 'cab_rate_card' table of the 'tges' database using the MySQL module
+ */
 const downloadCabRateCardFile = asyncHandler(async (req, res) => {
     try {
         const sql = `SELECT * FROM cab_rate_card WHERE userId = ?`;
@@ -99,6 +109,11 @@ const downloadCabRateCardFile = asyncHandler(async (req, res) => {
     }
 })
 
+/**
+ * @addCabRateCard
+ * @params req, res
+ * @Description : This function is used to add cab rate card data in the 'cab_rate_card' table of the 'tges' database using the MySQL module
+ */
 const addCabRateCard = asyncHandler(async (req, res) => {
     const reqBody = req.body || [];
 
@@ -180,6 +195,11 @@ const addCabRateCard = asyncHandler(async (req, res) => {
     }
 })
 
+/**
+ * @updateCabRateCard
+ * @params req, res
+ * @Description : This function is used to update cab rate card data in the 'cab_rate_card' table of the 'tges' database using the MySQL module
+ */
 const updateCabRateCard = asyncHandler(async (req, res) => {
     const reqBody = req.body || {};
     const id = req.params.id;
@@ -242,7 +262,7 @@ const updateCabRateCard = asyncHandler(async (req, res) => {
             if (existingRecord.filePath) {
                 // Update the existing field
                 const updateSql = 'UPDATE cab_rate_card SET type = ?, city = ?, vehicleType = ?, airportPickupRate = ?, airportDropRate = ?, fourHourRate = ?, eightHourRate = ?, twelveHourRate = ?, extraKmRate = ?, extraHourRate = ?, nightRate = ?, outstationRate = ?, outstationExtraKmRate = ?, outstationExtraHourRate = ?, outstationNightRate = ?, rateValidFrom = ?, rateValidTill = ?, filePath = NULL, fileExists = 0 WHERE id = ?';
-                const params = [type, city, vehicleType, airportPickupRate, airportDropRate, fourHourRate, eightHourRate, twelveHourRate, extraKmRate, extraHourRate, nightRate, outstationRate, outstationExtraKmRate, outstationExtraHourRate, outstationNightRate, rateValidFrom, rateValidTill , id];
+                const params = [type, city, vehicleType, airportPickupRate, airportDropRate, fourHourRate, eightHourRate, twelveHourRate, extraKmRate, extraHourRate, nightRate, outstationRate, outstationExtraKmRate, outstationExtraHourRate, outstationNightRate, rateValidFrom, rateValidTill, id];
                 const [insertResult] = await db.query(updateSql, params);
 
                 // delete the previous path
@@ -284,6 +304,11 @@ const updateCabRateCard = asyncHandler(async (req, res) => {
     }
 });
 
+/**
+ * @deleteCabRateCard
+ * @params req, res
+ * @Description : This function is used to delete cab rate card data in the 'cab_rate_card' table of the 'tges' database using the MySQL module
+ */
 const deleteCabRateCard = asyncHandler(async (req, res) => {
     const id = req.params.id;
 
@@ -345,6 +370,11 @@ const deleteCabRateCard = asyncHandler(async (req, res) => {
     }
 });
 
+/**
+ * @getCabRateCardDetails
+ * @params req, res
+ * @Description : This function is used to get cab rate card details in the 'cab_rate_card' table of the 'tges' database using the MySQL module
+ */
 const getCabRateCardDetails = asyncHandler(async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;

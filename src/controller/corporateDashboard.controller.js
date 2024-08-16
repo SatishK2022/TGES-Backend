@@ -5,6 +5,11 @@ import { calculateAge, generateBranchId } from "../utils/helper.js";
 
 let db = await connectToDb();
 
+/**
+ * @addBranch
+ * @params req, res
+ * @Description : This function is used to add branch data in the 'branch' table of the 'tges' database using the MySQL module
+ */
 const addBranch = asyncHandler(async (req, res) => {
     const reqBody = req.body || {};
     const { name, city, country, state, zipCode, address1, address2, countryCode, contactNo, landlineNumber, landlineCityCode, landlineCountryCode, email } = reqBody;
@@ -36,6 +41,11 @@ const addBranch = asyncHandler(async (req, res) => {
     }
 })
 
+/**
+ * @updateBranch
+ * @params req, res
+ * @Description : This function is used to update branch data in the 'branch' table of the 'tges' database using the MySQL module
+ */
 const updateBranch = asyncHandler(async (req, res) => {
     const reqBody = req.body || {};
     const branchId = req.params.branchId;
@@ -79,6 +89,11 @@ const updateBranch = asyncHandler(async (req, res) => {
     }
 })
 
+/**
+ * @deleteBranch
+ * @params req, res
+ * @Description : This function is used to delete branch data in the 'branch' table of the 'tges' database using the MySQL module
+ */
 const deleteBranch = asyncHandler(async (req, res) => {
     const branchId = req.params.branchId;
 
@@ -115,6 +130,11 @@ const deleteBranch = asyncHandler(async (req, res) => {
     }
 });
 
+/**
+ * @getAllBranches
+ * @params req, res
+ * @Description : This function is used to get all branches data in the 'branch' table of the 'tges' database using the MySQL module
+ */
 const getAllBranches = asyncHandler(async (req, res) => {
     try {
         const sql = `SELECT * FROM branch WHERE userId = ? AND companyId = ? ORDER BY createdAt DESC`;
@@ -155,6 +175,11 @@ const getAllBranches = asyncHandler(async (req, res) => {
     }
 });
 
+/**
+ * @addEmployee
+ * @params req, res
+ * @Description : This function is used to add employee data in the 'employee' table of the 'tges' database using the MySQL module
+ */
 const addEmployee = asyncHandler(async (req, res) => {
     const reqBody = req.body || {};
     const { employeeId, name, gender, dob, zipCode, country, city, state, email, password, countryCode, contactNo, department, position } = reqBody;
@@ -199,6 +224,11 @@ const addEmployee = asyncHandler(async (req, res) => {
     }
 });
 
+/**
+ * @updateEmployee
+ * @params req, res
+ * @Description : This function is used to update employee data in the 'employee' table of the 'tges' database using the MySQL module
+ */
 const updateEmployee = asyncHandler(async (req, res) => {
     const reqBody = req.body || {};
     const employeeId = req.params.employeeId;
@@ -243,6 +273,11 @@ const updateEmployee = asyncHandler(async (req, res) => {
 
 })
 
+/**
+ * @deleteEmployee
+ * @params req, res
+ * @Description : This function is used to delete employee data in the 'employee' table of the 'tges' database using the MySQL module
+ */
 const deleteEmployee = asyncHandler(async (req, res) => {
     const employeeId = req.params.employeeId;
 
@@ -274,6 +309,11 @@ const deleteEmployee = asyncHandler(async (req, res) => {
     }
 });
 
+/**
+ * @getEmployee
+ * @params req, res
+ * @Description : This function is used to get employee data in the 'employee' table of the 'tges' database using the MySQL module
+ */
 const getEmployee = asyncHandler(async (req, res) => {
     const reqBody = req.body || {};
     const { employeeId, companyId } = reqBody;
@@ -347,6 +387,11 @@ const getEmployee = asyncHandler(async (req, res) => {
     }
 })
 
+/**
+ * @getBranchEmployees
+ * @params req, res
+ * @Description : This function is used to get employee data in the 'employee' table of the 'tges' database using the MySQL module
+ */
 const getBranchEmployees = asyncHandler(async (req, res) => {
     const { employeeId, name } = req.query;
     const branchId = req.params.branchId;
@@ -423,6 +468,11 @@ const getBranchEmployees = asyncHandler(async (req, res) => {
     }
 });
 
+/**
+ * @getAllEmployees
+ * @params req, res
+ * @Description : This function is used to get all employees data in the 'employee' table of the 'tges' database using the MySQL module
+ */
 const getAllEmployees = asyncHandler(async (req, res) => {
     const { name, email, employeeId } = req.query;
     const page = parseInt(req.query.page) || 1;
