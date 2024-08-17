@@ -34,10 +34,10 @@ dbConnection
         await db.query(healthInsurance)
         await db.query(travelInsurance)
         await db.query(cab_rate_card)
-        await db.query(hotel_rate_card)
         await db.query(room)
-        await db.query(event_rate_card)
+        await db.query(hotel_rate_card)
         await db.query(conference_hall)
+        await db.query(event_rate_card)
 
         console.log("✅ Database connected successfully");
     })

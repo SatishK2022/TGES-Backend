@@ -189,7 +189,7 @@ export const cab = `CREATE TABLE IF NOT EXISTS cab (
     otherRequirements VARCHAR(255),
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-)`; 
+)`;
 
 
 // Services
@@ -368,6 +368,76 @@ export const cab_rate_card = `CREATE TABLE IF NOT EXISTS cab_rate_card (
     outstationNightRate VARCHAR(255),
     rateValidFrom VARCHAR(255),
     rateValidTill VARCHAR(255),
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+)`
+
+export const hotel_rate_card = `CREATE TABLE IF NOT EXISTS hotel_rate_card (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    userId INT NOT NULL,
+    FOREIGN KEY (userId) REFERENCES user (id),
+    roomId INT,
+    FOREIGN KEY (roomId) REFERENCES room (id),
+    filePath VARCHAR(255),
+    fileExists BOOLEAN DEFAULT FALSE,
+    type VARCHAR(255),
+    submissionDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    hotelName VARCHAR(255),
+    hotelAddress VARCHAR(255),
+    hotelState VARCHAR(255),
+    hotelCity VARCHAR(255),
+    hotelZipCode VARCHAR(255),
+    phoneNo VARCHAR(10),
+    email VARCHAR(255),
+    gstNo VARCHAR(255),
+    rateValidFrom DATETIME,
+    rateValidTill DATETIME,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+)`
+
+export const room = `CREATE TABLE IF NOT EXISTS room (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    weekendType VARCHAR(255),
+    roomType VARCHAR(255),
+    occupancyType VARCHAR(255),
+    roomOnlyRate VARCHAR(255),
+    cpaiRate VARCHAR(255),
+    mapiRate VARCHAR(255),
+    epRate VARCHAR(255),
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+)`
+
+export const event_rate_card = `CREATE TABLE IF NOT EXISTS event_rate_card (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    userId INT NOT NULL,
+    FOREIGN KEY (userId) REFERENCES user (id),
+    confHall INT,
+    FOREIGN KEY (confHall) REFERENCES conference_hall (id),
+    filePath VARCHAR(255),
+    fileExists BOOLEAN DEFAULT FALSE,
+    type VARCHAR(255),
+    noOfConfHall BOOLEAN DEFAULT FALSE,
+    highTeaOneTimeCharges VARCHAR(255),
+    highTeaTwoTimeCharges VARCHAR(255),
+    highTeaWithCookiesOneTimeCharges VARCHAR(255),
+    highTeaWithCookiesTwoTimeCharges VARCHAR(255),
+    cocktailCharges VARCHAR(255),
+    perDayChargesForProjectors VARCHAR(255),
+    djCharges VARCHAR(255),
+    otherActivities VARCHAR(255),
+    complementaryServices VARCHAR(255),
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+)`
+
+export const conference_hall = `CREATE TABLE IF NOT EXISTS conference_hall (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    noOfConferenceHall VARCHAR(255),
+    typeOfConferenceHall VARCHAR(255),
+    conferenceHallStrength VARCHAR(255),
+    conferenceHallCharges VARCHAR(255),
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 )`
