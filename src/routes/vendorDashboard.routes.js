@@ -5,21 +5,21 @@ import { checkCabRateCardExists, checkFileExists, upload } from "../middlewares/
 const router = express.Router();
 
 router
-    .route("/ratecard")
+    .route("/ratecard/cab")
     .post(isLoggedIn, addCabRateCard)
     .get(isLoggedIn, getCabRateCardDetails)
 
 router
-    .route("/ratecard/:id")
+    .route("/ratecard/cab/:id")
     .put(isLoggedIn, checkCabRateCardExists, upload.single("cabRateCard"), updateCabRateCard)
     .delete(isLoggedIn, deleteCabRateCard)
 
 router
-    .route("/ratecard/upload")
+    .route("/ratecard/cab/upload")
     .post(isLoggedIn, checkFileExists, upload.single("cabRateCard"), addCabRateCardFile)
 
 router
-    .route("/ratecard/download")
+    .route("/ratecard/cab/download")
     .get(isLoggedIn, downloadCabRateCardFile);
 
 export default router;

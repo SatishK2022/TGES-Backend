@@ -877,6 +877,91 @@ const getAllHealthInsurance = asyncHandler(async (req, res) => {
     }
 })
 
+/**
+ * @getAllCabRateCard
+ * @params req, res
+ * @Description : This function is used to get all cab rate card details data in the 'cab_rate_card' table of the 'tges' database using the MySQL module
+*/
+const getAllCabRateCard = asyncHandler(async (req, res) => {
+    const { zipCode, city } = req.query;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    console.log(zipCode, city)
+
+    let sql = `
+        SELECT SQL_CALC_FOUND_ROWS user.id, user.email, user.zipCode, user.country, user.city, user.state, cab_rate_card.* 
+        FROM cab_rate_card 
+        INNER JOIN user ON cab_rate_card.userId = user.id`;
+    
+    const params = [];
+
+    // Initialize WHERE clause if any filter is provided
+    let whereClauses = [];
+
+    // Add search conditions if provided
+    if (zipCode) {
+        whereClauses.push(`user.zipCode LIKE ?`);
+        params.push(`%${zipCode}%`);
+    }
+    if (city) {
+        whereClauses.push(`LOWER(user.city) LIKE ?`);
+        params.push(`%${city.toLowerCase()}%`);
+    }
+
+    // If there are any where clauses, append them to the SQL query
+    if (whereClauses.length > 0) {
+        sql += ` WHERE ${whereClauses.join(' AND ')}`;
+    }
+
+    sql += ` ORDER BY cab_rate_card.createdAt DESC LIMIT ? OFFSET ?`;
+    params.push(limit, skip);
+
+    console.log(sql)
+    console.log(params)
+
+    try {
+        const [result, fields] = await db.query(sql, params);
+
+        console.log(result)
+
+        if (result.length === 0) {
+            return res.status(404).json(
+                new ApiResponse(200, null, "No cab rate card details found")
+            );
+        }
+
+        const totalCountSql = `SELECT FOUND_ROWS() as count`;
+        const [totalCountResult] = await db.query(totalCountSql);
+        const totalCount = totalCountResult[0].count;
+
+        const cleanedResult = result.map(user => {
+            const { userId, type, createdAt, updatedAt, ...rest } = user;
+            return rest;
+        });
+
+        return res.status(200).json(
+            new ApiResponse(200, {
+                data: cleanedResult,
+                pagination: {
+                    total_records: totalCount,
+                    total_pages: Math.ceil(totalCount / limit),
+                    limit: limit,
+                    current_page: page,
+                    next_page: page < Math.ceil(totalCount / limit) ? page + 1 : null,
+                    prev_page: page > 1 ? page - 1 : null
+                }
+            }, "Cab rate card details fetched successfully")
+        );
+    } catch (error) {
+        console.error("Error getting cab rate card: ", error);
+        return res.status(500).json(
+            new ApiResponse(500, null, "An error occurred while getting cab rate card details")
+        );
+    }
+});
+
 export {
     registerAdmin,
     loginAdmin,
@@ -890,5 +975,6 @@ export {
     getAllBusDetails,
     getAllHotelDetails,
     getAllTravelInsurance,
-    getAllHealthInsurance
+    getAllHealthInsurance,
+    getAllCabRateCard
 }
