@@ -1,9 +1,10 @@
 import express from "express";
 import { isLoggedIn } from "../middlewares/auth.middleware.js";
-import { addCabRateCard, addCabRateCardFile, deleteCabRateCard, downloadCabRateCardFile, getCabRateCardDetails, updateCabRateCard } from "../controller/vendorDashboard.controller.js";
-import { checkCabRateCardExists, checkFileExists, upload } from "../middlewares/multer.middleware.js";
+import { addCabRateCard, addCabRateCardFile, addHotelRateCard, addHotelRateCardFile, deleteCabRateCard, deleteHotelRateCard, downloadCabRateCardFile, downloadHotelRateCardFile, getCabRateCardDetails, getHotelRateCardDetails, updateCabRateCard, updateHotelRateCard } from "../controller/vendorDashboard.controller.js";
+import { checkFileExists, checkRateCardExists, upload } from "../middlewares/multer.middleware.js";
 const router = express.Router();
 
+// Cab Rate Card
 router
     .route("/ratecard/cab")
     .post(isLoggedIn, addCabRateCard)
@@ -11,7 +12,7 @@ router
 
 router
     .route("/ratecard/cab/:id")
-    .put(isLoggedIn, checkCabRateCardExists, upload.single("cabRateCard"), updateCabRateCard)
+    .put(isLoggedIn, checkRateCardExists, upload.single("cabRateCard"), updateCabRateCard)
     .delete(isLoggedIn, deleteCabRateCard)
 
 router
@@ -21,5 +22,24 @@ router
 router
     .route("/ratecard/cab/download")
     .get(isLoggedIn, downloadCabRateCardFile);
+
+// Hotel Rate Card
+router
+    .route("/ratecard/hotel")
+    .post(isLoggedIn, addHotelRateCard)
+    .get(isLoggedIn, getHotelRateCardDetails)
+
+router
+    .route("/ratecard/hotel/:id")
+    .put(isLoggedIn, checkRateCardExists, upload.single("hotelRateCard"), updateHotelRateCard)
+    .delete(isLoggedIn, deleteHotelRateCard)
+
+router
+    .route("/ratecard/hotel/upload")
+    .post(isLoggedIn, checkFileExists, upload.single("hotelRateCard"), addHotelRateCardFile)
+
+router
+    .route("/ratecard/hotel/download")
+    .get(isLoggedIn, downloadHotelRateCardFile);
 
 export default router;

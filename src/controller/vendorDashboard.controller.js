@@ -449,6 +449,20 @@ const addHotelRateCardFile = asyncHandler(async (req, res) => {
     }
 
     try {
+        const sql = 'SELECT * FROM hotel_rate_card WHERE userId = ?';
+        const params = [req.user.id];
+        const [existedUser] = await db.query(sql, params);
+
+        if(existedUser.length > 0) {
+            return res.status(400).json(
+                new ApiResponse(
+                    400,
+                    null,
+                    "Hotel rate card already exists"
+                )
+            );
+        }
+
         const filePath = file.path;
         const insertSql = 'INSERT INTO hotel_rate_card (userId, filePath, type, fileExists) VALUES (?, ?, ?, ?)';
         const insertParams = [req.user.id, filePath, type, true];
@@ -531,7 +545,6 @@ const downloadHotelRateCardFile = asyncHandler(async (req, res) => {
 const addHotelRateCard = asyncHandler(async (req, res) => {
     const reqBody = req.body || [];
 
-    // Validate request body
     if (!Array.isArray(reqBody) || reqBody.length === 0) {
         return res.status(400).json(
             new ApiResponse(400, null, "Fields are required")
@@ -539,7 +552,6 @@ const addHotelRateCard = asyncHandler(async (req, res) => {
     }
 
     try {
-        // Check if a hotel rate card already exists for the user
         const sql1 = 'SELECT * FROM hotel_rate_card WHERE userId = ?';
         const params1 = [req.user.id];
         const [existedUser] = await db.query(sql1, params1);
@@ -616,15 +628,12 @@ const addHotelRateCard = asyncHandler(async (req, res) => {
 });
 
 const updateHotelRateCard = asyncHandler(async (req, res) => {
-    
-});
-
-const deleteHotelRateCard = asyncHandler(async (req, res) => {
+    const reqBody = req.body || {};
     const id = req.params.id;
+    const { type, submissionDate, hotelName, hotelAddress, hotelState, hotelCity, hotelZipCode, phoneNo, email, gstNo, rateValidFrom, rateValidTill, weekendType, roomType, occupancyType, roomOnlyRate, cpaiRate, mapiRate, epRate } = reqBody;
 
     try {
-        // Retrieve the hotel rate card
-        const sql = 'SELECT * FROM hotel_rate_card WHERE id = ? AND userId = ?';
+        const sql = `SELECT * FROM hotel_rate_card WHERE id = ? AND userId = ?`;
         const params = [id, req.user.id];
         const [result] = await db.query(sql, params);
 
@@ -634,14 +643,195 @@ const deleteHotelRateCard = asyncHandler(async (req, res) => {
             );
         }
 
-        const roomId = result[0].roomId; // Assuming roomId is stored in the hotel_rate_card table
+        const existingRecord = result[0];
+        const filePath = req.file ? req.file.path : null;
 
-        // Begin a transaction
+        // Logic to handle filePath updates
+        if (filePath) {
+            if (existingRecord.filePath) {
+                // If there is an existing filePath, delete the existing file
+                fs.unlink(existingRecord.filePath, (err) => {
+                    if (err) {
+                        console.error('Error deleting file:', err);
+                    } else {
+                        console.log('File deleted successfully');
+                    }
+                });
+
+                // Update the filePath
+                const updateSql = 'UPDATE hotel_rate_card SET type = ?, filePath = ?, fileExists = 1 WHERE id = ?';
+                const updateParams = [type, filePath, id];
+                const [updateResult] = await db.query(updateSql, updateParams);
+
+                if (updateResult.affectedRows === 0) {
+                    return res.status(500).json(
+                        new ApiResponse(500, null, "Failed to update hotel rate card")
+                    );
+                }
+            } else {
+                // If there is no existing filePath, delete the manual fields
+                await db.beginTransaction();
+
+                const deleteManualFieldsSql = 'DELETE FROM hotel_rate_card WHERE userId = ?';
+                const [deleteManualFieldsResult] = await db.query(deleteManualFieldsSql, [req.user.id]);
+
+                if (deleteManualFieldsResult.affectedRows === 0) {
+                    await db.rollback();
+                    return res.status(500).json(
+                        new ApiResponse(500, null, "Failed to delete manual fields")
+                    );
+                }
+
+                // Check for existing references before deleting room
+                const checkReferencesSql = 'SELECT COUNT(*) as count FROM hotel_rate_card WHERE roomId = ?';
+                const [referenceCount] = await db.query(checkReferencesSql, [existingRecord.roomId]);
+
+                if (referenceCount[0].count > 0) {
+                    await db.rollback();
+                    return res.status(400).json(
+                        new ApiResponse(400, null, "Cannot delete room; it is still referenced by hotel rate cards")
+                    );
+                }
+
+                // Delete room fields
+                const deleteRoomFields = 'DELETE FROM room WHERE id = ?';
+                const [deleteRoomFieldsResult] = await db.query(deleteRoomFields, [existingRecord.roomId]);
+
+                if (deleteRoomFieldsResult.affectedRows === 0) {
+                    await db.rollback();
+                    return res.status(500).json(
+                        new ApiResponse(500, null, "Failed to delete room fields")
+                    );
+                }
+
+                // Then Insert the record with the new filePath
+                const insertSql = 'INSERT INTO hotel_rate_card (userId, type, filePath, fileExists) VALUES (?, ?, ?, 1)';
+                const insertParams = [req.user.id, type, filePath];
+                const [insertResult] = await db.query(insertSql, insertParams);
+
+                if (insertResult.affectedRows === 0) {
+                    await db.rollback();
+                    return res.status(500).json(
+                        new ApiResponse(500, null, "Failed to insert new hotel rate card")
+                    );
+                }
+
+                await db.commit();
+            }
+        } else {
+            if (existingRecord.filePath) {
+                await db.beginTransaction();
+
+                // 1. Delete File Path
+                fs.unlink(existingRecord.filePath, (err) => {
+                    if (err) {
+                        console.error('Error deleting file:', err);
+                    } else {
+                        console.log('File deleted successfully');
+                    }
+                });
+
+                const deleteExistingSql = 'DELETE FROM hotel_rate_card WHERE userId = ? AND id = ?';
+                const [deleteExistingResult] = await db.query(deleteExistingSql, [req.user.id, id]);
+
+                if (deleteExistingResult.affectedRows === 0) {
+                    await db.rollback();
+                    return res.status(500).json(
+                        new ApiResponse(500, null, "Failed to delete hotel rate card")
+                    );
+                }
+
+                // 2. Insert New Record
+                const insertRoomSql = 'INSERT INTO room (weekendType, roomType, occupancyType, roomOnlyRate, cpaiRate, mapiRate, epRate) VALUES (?, ?, ?, ?, ?, ?, ?)';
+                const [insertResult] = await db.query(insertRoomSql, [weekendType, roomType, occupancyType, roomOnlyRate, cpaiRate, mapiRate, epRate]);
+
+                if (insertResult.affectedRows === 0) {
+                    await db.rollback();
+                    return res.status(500).json(
+                        new ApiResponse(500, null, "Failed to add room")
+                    );
+                }
+
+                // Get the inserted room ID
+                const roomId = insertResult.insertId;
+
+                const insertHotelSql = 'INSERT INTO hotel_rate_card (userId, roomId, type, submissionDate, hotelName, hotelAddress, hotelState, hotelCity, hotelZipCode, phoneNo, email, gstNo, rateValidFrom, rateValidTill) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+                const [result] = await db.query(insertHotelSql, [req.user.id, roomId, type, submissionDate, hotelName, hotelAddress, hotelState, hotelCity, hotelZipCode, phoneNo, email, gstNo, rateValidFrom, rateValidTill]);
+
+                // Check if hotel rate card insertion was successful
+                if (result.affectedRows === 0) {
+                    await db.rollback();
+                    return res.status(500).json(
+                        new ApiResponse(500, null, "Failed to add hotel rate card")
+                    );
+                }
+
+                await db.commit();
+            } else {
+                await db.beginTransaction();
+
+                // Update hotel rate card
+                const updateHotelSql = 'UPDATE hotel_rate_card SET submissionDate = ?, hotelName = ?, hotelAddress = ?, hotelState = ?, hotelCity = ?, hotelZipCode = ?, phoneNo = ?, email = ?, gstNo = ?, rateValidFrom = ?, rateValidTill = ? WHERE id = ?';
+                const updateParams = [submissionDate, hotelName, hotelAddress, hotelState, hotelCity, hotelZipCode, phoneNo, email, gstNo, rateValidFrom, rateValidTill, id];
+                const [updateResult] = await db.query(updateHotelSql, updateParams);
+
+                if (updateResult.affectedRows === 0) {
+                    await db.rollback();
+                    return res.status(500).json(
+                        new ApiResponse(500, null, "Failed to update hotel rate card")
+                    );
+                }
+
+                // Update room
+                const updateRoomSql = 'UPDATE room SET weekendType = ?, roomType = ?, occupancyType = ?, roomOnlyRate = ?, cpaiRate = ?, mapiRate = ?, epRate = ? WHERE id = ?';
+                const updateRoomParams = [weekendType, roomType, occupancyType, roomOnlyRate, cpaiRate, mapiRate, epRate, existingRecord.roomId];
+                const [updateRoomResult] = await db.query(updateRoomSql, updateRoomParams);
+
+                if (updateRoomResult.affectedRows === 0) {
+                    await db.rollback();
+                    return res.status(500).json(
+                        new ApiResponse(500, null, "Failed to update room")
+                    );
+                }
+
+                await db.commit();
+            }
+        }
+
+        return res.status(200).json(
+            new ApiResponse(200, null, "Hotel rate card updated successfully")
+        );
+    } catch (error) {
+        console.error("Error while updating hotel rate card: ", error);
+        return res.status(500).json(
+            new ApiResponse(500, null, "Error while updating hotel rate card")
+        );
+    }
+});
+
+const deleteHotelRateCard = asyncHandler(async (req, res) => {
+    const id = req.params.id;
+
+    try {
         await db.beginTransaction();
 
+        const sql = 'SELECT * FROM hotel_rate_card WHERE id = ? AND userId = ?';
+        const params = [id, req.user.id];
+        const [result] = await db.query(sql, params);
+
+        if (result.length === 0) {
+            await db.rollback();
+            return res.status(404).json(
+                new ApiResponse(404, null, "Hotel rate card not found")
+            );
+        }
+
+        const hotelRateCard = result[0];
+        const roomId = hotelRateCard.roomId;
+
         // Delete the associated file if it exists
-        if (result[0].fileExists) {
-            fs.unlink(result[0].filePath, (err) => {
+        if (hotelRateCard.fileExists) {
+            fs.unlink(hotelRateCard.filePath, (err) => {
                 if (err) {
                     console.error('Error deleting file:', err);
                 } else {
@@ -656,29 +846,37 @@ const deleteHotelRateCard = asyncHandler(async (req, res) => {
         const [deleteResult] = await db.query(deleteSql, deleteParams);
 
         if (deleteResult.affectedRows === 0) {
-            await db.rollback(); // Rollback the transaction if hotel rate card deletion fails
+            await db.rollback(); // Rollback if hotel rate card deletion fails
             return res.status(500).json(
                 new ApiResponse(500, null, "Failed to delete hotel rate card")
             );
         }
 
-        // Delete the associated room
-        const deleteRoomSql = 'DELETE FROM room WHERE id = ?';
-        const deleteRoomParams = [roomId];
-        const [deleteRoomResult] = await db.query(deleteRoomSql, deleteRoomParams);
+        // Check if the room exists before attempting to delete it
+        const roomCheckSql = 'SELECT * FROM room WHERE id = ?';
+        const [roomCheckResult] = await db.query(roomCheckSql, [roomId]);
 
-        if (deleteRoomResult.affectedRows === 0) {
-            await db.rollback(); // Rollback the transaction if room deletion fails
-            return res.status(500).json(
-                new ApiResponse(500, null, "Failed to delete associated room")
-            );
+        if (roomCheckResult.length > 0) {
+            // Delete the associated room
+            const deleteRoomSql = 'DELETE FROM room WHERE id = ?';
+            const deleteRoomParams = [roomId];
+            const [deleteRoomResult] = await db.query(deleteRoomSql, deleteRoomParams);
+
+            if (deleteRoomResult.affectedRows === 0) {
+                await db.rollback(); // Rollback if room deletion fails
+                return res.status(500).json(
+                    new ApiResponse(500, null, "Failed to delete associated room")
+                );
+            }
+        } else {
+            console.log(`Room with ID ${roomId} does not exist, skipping deletion.`);
         }
 
-        // Step 6: Commit the transaction
+        // Commit the transaction
         await db.commit();
 
         return res.status(200).json(
-            new ApiResponse(200, null, "Hotel rate card and associated room deleted successfully")
+            new ApiResponse(200, null, "Hotel rate card deleted successfully")
         );
     } catch (error) {
         console.error("Error while deleting hotel rate card: ", error);
@@ -695,15 +893,16 @@ const getHotelRateCardDetails = asyncHandler(async (req, res) => {
     const skip = (page - 1) * limit;
 
     try {
-        // Fetch hotel rate card details along with room details
+        // Fetch hotel rate card details along with room details using LEFT JOIN
         const sql = `
-            SELECT h.*, r.*
-            FROM hotel_rate_card h
-            JOIN room r ON h.roomId = r.id
-            WHERE h.userId = ?
-            ORDER BY h.createdAt
+            SELECT hotel_rate_card.id AS rateCardId, hotel_rate_card.*, 
+            room.id AS roomId, room.*
+            FROM hotel_rate_card
+            LEFT JOIN room ON hotel_rate_card.roomId = room.id
+            WHERE hotel_rate_card.userId = ?
+            ORDER BY hotel_rate_card.createdAt DESC
             LIMIT ? OFFSET ?`;
-        
+
         const params = [req.user.id, limit, skip];
         const [result] = await db.query(sql, params);
 
@@ -719,12 +918,11 @@ const getHotelRateCardDetails = asyncHandler(async (req, res) => {
 
         // Format the result to remove unnecessary fields
         const hotelRateResult = result.map(record => {
-            const { userId, createdAt, updatedAt, ...hotelRateCardDetails } = record;
-            const { roomId, ...roomDetails } = record;
-            return {
-                ...hotelRateCardDetails,
-                ...roomDetails
-            };
+            const { userId, createdAt, updatedAt, roomId, id, rateCardId, ...hotelRateCardDetails } = record;
+
+            console.log("Hotel Rate Card Details:", hotelRateCardDetails);
+
+            return { id: record.rateCardId, ...hotelRateCardDetails };
         });
 
         // Count total records for pagination

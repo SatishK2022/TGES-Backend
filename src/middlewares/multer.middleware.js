@@ -30,15 +30,29 @@ const upload = multer({
 });
 
 const checkFileExists = asyncHandler(async (req, res, next) => {
-    try {
-        const sql = 'SELECT * FROM cab_rate_card WHERE userId = ?';
-        const params = [req.user.id];
-        const [existedUser] = await db.query(sql, params);
+    const type = req.query.type;
 
-        if (existedUser.length > 0 && existedUser[0].fileExists) {
-            return res.status(400).json(
-                new ApiResponse(400, null, "Cab rate card file already exists")
-            );
+    try {
+        if (type === 'cab') {
+            const sql = 'SELECT * FROM cab_rate_card WHERE userId = ?';
+            const params = [req.user.id];
+            const [existedUser] = await db.query(sql, params);
+
+            if (existedUser.length > 0) {
+                return res.status(400).json(
+                    new ApiResponse(400, null, "Cab rate card already exists")
+                );
+            }
+        } else if(type === 'hotel') {
+            const sql = 'SELECT * FROM hotel_rate_card WHERE userId = ?';
+            const params = [req.user.id];
+            const [existedUser] = await db.query(sql, params);
+
+            if (existedUser.length > 0) {
+                return res.status(400).json(
+                    new ApiResponse(400, null, "Hotel rate card already exists")
+                );
+            }
         }
 
         next();
@@ -50,18 +64,31 @@ const checkFileExists = asyncHandler(async (req, res, next) => {
     }
 });
 
-const checkCabRateCardExists = asyncHandler(async (req, res, next) => {
+const checkRateCardExists = asyncHandler(async (req, res, next) => {
     const id = req.params.id;
+    const type = req.query.type;
 
     try {
-        const sql = `SELECT * FROM cab_rate_card WHERE id = ? AND userId = ?`;
-        const params = [id, req.user.id];
-        const [result] = await db.query(sql, params);
+        if (type === 'cab') {
+            const sql = `SELECT * FROM cab_rate_card WHERE id = ? AND userId = ?`;
+            const params = [id, req.user.id];
+            const [result] = await db.query(sql, params);
 
-        if (result.length === 0) {
-            return res.status(404).json(
-                new ApiResponse(404, null, "Cab rate card not found")
-            );
+            if (result.length === 0) {
+                return res.status(404).json(
+                    new ApiResponse(404, null, "Cab rate card not found")
+                );
+            }
+        } else if (type === 'hotel') {
+            const sql = `SELECT * FROM hotel_rate_card WHERE id = ? AND userId = ?`;
+            const params = [id, req.user.id];
+            const [result] = await db.query(sql, params);
+
+            if (result.length === 0) {
+                return res.status(404).json(
+                    new ApiResponse(404, null, "Cab rate card not found")
+                );
+            }
         }
 
         next();
@@ -76,5 +103,5 @@ const checkCabRateCardExists = asyncHandler(async (req, res, next) => {
 export {
     upload,
     checkFileExists,
-    checkCabRateCardExists
+    checkRateCardExists
 }
