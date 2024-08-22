@@ -45,7 +45,7 @@ dbConnection
 
 // middlewares
 app.use(cors({
-    origin: ["http://localhost:5173", "https://v1.tgestravel.com/"],
+    origin: ["http://localhost:5173", "https://v1.tgestravel.com"],
     credentials: true
 }))
 app.use(express.json())
