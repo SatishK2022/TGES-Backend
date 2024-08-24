@@ -1,9 +1,8 @@
 import asyncHandler from "../utils/asyncHandler.js";
 import ApiResponse from "../utils/ApiResponse.js";
-import connectToDb from "../config/db.js";
+import { pool as db } from "../config/db.js";
 import { calculateAge, comparePassword, generateToken, hashPassword } from "../utils/helper.js";
 
-let db = await connectToDb();
 
 /**
  * @registerAdmin
@@ -894,7 +893,7 @@ const getAllCabRateCard = asyncHandler(async (req, res) => {
         SELECT SQL_CALC_FOUND_ROWS user.id, user.email, user.zipCode, user.country, user.city, user.state, cab_rate_card.* 
         FROM cab_rate_card 
         INNER JOIN user ON cab_rate_card.userId = user.id`;
-    
+
     const params = [];
 
     // Initialize WHERE clause if any filter is provided

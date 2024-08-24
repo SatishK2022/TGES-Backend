@@ -5,17 +5,14 @@ import cors from "cors"
 import cookieParser from "cookie-parser"
 import bodyParser from "body-parser";
 import morgan from "morgan"
-import connectToDb from "./config/db.js";
+import { connectToDb, pool as db } from "./config/db.js";
 import { user, retail_user, corporate_user, vendor, train, air, volvoBus, cab, hotel, passport, healthInsurance, travelInsurance, admin, branch, employee, cab_rate_card, hotel_rate_card, room, event_rate_card, conference_hall } from "./constants.js"
 
 const app = express();
 
 // Database Connection
-const dbConnection = connectToDb();
-
-dbConnection
+await connectToDb()
     .then(async () => {
-        const db = await connectToDb();
         await db.query("CREATE DATABASE IF NOT EXISTS tges");
 
         await db.query(admin)
@@ -38,10 +35,7 @@ dbConnection
         await db.query(hotel_rate_card)
         await db.query(conference_hall)
         await db.query(event_rate_card)
-
-        console.log("✅ Database connected successfully");
     })
-    .catch(error => console.log("❌ Error Connecting to Database : ", error));
 
 // middlewares
 app.use(cors({
@@ -90,5 +84,5 @@ app.get("*", (req, res) => {
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-    console.log(`Server running on  http://localhost:${PORT}`);
+    console.log(`Server running on http://localhost:${PORT}`);
 })

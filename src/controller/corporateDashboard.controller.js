@@ -1,9 +1,8 @@
 import asyncHandler from "../utils/asyncHandler.js";
 import ApiResponse from "../utils/ApiResponse.js";
-import connectToDb from "../config/db.js";
+import { pool as db } from "../config/db.js";
 import { calculateAge, generateBranchId } from "../utils/helper.js";
 
-let db = await connectToDb();
 
 /**
  * @addBranch
@@ -77,7 +76,7 @@ const updateBranch = asyncHandler(async (req, res) => {
                 "Branch updated successfully"
             )
         )
-    } catch(error) {
+    } catch (error) {
         console.log("Error while updating branch: ", error);
         return res.status(500).json(
             new ApiResponse(

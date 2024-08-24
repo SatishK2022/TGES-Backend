@@ -1,11 +1,10 @@
 import ApiResponse from "../utils/ApiResponse.js";
 import asyncHandler from "../utils/asyncHandler.js";
-import connectToDb from "../config/db.js";
+import { pool as db } from "../config/db.js";
 import { isValuePresent } from "../utils/helper.js";
 import { sendMail } from "../utils/sendMail.js";
 import { hotelBookingTemplate } from "../email/email-template.js";
 
-let db = await connectToDb();
 
 /**
  * @createHotelBooking

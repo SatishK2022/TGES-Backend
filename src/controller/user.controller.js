@@ -1,11 +1,10 @@
-import connectToDb from "../config/db.js";
+import { pool as db } from "../config/db.js";
 import asyncHandler from "../utils/asyncHandler.js";
 import ApiResponse from "../utils/ApiResponse.js"
 import { sendMail } from "../utils/sendMail.js";
 import { corporateRegisterTemplate, forgotPasswordTemplate, retailRegisterTemplate, vendorRegisterTemplate } from "../email/email-template.js";
 import { comparePassword, generateCompanyId, generateOTP, generateToken, hashPassword } from "../utils/helper.js";
 
-let db = await connectToDb();
 
 /**
  * @retailRegister

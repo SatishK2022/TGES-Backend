@@ -1,13 +1,11 @@
 import ApiResponse from "../utils/ApiResponse.js";
 import asyncHandler from "../utils/asyncHandler.js";
-import connectToDb from "../config/db.js";
+import { pool as db } from "../config/db.js";
 import { sendMail } from "../utils/sendMail.js"
 import { airBookingTemplate } from "../email/email-template.js";
 import { calculateAge, generateExcelSheet } from "../utils/helper.js";
 import { v4 as uuidv4 } from "uuid"
 import path from "path";
-
-let db = await connectToDb();
 
 /**
  * @createAirTravel
@@ -130,7 +128,7 @@ const getAirTravelDetails = asyncHandler(async (req, res) => {
 
     try {
         const sql = `SELECT SQL_CALC_FOUND_ROWS * FROM air WHERE userId = ? ORDER BY createdAt DESC LIMIT ? OFFSET ?`;
-        const params = [id];
+        const params = [id, limit, skip];
         const [result, fields] = await db.query(sql, params);
 
         if (result.length === 0) {

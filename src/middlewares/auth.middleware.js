@@ -1,9 +1,7 @@
 import jwt from "jsonwebtoken"
 import asyncHandler from "../utils/asyncHandler.js";
 import ApiResponse from "../utils/ApiResponse.js";
-import dbConnection from "../config/db.js";
-
-let db = await dbConnection();
+import { pool as db } from "../config/db.js";
 
 const isLoggedIn = asyncHandler(async (req, res, next) => {
     const { token } = req.cookies;

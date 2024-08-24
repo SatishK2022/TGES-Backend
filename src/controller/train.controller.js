@@ -1,13 +1,12 @@
 import ApiResponse from "../utils/ApiResponse.js";
 import asyncHandler from "../utils/asyncHandler.js";
-import connectToDb from "../config/db.js";
+import { pool as db } from "../config/db.js";
 import { sendMail } from "../utils/sendMail.js";
 import { trainBookingTemplate } from "../email/email-template.js";
 import { calculateAge, generateExcelSheet } from "../utils/helper.js";
 import { v4 as uuidv4 } from "uuid"
 import path from "path";
 
-let db = await connectToDb();
 
 /**
  * @createTrainTravel

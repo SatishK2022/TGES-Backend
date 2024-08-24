@@ -2,10 +2,8 @@ import path from 'path';
 import multer from 'multer';
 import { v4 as uuidv4 } from 'uuid';
 import ApiResponse from '../utils/ApiResponse.js';
-import connectToDb from "../config/db.js";
+import { pool as db } from "../config/db.js";
 import asyncHandler from '../utils/asyncHandler.js';
-
-let db = await connectToDb();
 
 const upload = multer({
     storage: multer.diskStorage({
@@ -43,7 +41,7 @@ const checkFileExists = asyncHandler(async (req, res, next) => {
                     new ApiResponse(400, null, "Cab rate card already exists")
                 );
             }
-        } else if(type === 'hotel') {
+        } else if (type === 'hotel') {
             const sql = 'SELECT * FROM hotel_rate_card WHERE userId = ?';
             const params = [req.user.id];
             const [existedUser] = await db.query(sql, params);

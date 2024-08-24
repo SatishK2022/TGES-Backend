@@ -1,11 +1,10 @@
-import connectToDb from "../config/db.js";
+import { pool as db } from "../config/db.js";
 import { healthInsuranceTemplate } from "../email/email-template.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import asyncHandler from "../utils/asyncHandler.js";
 import { calculateAge } from "../utils/helper.js";
 import { sendMail } from "../utils/sendMail.js";
 
-let db = await connectToDb();
 
 const createHealthInsurance = asyncHandler(async (req, res) => {
     const reqBody = req.body || {};
