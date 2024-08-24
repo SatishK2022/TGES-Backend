@@ -590,8 +590,6 @@ export {
     retailRegister,
     vendorRegister,
     login,
-    corporateLogin,
-    vendorLogin,
     forgotPassword,
     verifyOtp,
     resetPassword,
