@@ -248,11 +248,11 @@ const vendorRegister = asyncHandler(async (req, res) => {
 })
 
 /**
- * @retailLogin
+ * @login
  * @params req, res
  * @Description : This function is used to login retail user data in the 'user' table of the 'tges' database using the MySQL module
 */
-const retailLogin = asyncHandler(async (req, res) => {
+const login = asyncHandler(async (req, res) => {
     const reqBody = req.body || {};
     const { email, password } = reqBody;
 
@@ -266,217 +266,100 @@ const retailLogin = asyncHandler(async (req, res) => {
         );
     }
 
-    const sql = `SELECT retail_user.*, user.* FROM retail_user INNER JOIN user ON retail_user.userId = user.id WHERE user.email = ?;`;
-    const params = [email];
-    const [result, fields] = await db.query(sql, params);
-    if (result.length === 0) {
-        return res.status(404).json(
+    // SQL queries for all user types
+    const queries = [
+        {
+            sql: `SELECT retail_user.*, user.* FROM retail_user INNER JOIN user ON retail_user.userId = user.id WHERE user.email = ?;`,
+            params: [email],
+            type: 'retail'
+        },
+        {
+            sql: `SELECT corporate_user.*, user.* FROM corporate_user INNER JOIN user ON corporate_user.userId = user.id WHERE user.email = ?;`,
+            params: [email],
+            type: 'corporate'
+        },
+        {
+            sql: `SELECT vendor.*, user.* FROM vendor INNER JOIN user ON vendor.userId = user.id WHERE user.email = ?;`,
+            params: [email],
+            type: 'vendor'
+        }
+    ];
+
+    let user = null;
+
+    try {
+        // Check each user type
+        for (const query of queries) {
+            const [result] = await db.query(query.sql, query.params);
+            if (result.length > 0) {
+                user = { ...result[0], userType: query.type };
+                break;
+            }
+        }
+    
+        if (!user) {
+            return res.status(404).json(
+                new ApiResponse(
+                    404,
+                    null,
+                    "User not found"
+                )
+            );
+        }
+    
+        const passwordMatch = await comparePassword(password, user.password);
+        if (!passwordMatch) {
+            return res.status(401).json(
+                new ApiResponse(
+                    401,
+                    null,
+                    "Invalid credentials"
+                )
+            );
+        }
+    
+        const token = generateToken({
+            id: user.id,
+            email: user.email,
+            userType: user.userType
+        });
+    
+        const cookieOptions = {
+            httpOnly: true,
+            secure: true,
+        };
+    
+        const cleanedResult = {
+            ...user,
+            otp: undefined,
+            otpExpires: undefined,
+            password: undefined,
+            userId: undefined,
+            createdAt: undefined,
+            updatedAt: undefined,
+        };
+    
+        return res
+            .status(200)
+            .cookie("token", token, cookieOptions)
+            .json(
+                new ApiResponse(
+                    200,
+                    cleanedResult,
+                    "Login Successful"
+                )
+            );
+    } catch (error) {
+        console.error('Error during user login:', error);
+        return res.status(500).json(
             new ApiResponse(
-                404,
+                500,
                 null,
-                "User not found"
+                "An error occurred during login"
             )
         );
     }
-
-    const user = result[0];
-
-    const passwordMatch = await comparePassword(password, user.password);
-    if (!passwordMatch) {
-        return res.status(401).json(
-            new ApiResponse(
-                401,
-                null,
-                "Invalid credentials"
-            )
-        );
-    }
-
-    const token = generateToken({
-        id: user.id,
-        email: user.email,
-    })
-
-    const cookieOptions = {
-        httpOnly: true,
-        secure: true,
-    }
-
-    const cleanedResult = {
-        ...user,
-        otp: undefined,
-        otpExpires: undefined,
-        password: undefined,
-        userId: undefined,
-        createdAt: undefined,
-        updatedAt: undefined,
-    };
-
-    return res
-        .status(200)
-        .cookie("token", token, cookieOptions)
-        .json(
-            new ApiResponse(
-                200,
-                cleanedResult,
-                "Login Successful"
-            )
-        );
-})
-
-/**
- * @corporateLogin
- * @params req, res
- * @Description : This function is used to login corporate user data in the 'user' table of the 'tges' database using the MySQL module
-*/
-const corporateLogin = asyncHandler(async (req, res) => {
-    const reqBody = req.body || {};
-    const { email, password } = reqBody;
-
-    if (!email || !password) {
-        return res.status(400).json(
-            new ApiResponse(
-                400,
-                null,
-                "All fields are required"
-            )
-        );
-    }
-
-    const sql = `SELECT corporate_user.*, user.* FROM corporate_user INNER JOIN user ON corporate_user.userId = user.id WHERE user.email = ?`;
-    const params = [email];
-    const [result, fields] = await db.query(sql, params);
-    if (result.length === 0) {
-        return res.status(404).json(
-            new ApiResponse(
-                404,
-                null,
-                "User not found"
-            )
-        );
-    }
-
-    const user = result[0];
-
-    const passwordMatch = await comparePassword(password, user.password);
-    if (!passwordMatch) {
-        return res.status(401).json(
-            new ApiResponse(
-                401,
-                null,
-                "Invalid credentials"
-            )
-        );
-    }
-
-    const token = generateToken({
-        id: user.id,
-        email: user.email,
-    })
-
-    const cookieOptions = {
-        httpOnly: true,
-        secure: true,
-    }
-
-    const cleanedResult = {
-        ...user,
-        otp: undefined,
-        otpExpires: undefined,
-        password: undefined,
-        userId: undefined,
-        createdAt: undefined,
-        updatedAt: undefined,
-    };
-
-    return res
-        .status(200)
-        .cookie("token", token, cookieOptions)
-        .json(
-            new ApiResponse(
-                200,
-                cleanedResult,
-                "Login Successful"
-            )
-        );
-})
-
-/**
- * @vendorLogin
- * @params req, res
- * @Description : This function is used to login vendor user data in the 'user' table of the 'tges' database using the MySQL module
-*/
-const vendorLogin = asyncHandler(async (req, res) => {
-    const reqBody = req.body || {};
-    const { email, password } = reqBody;
-
-    if (!email || !password) {
-        return res.status(400).json(
-            new ApiResponse(
-                400,
-                null,
-                "All fields are required"
-            )
-        );
-    }
-
-    const sql = `SELECT vendor.*, user.* FROM vendor INNER JOIN user ON vendor.userId = user.id WHERE user.email = ?`;
-    const params = [email];
-    const [result, fields] = await db.query(sql, params);
-    if (result.length === 0) {
-        return res.status(404).json(
-            new ApiResponse(
-                404,
-                null,
-                "User not found"
-            )
-        );
-    }
-
-    const user = result[0];
-
-    const passwordMatch = await comparePassword(password, user.password);
-    if (!passwordMatch) {
-        return res.status(401).json(
-            new ApiResponse(
-                401,
-                null,
-                "Invalid credentials"
-            )
-        );
-    }
-
-    const token = generateToken({
-        id: user.id,
-        email: user.email,
-    })
-
-    const cookieOptions = {
-        httpOnly: true,
-        secure: true,
-    }
-
-    const cleanedResult = {
-        ...user,
-        otp: undefined,
-        otpExpires: undefined,
-        password: undefined,
-        userId: undefined,
-        createdAt: undefined,
-        updatedAt: undefined,
-    };
-
-    return res
-        .status(200)
-        .cookie("token", token, cookieOptions)
-        .json(
-            new ApiResponse(
-                200,
-                cleanedResult,
-                "Login Successful"
-            )
-        );
-})
+});
 
 /**
  * @forgotPassword
@@ -706,7 +589,7 @@ export {
     corporateRegister,
     retailRegister,
     vendorRegister,
-    retailLogin,
+    login,
     corporateLogin,
     vendorLogin,
     forgotPassword,
