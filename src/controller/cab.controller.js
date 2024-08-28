@@ -51,11 +51,87 @@ const createCabTravel = asyncHandler(async (req, res) => {
 })
 
 const updateCabTravel = asyncHandler(async (req, res) => {
-    // TODO: Implement update travel
+    const id = req.params.id;
+    const reqBody = req.body || {};
+    const { pickupCountry, nationality, tourPlan, name, contactNo, alternateContactNo, email, cabRequiredAt, cabRequiredFor, localTravelKmsLimit, pickupDateTime, pickupAddress, pickupLandmark, dropDateTime, dropAddress, dropLandmark, cabDuration, noOfCabsRequired, typeOfCabRequired, noOfPersonsTravelling, noOfInfants, noOfChildren, otherRequirements } = reqBody;
+
+    try {
+        const sql = 'SELECT * FROM cab WHERE id = ?';
+        const params = [id];
+        const [result, fields] = await db.query(sql, params);
+
+        if (result.length === 0) {
+            return res.status(404).json(
+                new ApiResponse(
+                    404,
+                    null,
+                    "Cab travel not found"
+                )
+            )
+        }
+
+        const updateSql = 'UPDATE cab SET pickupCountry = ?, nationality = ?, tourPlan = ?, name = ?, contactNo = ?, alternateContactNo = ?, email = ?, cabRequiredAt = ?, cabRequiredFor = ?, localTravelKmsLimit = ?, pickupDateTime = ?, pickupAddress = ?, pickupLandmark = ?, dropDateTime = ?, dropAddress = ?, dropLandmark = ?, cabDuration = ?, noOfCabsRequired = ?, typeOfCabRequired = ?, noOfPersonsTravelling = ?, noOfInfants = ?, noOfChildren = ?, otherRequirements = ? WHERE id = ?';
+        const updateParams = [pickupCountry, nationality, tourPlan, name, contactNo, alternateContactNo, email, cabRequiredAt, cabRequiredFor, localTravelKmsLimit, pickupDateTime, pickupAddress, pickupLandmark, dropDateTime, dropAddress, dropLandmark, cabDuration, noOfCabsRequired, typeOfCabRequired, noOfPersonsTravelling, noOfInfants, noOfChildren, otherRequirements, id];
+        const [updateResult, updateFields] = await db.query(updateSql, updateParams);
+
+        return res.status(200).json(
+            new ApiResponse(
+                200,
+                null,
+                "Cab travel updated successfully"
+            )
+        )
+    } catch (error) {
+        console.error("Error updating cab travel:", error);
+        return res.status(500).json(
+            new ApiResponse(
+                500,
+                null,
+                "An error occurred while updating cab travel"
+            )
+        )
+    }
 })
 
 const deleteCabTravel = asyncHandler(async (req, res) => {
-    // TODO: Implement delete travel
+    const id = req.params.id;
+
+    try {
+        const sql = 'SELECT * FROM cab WHERE id = ?';
+        const params = [id];
+        const [result, fields] = await db.query(sql, params);
+
+        if (result.length === 0) {
+            return res.status(404).json(
+                new ApiResponse(
+                    404,
+                    null,
+                    "Cab travel not found"
+                )
+            )
+        }
+
+        const deleteSql = 'DELETE FROM cab WHERE id = ?';
+        const deleteParams = [id];
+        const [deleteResult, deleteFields] = await db.query(deleteSql, deleteParams);
+
+        return res.status(200).json(
+            new ApiResponse(
+                200,
+                null,
+                "Cab travel deleted successfully"
+            )
+        )
+    } catch (error) {
+        console.error("Error deleting cab travel:", error);
+        return res.status(500).json(
+            new ApiResponse(
+                500,
+                null,
+                "An error occurred while deleting cab travel"
+            )
+        )
+    }
 })
 
 const getCabTravelDetails = asyncHandler(async (req, res) => {
@@ -66,7 +142,7 @@ const getCabTravelDetails = asyncHandler(async (req, res) => {
 
     try {
         const sql = `SELECT SQL_CALC_FOUND_ROWS * FROM cab WHERE userId = ? ORDER BY createdAt DESC LIMIT ? OFFSET ?`;
-        const params = [id];
+        const params = [id, limit, skip];
         const [result, fields] = await db.query(sql, params);
 
         if (result.length === 0) {

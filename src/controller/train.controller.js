@@ -99,11 +99,87 @@ const createTrainTravel = asyncHandler(async (req, res) => {
 });
 
 const updateTrainTravel = asyncHandler(async (req, res) => {
-    // TODO: Implement update travel
+    const reqBody = req.body || {};
+    const id = req.params.id;
+    const { fullName, dob, gender, contactNo, email, travelFrom, travelTo, classOfTravel, travelDate, trainNo, timePreference } = reqBody;
+
+    try {
+        const sql = 'SELECT * from train WHERE id = ?';
+        const params = [id];
+        const [result] = await db.query(sql, params);
+
+        if (result.length === 0) {
+            return res.status(404).json(
+                new ApiResponse(
+                    404,
+                    null,
+                    "Travel not found"
+                )
+            );
+        }
+
+        const updateSql = 'UPDATE train SET fullName = ?, dob = ?, gender = ?, contactNo = ?, email = ?, travelFrom = ?, travelTo = ?, classOfTravel = ?, travelDate = ?, trainNo = ?, timePreference = ? WHERE id = ?';
+        const updateParams = [fullName, dob, gender, contactNo, email, travelFrom, travelTo, classOfTravel, travelDate, trainNo, timePreference, id];
+        const [updateResult] = await db.query(updateSql, updateParams);
+
+        return res.status(200).json(
+            new ApiResponse(
+                200,
+                null,
+                "Travel updated successfully"
+            )
+        );
+    } catch (error) {
+        console.error("Error while updating travel:", error);
+        return res.status(500).json(
+            new ApiResponse(
+                500,
+                null,
+                "An error occurred while updating the travel"
+            )
+        );
+    }
 });
 
 const deleteTrainTravel = asyncHandler(async (req, res) => {
-    // TODO: Implement delete travel
+    const id = req.params.id;
+
+    try {
+        const sql = 'SELECT * from train WHERE id = ?';
+        const params = [id];
+        const [result] = await db.query(sql, params);
+
+        if (result.length === 0) {
+            return res.status(404).json(
+                new ApiResponse(
+                    404,
+                    null,
+                    "Travel not found"
+                )
+            );
+        }
+
+        const deleteSql = 'DELETE FROM train WHERE id = ?';
+        const deleteParams = [id];
+        const [deleteResult] = await db.query(deleteSql, deleteParams);
+
+        return res.status(200).json(
+            new ApiResponse(
+                200,
+                null,
+                "Travel deleted successfully"
+            )
+        );
+    } catch (error) {
+        console.error("Error while deleting travel:", error);
+        return res.status(500).json(
+            new ApiResponse(
+                500,
+                null,
+                "An error occurred while deleting the travel"
+            )
+        );
+    }
 })
 
 const getTrainTravelDetails = asyncHandler(async (req, res) => {
@@ -133,7 +209,7 @@ const getTrainTravelDetails = asyncHandler(async (req, res) => {
 
         const trainData = result.map(user => {
             const { userId, createdAt, updatedAt, ...rest } = user;
-            if (!user.dob) {
+            if (user.dob) {
                 const calculatedAge = calculateAge(user.dob);
                 return { ...rest, age: calculatedAge };
             }

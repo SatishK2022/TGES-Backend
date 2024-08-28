@@ -61,11 +61,87 @@ const createHotelBooking = asyncHandler(async (req, res) => {
 })
 
 const updateHotelBooking = asyncHandler(async (req, res) => {
-    // TODO: Implement update travel
+    const reqBody = req.body || {};
+    const id = req.params.id;
+    const { nationality, name, contactNo1, contactNo2, email, country, state, city, roomCategory, mealPlan, hotelCategory, priceRange, checkInDate, checkOutDate, numberOfNights, numberOfRooms, adults, children, infants } = reqBody;
+
+    try {
+        const sql = 'SELECT * FROM hotel WHERE id = ?';
+        const params = [id];
+        const [result] = await db.query(sql, params);
+
+        if (result.length === 0) {
+            return res.status(404).json(
+                new ApiResponse(
+                    404,
+                    null,
+                    "Hotel booking not found"
+                )
+            )
+        }
+
+        const updateSql = 'UPDATE hotel SET nationality = ?, name = ?, contactNo1 = ?, contactNo2 = ?, email = ?, country = ?, state = ?, city = ?, roomCategory = ?, mealPlan = ?, hotelCategory = ?, priceRange = ?, checkInDate = ?, checkOutDate = ?, numberOfNights = ?, numberOfRooms = ?, adults = ?, children = ?, infants = ? WHERE id = ?';
+        const updateParams = [nationality, name, contactNo1, contactNo2, email, country, state, city, roomCategory, mealPlan, hotelCategory, priceRange, checkInDate, checkOutDate, numberOfNights, numberOfRooms, adults, children, infants, id];
+        const [updateResult] = await db.query(updateSql, updateParams);
+
+        return res.status(200).json(
+            new ApiResponse(
+                200,
+                null,
+                "Hotel booking updated successfully"
+            )
+        )
+    } catch (error) {
+        console.error("Error updating hotel booking:", error);
+        return res.status(500).json(
+            new ApiResponse(
+                500,
+                null,
+                "An error occurred while updating hotel booking"
+            )
+        )
+    }
 })
 
 const deleteHotelBooking = asyncHandler(async (req, res) => {
-    // TODO: Implement delete travel
+    const id = req.params.id;
+
+    try {
+        const sql = 'SELECT * FROM hotel WHERE id = ?';
+        const params = [id];
+        const [result] = await db.query(sql, params);
+
+        if (result.length === 0) {
+            return res.status(404).json(
+                new ApiResponse(
+                    404,
+                    null,
+                    "Hotel booking not found"
+                )
+            )
+        }
+
+        const deleteSql = `DELETE FROM hotel WHERE id = ?`;
+        const deleteParams = [id];
+        const [deleteResult] = await db.query(deleteSql, deleteParams);
+
+        return res.status(200).json(
+            new ApiResponse(
+                200,
+                null,
+                "Hotel booking deleted successfully"
+            )
+        )
+    } catch (error) {
+        console.error("Error deleting hotel booking:", error);
+        return res.status(500).json(
+            new ApiResponse(
+                500,
+                null,
+                "An error occurred while deleting hotel booking"
+            )
+        )
+    }
 })
 
 const getHotelBookings = asyncHandler(async (req, res) => {

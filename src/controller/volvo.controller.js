@@ -106,11 +106,87 @@ const createVolvoBusTravel = asyncHandler(async (req, res) => {
 });
 
 const updateVolvoBusTravel = asyncHandler(async (req, res) => {
-    // TODO: Implement update travel
+    const reqBody = req.body || {};
+    const id = req.user.id;
+    const { fullName, dob, gender, contactNo, email, pickupLocation, destination, travelDate, seatType, busNo } = reqBody;
+
+    try {
+        const sql = 'SELECT * FROM bus WHERE userId = ?';
+        const params = [id];
+        const [result] = await db.query(sql, params);
+
+        if (result.length === 0) {
+            return res.status(404).json(
+                new ApiResponse(
+                    404,
+                    null,
+                    "Volvo bus travel not found"
+                )
+            );
+        }
+
+        const updateSql = 'UPDATE bus SET fullName = ?, dob = ?, gender = ?, contactNo = ?, email = ?, pickupLocation = ?, destination = ?, travelDate = ?, seatType = ?, busNo = ? WHERE userId = ?';
+        const updateParams = [fullName, dob, gender, contactNo, email, pickupLocation, destination, travelDate, seatType, busNo, id];
+        const [updateResult] = await db.query(updateSql, updateParams);
+
+        return res.status(200).json(
+            new ApiResponse(
+                200,
+                null,
+                "Volvo bus travel updated successfully"
+            )
+        );
+    } catch (error) {
+        console.error("Error updating volvo bus travel:", error);
+        return res.status(500).json(
+            new ApiResponse(
+                500,
+                null,
+                "An error occurred while updating volvo bus travel"
+            )
+        );
+    }
 })
 
 const deleteVolvoBusTravel = asyncHandler(async (req, res) => {
-    // TODO: Implement delete travel
+    const id = req.user.id;
+
+    try {
+        const sql = 'SELECT * FROM bus WHERE userId = ?';
+        const params = [id];
+        const [result] = await db.query(sql, params);
+
+        if (result.length === 0) {
+            return res.status(404).json(
+                new ApiResponse(
+                    404,
+                    null,
+                    "Volvo bus travel not found"
+                )
+            );
+        }
+
+        const sqlDelete = 'DELETE FROM bus WHERE id = ?';
+        const paramsDelete = [id];
+        const [deleteResult] = await db.query(sqlDelete, paramsDelete);
+
+        return res.status(200).json(
+            new ApiResponse(
+                200,
+                null,
+                "Volvo bus travel deleted successfully"
+            )
+        );
+    } catch (error) {
+        console.error("Error deleting volvo bus travel:", error);
+        return res.status(500).json(
+            new ApiResponse(
+                500,
+                null,
+                "An error occurred while deleting volvo bus travel"
+            )
+        );
+    }
 })
 
 const getVolvoBusTravelDetails = asyncHandler(async (req, res) => {

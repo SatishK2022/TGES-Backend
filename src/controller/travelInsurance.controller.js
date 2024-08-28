@@ -46,6 +46,90 @@ const createTravelInsurance = asyncHandler(async (req, res) => {
     }
 })
 
+const updateTravelInsurance = asyncHandler(async (req, res) => {
+    const id = req.params.id;
+    const reqBody = req.body || {};
+    const { name, gender, dob, address, contactNo, email, tripType, startDate, endDate, preExistingDisease, diseaseName, smoker, passportNo, dateOfIssue, dateOfExpiry, nomineeName, nomineeGender, nomineeRelationship } = reqBody;
+
+    try {
+        const sql = 'SELECT * from travelInsurance WHERE id = ?';
+        const params = [id];
+        const [result] = await db.query(sql, params);
+
+        if (result.length === 0) {
+            return res.status(404).json(
+                new ApiResponse(
+                    404,
+                    null,
+                    "Travel Insurance not found"
+                )
+            )
+        }
+
+        const updateSql = 'UPDATE travelInsurance SET name = ?, gender = ?, dob = ?, address = ?, contactNo = ?, email = ?, tripType = ?, startDate = ?, endDate = ?, preExistingDisease = ?, diseaseName = ?, smoker = ?, passportNo = ?, dateOfIssue = ?, dateOfExpiry = ?, nomineeName = ?, nomineeGender = ?, nomineeRelationship = ? WHERE id = ?';
+        const updateParams = [name, gender, dob, address, contactNo, email, tripType, startDate, endDate, preExistingDisease, diseaseName, smoker, passportNo, dateOfIssue, dateOfExpiry, nomineeName, nomineeGender, nomineeRelationship, id];
+        const [updateResult] = await db.query(updateSql, updateParams);
+
+        return res.status(200).json(
+            new ApiResponse(
+                200,
+                null,
+                "Travel Insurance updated successfully"
+            )
+        )
+    } catch (error) {
+        console.error("Error updating travel insurance:", error);
+        return res.status(500).json(
+            new ApiResponse(
+                500,
+                null,
+                "An error occurred while updating travel insurance"
+            )
+        )
+    }
+})
+
+const deleteTravelInsurance = asyncHandler(async (req, res) => {
+    const id = req.params.id;
+
+    try {
+        const sql = 'SELECT * from travelInsurance WHERE id = ?';
+        const params = [id];
+        const [result] = await db.query(sql, params);
+
+        if (result.length === 0) {
+            return res.status(404).json(
+                new ApiResponse(
+                    404,
+                    null,
+                    "Travel Insurance not found"
+                )
+            )
+        }
+
+        const sqlDelete = 'DELETE FROM travelInsurance WHERE id = ?';
+        const paramsDelete = [id];
+        const [deleteResult] = await db.query(sqlDelete, paramsDelete);
+
+        return res.status(200).json(
+            new ApiResponse(
+                200,
+                null,
+                "Travel Insurance deleted successfully"
+            )
+        )
+    } catch (error) {
+        console.error("Error deleting travel insurance:", error);
+        return res.status(500).json(
+            new ApiResponse(
+                500,
+                null,
+                "An error occurred while deleting travel insurance"
+            )
+        )
+    }
+})
+
 const getTravelInsuranceDetails = asyncHandler(async (req, res) => {
     const id = req.user.id;
     const page = parseInt(req.query.page) || 1;
@@ -53,8 +137,8 @@ const getTravelInsuranceDetails = asyncHandler(async (req, res) => {
     const skip = (page - 1) * limit;
 
     try {
-        const sql = `SELECT SQL_CALC_FOUND_ROWS * FROM travelInsurance WHERE userId = ?`;
-        const params = [id];
+        const sql = `SELECT SQL_CALC_FOUND_ROWS * FROM travelInsurance WHERE userId = ? ORDER BY createdAt DESC LIMIT ? OFFSET ?`;
+        const params = [id, limit, skip];
         const [result, fields] = await db.query(sql, params);
 
         if (result.length === 0) {
@@ -74,6 +158,7 @@ const getTravelInsuranceDetails = asyncHandler(async (req, res) => {
         const travelInsuranceData = result.map((data) => {
             const { userId, createdAt, updatedAt, ...rest } = data;
             const calculatedAge = calculateAge(data.dob);
+            return { ...rest, age: calculatedAge };
         })
 
         return res.status(200).json(
@@ -94,7 +179,7 @@ const getTravelInsuranceDetails = asyncHandler(async (req, res) => {
             )
         )
     } catch (error) {
-        console.log("Error Getting Travel Insurance Details:", error);
+        console.error("Error Getting Travel Insurance Details:", error);
         return res.status(500).json(
             new ApiResponse(
                 500,
@@ -107,5 +192,7 @@ const getTravelInsuranceDetails = asyncHandler(async (req, res) => {
 
 export {
     createTravelInsurance,
+    updateTravelInsurance,
+    deleteTravelInsurance,
     getTravelInsuranceDetails
 }

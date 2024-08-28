@@ -51,6 +51,90 @@ const createPassport = asyncHandler(async (req, res) => {
     }
 })
 
+const updatePassport = asyncHandler(async (req, res) => {
+    const id = req.params.id;
+    const reqBody = req.body || {};
+    const { totalNoOfTravellers, name, nationality, dob, gender, passportNo, passportIssueDate, passportExpiryDate, passportValidityPeriod, placeOfIssue, nomineeName, nomineeGender, addressWithPinCode, contactNo, email, holdPassportFrom, applyFrom, goTo, travelDuration } = reqBody;
+
+    try {
+        const sql = 'SELECT * from passport WHERE id = ?';
+        const params = [id];
+        const [passportResult, passportFields] = await db.query(sql, params);
+
+        if (passportResult.length === 0) {
+            return res.status(404).json(
+                new ApiResponse(
+                    200,
+                    null,
+                    "Passport not found"
+                )
+            )
+        }
+
+        const updateSql = 'UPDATE passport SET totalNoOfTravellers = ?, name = ?, nationality = ?, dob = ?, gender = ?, passportNo = ?, passportIssueDate = ?, passportExpiryDate = ?, passportValidityPeriod = ?, placeOfIssue = ?, nomineeName = ?, nomineeGender = ?, addressWithPinCode = ?, contactNo = ?, email = ?, holdPassportFrom = ?, applyFrom = ?, goTo = ?, travelEntryDate = ?, travelExitDate = ? WHERE id = ?';
+        const updateParams = [totalNoOfTravellers, name, nationality, dob, gender, passportNo, passportIssueDate, passportExpiryDate, passportValidityPeriod, placeOfIssue, nomineeName, nomineeGender, addressWithPinCode, contactNo, email, holdPassportFrom, applyFrom, goTo, travelDuration.entryDate, travelDuration.exitDate, id];
+        const [updateResult] = await db.query(updateSql, updateParams);
+
+        return res.status(200).json(
+            new ApiResponse(
+                200,
+                null,
+                "Passport updated successfully"
+            )
+        );
+    } catch (error) {
+        console.error("Error updating passport:", error);
+        return res.status(500).json(
+            new ApiResponse(
+                500,
+                null,
+                "An error occurred while updating passport"
+            )
+        )
+    }
+})
+
+const deletePassport = asyncHandler(async (req, res) => {
+    const id = req.params.id;
+
+    try {
+        const sql = 'SELECT * from passport WHERE id = ?';
+        const params = [id];
+        const [passportResult, passportFields] = await db.query(sql, params);
+
+        if (passportResult.length === 0) {
+            return res.status(404).json(
+                new ApiResponse(
+                    200,
+                    null,
+                    "Passport not found"
+                )
+            )
+        }
+
+        const deleteSql = 'DELETE FROM passport WHERE id = ?';
+        const deleteParams = [id];
+        const [deleteResult] = await db.query(deleteSql, deleteParams);
+
+        return res.status(200).json(
+            new ApiResponse(
+                200,
+                null,
+                "Passport deleted successfully"
+            )
+        );
+    } catch (error) {
+        console.error("Error deleting passport:", error);
+        return res.status(500).json(
+            new ApiResponse(
+                500,
+                null,
+                "An error occurred while deleting passport"
+            )
+        )
+    }
+})
+
 const getPassportDetails = asyncHandler(async (req, res) => {
     const id = req.user.id;
     const page = parseInt(req.query.page) || 1;
@@ -112,5 +196,7 @@ const getPassportDetails = asyncHandler(async (req, res) => {
 
 export {
     createPassport,
+    updatePassport,
+    deletePassport,
     getPassportDetails
 }

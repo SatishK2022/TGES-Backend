@@ -113,11 +113,88 @@ const createAirTravel = asyncHandler(async (req, res) => {
 })
 
 const updateAirTravel = asyncHandler(async (req, res) => {
-    // TODO: Implement update travel
+    const id = req.params.id;
+    const reqBody = req.body || {};
+    const { fullName, dob, gender, contactNo, email, travelFrom, travelTo, classOfTravel, travelDate, flightNo, timePreference, remarks } = reqBody;
+
+    try {
+        const sql = 'SELECT * FROM air WHERE id = ?';
+        const params = [id];
+        const [result, fields] = await db.query(sql, params);
+
+        if (result.length === 0) {
+            return res.status(404).json(
+                new ApiResponse(
+                    404,
+                    null,
+                    "Air travel not found"
+                )
+            )
+        }
+
+        const updateSql = 'UPDATE air SET fullName = ?, dob = ?, gender = ?, contactNo = ?, email = ?, travelFrom = ?, travelTo = ?, classOfTravel = ?, travelDate = ?, flightNo = ?, timePreference = ?, remarks = ? WHERE id = ?';
+        const updateParams = [fullName, dob, gender, contactNo, email, travelFrom, travelTo, classOfTravel, travelDate, flightNo, timePreference, remarks, id];
+
+        const [updateResult, updateFields] = await db.query(updateSql, updateParams);
+
+        return res.status(200).json(
+            new ApiResponse(
+                200,
+                null,
+                "Air travel updated successfully"
+            )
+        )
+    } catch (error) {
+        console.error("Error while updating travel:", error);
+        return res.status(500).json(
+            new ApiResponse(
+                500,
+                null,
+                "An error occurred while updating travel"
+            )
+        )
+    }
 })
 
 const deleteAirTravel = asyncHandler(async (req, res) => {
-    // TODO: Implement delete travel
+    const id = req.params.id;
+
+    try {
+        const sql = 'SELECT * FROM air WHERE id = ?';
+        const params = [id];
+        const [result, fields] = await db.query(sql, params);
+
+        if (result.length === 0) {
+            return res.status(404).json(
+                new ApiResponse(
+                    404,
+                    null,
+                    "Air travel not found"
+                )
+            )
+        }
+
+        const deleteSql = 'DELETE FROM air WHERE id = ?';
+        const deleteParams = [id];
+        const [deleteResult, deleteFields] = await db.query(deleteSql, deleteParams);
+
+        return res.status(200).json(
+            new ApiResponse(
+                200,
+                null,
+                "Air travel deleted successfully"
+            )
+        )
+    } catch (error) {
+        console.error("Error while deleting travel:", error);
+        return res.status(500).json(
+            new ApiResponse(
+                500,
+                null,
+                "An error occurred while deleting travel"
+            )
+        )
+    }
 })
 
 const getAirTravelDetails = asyncHandler(async (req, res) => {

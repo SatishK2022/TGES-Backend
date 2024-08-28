@@ -46,6 +46,90 @@ const createHealthInsurance = asyncHandler(async (req, res) => {
     }
 });
 
+const updateHealthInsurance = asyncHandler(async (req, res) => {
+    const id = req.params.id;
+    const reqBody = req.body || {};
+    const { name, gender, dob, address, contactNo, email, preExistingDisease, diseaseName, smoker, nomineeName, nomineeGender, nomineeRelationship } = reqBody;
+
+    try {
+        const sql = 'SELECT * FROM healthInsurance WHERE id = ?';
+        const params = [id];
+        const [result] = await db.query(sql, params);
+
+        if (result.length === 0) {
+            return res.status(404).json(
+                new ApiResponse(
+                    404,
+                    null,
+                    "Health Insurance not found"
+                )
+            )
+        }
+
+        const updateSql = 'UPDATE healthInsurance SET name = ?, gender = ?, dob = ?, address = ?, contactNo = ?, email = ?, preExistingDisease = ?, diseaseName = ?, smoker = ?, nomineeName = ?, nomineeGender = ?, nomineeRelationship = ? WHERE id = ?';
+        const updateParams = [name, gender, dob, address, contactNo, email, preExistingDisease, diseaseName, smoker, nomineeName, nomineeGender, nomineeRelationship, id];
+        const [updateResult] = await db.query(updateSql, updateParams);
+
+        return res.status(200).json(
+            new ApiResponse(
+                200,
+                null,
+                "Health Insurance updated successfully"
+            )
+        )
+    } catch (error) {
+        console.error("Error while updating health insurance: ", error);
+        return res.status(500).json(
+            new ApiResponse(
+                500,
+                null,
+                "An error occurred while updating health insurance"
+            )
+        )
+    }
+})
+
+const deleteHealthInsurance = asyncHandler(async (req, res) => {
+    const id = req.params.id;
+
+    try {
+        const sql = 'SELECT * FROM healthInsurance WHERE id = ?';
+        const params = [id];
+        const [result] = await db.query(sql, params);
+
+        if (result.length === 0) {
+            return res.status(404).json(
+                new ApiResponse(
+                    404,
+                    null,
+                    "Health Insurance not found"
+                )
+            )
+        }
+
+        const deleteSql = 'DELETE FROM healthInsurance WHERE id = ?';
+        const deleteParams = [id];
+        const [deleteResult] = await db.query(deleteSql, deleteParams);
+
+        return res.status(200).json(
+            new ApiResponse(
+                200,
+                null,
+                "Health Insurance deleted successfully"
+            )
+        )
+    } catch (error) {
+        console.error("Error while deleting health insurance: ", error);
+        return res.status(500).json(
+            new ApiResponse(
+                500,
+                null,
+                "An error occurred while deleting health insurance"
+            )
+        )
+    }
+})
+
 const getHealthInsuranceDetails = asyncHandler(async (req, res) => {
     const id = req.user.id;
     const page = parseInt(req.query.page) || 1;
@@ -53,8 +137,8 @@ const getHealthInsuranceDetails = asyncHandler(async (req, res) => {
     const skip = (page - 1) * limit;
 
     try {
-        const sql = `SELECT SQL_CALC_FOUND_ROWS * FROM healthInsurance WHERE userId = ?`;
-        const params = [id];
+        const sql = `SELECT SQL_CALC_FOUND_ROWS * FROM healthInsurance WHERE userId = ? ORDER BY createdAt DESC LIMIT ? OFFSET ?`;
+        const params = [id, limit, skip];
         const [result, fields] = await db.query(sql, params);
 
         if (result.length === 0) {
@@ -108,5 +192,7 @@ const getHealthInsuranceDetails = asyncHandler(async (req, res) => {
 
 export {
     createHealthInsurance,
+    updateHealthInsurance,
+    deleteHealthInsurance,
     getHealthInsuranceDetails
 }
