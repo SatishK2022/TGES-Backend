@@ -1862,3 +1862,77 @@ export function cancelTravelInsuranceTemplate({ name, gender, dob, address, cont
     </html>
     `
 }
+
+export function contactUsTemplate({ name, email, contactNo, subject, message }) {
+    return `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Contact Us Form Submission</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                background-color: #f4f4f4;
+            }
+            .container {
+                width: 80%;
+                margin: 40px auto;
+                background-color: #fff;
+                padding: 20px;
+                border: 1px solid #ddd;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }
+            .header {
+                text-align: center;
+                margin-bottom: 20px;
+            }
+            .header h1 {
+                color: #333;
+                font-size: 24px;
+            }
+            .details {
+                margin-bottom: 20px;
+            }
+            .details h2 {
+                margin-top: 0;
+            }
+            .detail-item {
+                margin-bottom: 10px;
+            }
+            .detail-item span {
+                font-weight: bold;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1>Contact Us Form Submission</h1>
+            </div>
+            <div class="details">
+                <h2>Submission Details</h2>
+                <div class="detail-item">
+                    <span>Name:</span> ${name}
+                </div>
+                <div class="detail-item">
+                    <span>Contact Number:</span> ${contactNo}
+                </div>
+                <div class="detail-item">
+                    <span>Email:</span> ${email}
+                </div>
+                <div class="detail-item">
+                    <span>Subject:</span> ${subject}
+                </div>
+                <div class="detail-item">
+                    <span>Message:</span> ${message}
+                </div>
+            </div>
+        </div>
+    </body>
+    </html>
+    `   
+}

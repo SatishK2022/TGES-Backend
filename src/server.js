@@ -56,6 +56,7 @@ import dashboardRouter from "./routes/dashboard.routes.js"
 import healthcheckRouter from "./routes/healthcheck.routes.js"
 import corporateDashboardRouter from "./routes/corporateDashboard.routes.js"
 import vendorDashboardRouter from "./routes/vendorDashboard.routes.js"
+import miscellaneousRouter from "./routes/miscellaneous.routes.js"
 
 // Routes Decleration
 app.use("/api/v1/status", healthcheckRouter)
@@ -64,6 +65,7 @@ app.use("/api/v1/travel", travelRouter)
 app.use("/api/v1/dashboard", dashboardRouter)
 app.use("/api/v1/corporate", corporateDashboardRouter)
 app.use("/api/v1/vendor", vendorDashboardRouter)
+app.use("/api/v1", miscellaneousRouter)
 
 // Home Route
 app.get("/", (req, res) => {

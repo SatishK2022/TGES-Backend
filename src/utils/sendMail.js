@@ -11,18 +11,24 @@ const transporter = nodemailer.createTransport({
 
 export async function sendMail(to, subject, html, filename, path) {
   try {
-    const info = await transporter.sendMail({
+    const mailOptions = {
       from: `TGES Travel ${process.env.SMTP_USER}`,
       to,
       subject,
-      html,
-      attachments: [
+      html
+    };
+
+    // Check if filename and path are provided
+    if (filename && path) {
+      mailOptions.attachments = [
         {
           filename,
           path
         }
-      ]
-    });
+      ];
+    }
+
+    const info = await transporter.sendMail(mailOptions);
 
     console.log("Message sent:", info.messageId);
   } catch (error) {
