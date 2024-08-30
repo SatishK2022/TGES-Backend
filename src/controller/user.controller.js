@@ -2,6 +2,7 @@ import { pool as db } from "../config/db.js";
 import asyncHandler from "../utils/asyncHandler.js";
 import ApiResponse from "../utils/ApiResponse.js"
 import { sendMail } from "../utils/sendMail.js";
+import { RETAIL_TYPE_NAME, CORPORATE_TYPE_NAME, VENDOR_TYPE_NAME } from "../constants.js";
 import { corporateRegisterTemplate, forgotPasswordTemplate, retailRegisterTemplate, vendorRegisterTemplate } from "../email/email-template.js";
 import { comparePassword, generateCompanyId, generateOTP, generateToken, hashPassword } from "../utils/helper.js";
 
@@ -271,17 +272,17 @@ const login = asyncHandler(async (req, res) => {
         {
             sql: `SELECT retail_user.*, user.* FROM retail_user INNER JOIN user ON retail_user.userId = user.id WHERE user.email = ?;`,
             params: [email],
-            type: 'retail'
+            type: RETAIL_TYPE_NAME
         },
         {
             sql: `SELECT corporate_user.*, user.* FROM corporate_user INNER JOIN user ON corporate_user.userId = user.id WHERE user.email = ?;`,
             params: [email],
-            type: 'corporate'
+            type: CORPORATE_TYPE_NAME
         },
         {
             sql: `SELECT vendor.*, user.* FROM vendor INNER JOIN user ON vendor.userId = user.id WHERE user.email = ?;`,
             params: [email],
-            type: 'vendor'
+            type: VENDOR_TYPE_NAME
         }
     ];
 
@@ -296,7 +297,7 @@ const login = asyncHandler(async (req, res) => {
                 break;
             }
         }
-    
+
         if (!user) {
             return res.status(404).json(
                 new ApiResponse(
@@ -306,7 +307,7 @@ const login = asyncHandler(async (req, res) => {
                 )
             );
         }
-    
+
         const passwordMatch = await comparePassword(password, user.password);
         if (!passwordMatch) {
             return res.status(401).json(
@@ -317,18 +318,18 @@ const login = asyncHandler(async (req, res) => {
                 )
             );
         }
-    
+
         const token = generateToken({
             id: user.id,
             email: user.email,
             userType: user.userType
         });
-    
+
         const cookieOptions = {
             httpOnly: true,
             secure: true,
         };
-    
+
         const cleanedResult = {
             ...user,
             otp: undefined,
@@ -338,7 +339,7 @@ const login = asyncHandler(async (req, res) => {
             createdAt: undefined,
             updatedAt: undefined,
         };
-    
+
         return res
             .status(200)
             .cookie("token", token, cookieOptions)
