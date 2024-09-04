@@ -435,6 +435,11 @@ const getCabRateCardDetails = asyncHandler(async (req, res) => {
 
 
 // Hotel Rate Card
+/**
+ * @addHotelRateCardFile
+ * @params req, res
+ * @Description : This function is used to add hotel rate card file in the 'hotel_rate_card' table of the 'tges' database using the MySQL module
+ */
 const addHotelRateCardFile = asyncHandler(async (req, res) => {
     const file = req.file;
     const type = req.query.type;
@@ -499,6 +504,11 @@ const addHotelRateCardFile = asyncHandler(async (req, res) => {
     }
 })
 
+/**
+ * @downloadHotelRateCardFile
+ * @params req, res
+ * @Description : This function is used to download hotel rate card file in the 'hotel_rate_card' table of the 'tges' database using the MySQL module
+ */
 const downloadHotelRateCardFile = asyncHandler(async (req, res) => {
     try {
         const sql = `SELECT * FROM hotel_rate_card WHERE userId = ?`;
@@ -543,6 +553,11 @@ const downloadHotelRateCardFile = asyncHandler(async (req, res) => {
     }
 })
 
+/**
+ * @addHotelRateCard
+ * @params req, res
+ * @Description : This function is used to add hotel rate card in the 'hotel_rate_card' table of the 'tges' database using the MySQL module
+ */
 const addHotelRateCard = asyncHandler(async (req, res) => {
     const reqBody = req.body || [];
 
@@ -628,6 +643,11 @@ const addHotelRateCard = asyncHandler(async (req, res) => {
     }
 });
 
+/**
+ * @updateHotelRateCard
+ * @params req, res
+ * @Description : This function is used to update hotel rate card in the 'hotel_rate_card' table of the 'tges' database using the MySQL module
+ */
 const updateHotelRateCard = asyncHandler(async (req, res) => {
     const reqBody = req.body || {};
     const id = req.params.id;
@@ -810,6 +830,11 @@ const updateHotelRateCard = asyncHandler(async (req, res) => {
     }
 });
 
+/**
+ * @deleteHotelRateCard
+ * @params req, res
+ * @Description : This function is used to delete hotel rate card in the 'hotel_rate_card' table of the 'tges' database using the MySQL module
+ */
 const deleteHotelRateCard = asyncHandler(async (req, res) => {
     const id = req.params.id;
 
@@ -888,6 +913,11 @@ const deleteHotelRateCard = asyncHandler(async (req, res) => {
     }
 });
 
+/**
+ * @getHotelRateCardDetails
+ * @params req, res
+ * @Description : This function is used to get hotel rate card details in the 'hotel_rate_card' table of the 'tges' database using the MySQL module
+ */
 const getHotelRateCardDetails = asyncHandler(async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
@@ -963,6 +993,11 @@ const getHotelRateCardDetails = asyncHandler(async (req, res) => {
 
 
 // Event Rate Card
+/**
+ * @addEventRateCardFile
+ * @params req, res
+ * @Description : This function is used to add event rate card file in the 'event_rate_card' table of the 'tges' database using the MySQL module
+ */
 const addEventRateCardFile = asyncHandler(async (req, res) => {
     const file = req.file;
     const type = req.query.params;
@@ -1027,6 +1062,11 @@ const addEventRateCardFile = asyncHandler(async (req, res) => {
     }
 });
 
+/**
+ * @downloadEventRateCardFile
+ * @params req, res
+ * @Description : This function is used to download event rate card file in the 'event_rate_card' table of the 'tges' database using the MySQL module
+ */
 const downloadEventRateCardFile = asyncHandler(async (req, res) => {
     try {
         const sql = `SELECT * FROM event_rate_card WHERE userId = ?`;
@@ -1071,6 +1111,11 @@ const downloadEventRateCardFile = asyncHandler(async (req, res) => {
     }
 });
 
+/**
+ * @addEventRateCard
+ * @params req, res
+ * @Description : This function is used to add event rate card in the 'event_rate_card' table of the 'tges' database using the MySQL module
+ */
 const addEventRateCard = asyncHandler(async (req, res) => {
     const reqBody = req.body || [];
 
@@ -1147,6 +1192,11 @@ const addEventRateCard = asyncHandler(async (req, res) => {
     }
 });
 
+/**
+ * @updateEventRateCard
+ * @params req, res
+ * @Description : This function is used to update event rate card in the 'event_rate_card' table of the 'tges' database using the MySQL module
+ */
 const updateEventRateCard = asyncHandler(async (req, res) => {
     const reqBody = req.body || {};
     const id = req.params.id;
@@ -1328,6 +1378,11 @@ const updateEventRateCard = asyncHandler(async (req, res) => {
     }
 });
 
+/**
+ * @deleteEventRateCard
+ * @params req, res
+ * @Description : This function is used to delete event rate card data in the 'event_rate_card' table of the 'tges' database using the MySQL module
+ */
 const deleteEventRateCard = asyncHandler(async (req, res) => {
     const id = req.params.id;
 
@@ -1405,6 +1460,11 @@ const deleteEventRateCard = asyncHandler(async (req, res) => {
     }
 });
 
+/**
+ * @getEventRateCardDetails
+ * @params req, res
+ * @Description : This function is used to get event rate card data in the 'event_rate_card' table of the 'tges' database using the MySQL module
+ */
 const getEventRateCardDetails = asyncHandler(async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;

@@ -5,7 +5,11 @@ import asyncHandler from "../utils/asyncHandler.js";
 import { calculateAge } from "../utils/helper.js";
 import { sendMail } from "../utils/sendMail.js";
 
-
+/**
+ * @createHealthInsurance
+ * @params req, res
+ * @Description : This function is used to create health insurance data in the 'healthInsurance' table of the 'tges' database using the MySQL module
+ */
 const createHealthInsurance = asyncHandler(async (req, res) => {
     const reqBody = req.body || {};
     const { name, gender, dob, address, contactNo, email, preExistingDisease, diseaseName, smoker, nomineeName, nomineeGender, nomineeRelationship } = reqBody;
@@ -46,6 +50,11 @@ const createHealthInsurance = asyncHandler(async (req, res) => {
     }
 });
 
+/**
+ * @updateHealthInsurance
+ * @params req, res
+ * @Description : This function is used to update health insurance data in the 'healthInsurance' table of the 'tges' database using the MySQL module
+ */
 const updateHealthInsurance = asyncHandler(async (req, res) => {
     const id = req.params.id;
     const reqBody = req.body || {};
@@ -89,6 +98,11 @@ const updateHealthInsurance = asyncHandler(async (req, res) => {
     }
 })
 
+/**
+ * @deleteHealthInsurance
+ * @params req, res
+ * @Description : This function is used to delete health insurance data in the 'healthInsurance' table of the 'tges' database using the MySQL module
+ */
 const deleteHealthInsurance = asyncHandler(async (req, res) => {
     const id = req.params.id;
 
@@ -130,6 +144,11 @@ const deleteHealthInsurance = asyncHandler(async (req, res) => {
     }
 })
 
+/**
+ * @getHealthInsuranceDetails
+ * @params req, res
+ * @Description : This function is used to get health insurance data in the 'healthInsurance' table of the 'tges' database using the MySQL module
+ */
 const getHealthInsuranceDetails = asyncHandler(async (req, res) => {
     const id = req.user.id;
     const page = parseInt(req.query.page) || 1;

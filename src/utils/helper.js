@@ -3,17 +3,35 @@ import jwt from 'jsonwebtoken';
 import ExcelJS from "exceljs";
 import fs from 'fs';
 
+/**
+ * @hashPassword
+ * @params password
+ * @Description : This function is used to hash the password
+ * @returns hashedPassword
+ */
 export const hashPassword = async (password) => {
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
     return hashedPassword;
 }
 
+/**
+ * @comparePassword
+ * @params password, hashedPassword
+ * @Description : This function is used to compare the password
+ * @returns isMatch
+ */
 export const comparePassword = async (password, hashedPassword) => {
     const isMatch = await bcrypt.compare(password, hashedPassword);
     return isMatch;
 }
 
+/**
+ * @generateToken
+ * @params payload
+ * @Description : This function is used to generate token
+ * @returns token
+ */
 export const generateToken = (payload) => {
     return jwt.sign(
         payload,
@@ -22,10 +40,22 @@ export const generateToken = (payload) => {
     );
 };
 
+/**
+ * @isValuePresent
+ * @params obj
+ * @Description : This function is used to check if the value is present
+ * @returns boolean
+ */
 export function isValuePresent(obj) {
     return Object.values(obj).every(value => value !== undefined && value !== null && value !== "");
 }
 
+/**
+ * @generateOTP
+ * @params length
+ * @Description : This function is used to generate OTP
+ * @returns otp
+ */
 export const generateOTP = (length) => {
     const characters = '0123456789';
     let otp = '';
@@ -35,6 +65,12 @@ export const generateOTP = (length) => {
     return parseInt(otp);
 }
 
+/**
+ * @generateCompanyId
+ * @params name
+ * @Description : This function is used to generate company id
+ * @returns id
+ */
 export function generateCompanyId(name) {
     const randomNumber = Math.floor(1000 + Math.random() * 9000);
     const nameDigits = name.slice(0, 4).toUpperCase();
@@ -42,6 +78,12 @@ export function generateCompanyId(name) {
     return id;
 }
 
+/**
+ * @generateBranchId
+ * @params name
+ * @Description : This function is used to generate branch id
+ * @returns id
+ */
 export function generateBranchId(branchName) {
     const randomNumber = Math.floor(1000 + Math.random() * 9000);
     const nameDigits = branchName.slice(0, 4).toUpperCase();
@@ -49,6 +91,12 @@ export function generateBranchId(branchName) {
     return id;
 }
 
+/**
+ * @calculateAge
+ * @params dob
+ * @Description : This function is used to calculate age
+ * @returns age
+ */
 export function calculateAge(dob) {
     const dateOfBirth = typeof dob === 'string' ? new Date(dob) : dob;
 
@@ -67,6 +115,11 @@ export function calculateAge(dob) {
     return age;
 }
 
+/**
+ * @generateExcelSheet
+ * @params data, fileName
+ * @Description : This function is used to generate excel sheet
+ */
 export async function generateExcelSheet(data, fileName, travelModeType) {
     const workbook = new ExcelJS.Workbook();
     const sheet = workbook.addWorksheet("Sheet1");

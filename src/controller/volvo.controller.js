@@ -105,6 +105,11 @@ const createVolvoBusTravel = asyncHandler(async (req, res) => {
     }
 });
 
+/**
+ * @updateVolvoBusTravel
+ * @params req, res
+ * @Description : This function is used to update volvo bus travel data in the 'bus' table of the 'tges' database using the MySQL module
+*/
 const updateVolvoBusTravel = asyncHandler(async (req, res) => {
     const reqBody = req.body || {};
     const id = req.user.id;
@@ -148,6 +153,11 @@ const updateVolvoBusTravel = asyncHandler(async (req, res) => {
     }
 })
 
+/**
+ * @deleteVolvoBusTravel
+ * @params req, res
+ * @Description : This function is used to delete volvo bus travel data in the 'bus' table of the 'tges' database using the MySQL module
+*/
 const deleteVolvoBusTravel = asyncHandler(async (req, res) => {
     const id = req.user.id;
 
@@ -189,6 +199,11 @@ const deleteVolvoBusTravel = asyncHandler(async (req, res) => {
     }
 })
 
+/**
+ * @getVolvoBusTravelDetails
+ * @params req, res
+ * @Description : This function is used to get volvo bus travel details in the 'bus' table of the 'tges' database using the MySQL module
+*/
 const getVolvoBusTravelDetails = asyncHandler(async (req, res) => {
     const id = req.user.id;
     const page = parseInt(req.query.page) || 1;

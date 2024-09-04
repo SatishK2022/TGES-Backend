@@ -112,6 +112,11 @@ const createAirTravel = asyncHandler(async (req, res) => {
     }
 })
 
+/**
+ * @updateAirTravel
+ * @params req, res
+ * @Description : This function is used to update air travel data in the 'air' table of the 'tges' database using the MySQL module
+*/
 const updateAirTravel = asyncHandler(async (req, res) => {
     const id = req.params.id;
     const reqBody = req.body || {};
@@ -156,6 +161,11 @@ const updateAirTravel = asyncHandler(async (req, res) => {
     }
 })
 
+/**
+ * @deleteAirTravel
+ * @params req, res
+ * @Description : This function is used to delete air travel data in the 'air' table of the 'tges' database using the MySQL module
+ */
 const deleteAirTravel = asyncHandler(async (req, res) => {
     const id = req.params.id;
 
@@ -197,6 +207,11 @@ const deleteAirTravel = asyncHandler(async (req, res) => {
     }
 })
 
+/**
+ * @getAirTravelDetails
+ * @params req, res
+ * @Description : This function is used to get air travel data in the 'air' table of the 'tges' database using the MySQL module
+ */
 const getAirTravelDetails = asyncHandler(async (req, res) => {
     const id = req.user.id;
     const page = parseInt(req.query.page) || 1;

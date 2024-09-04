@@ -3,6 +3,11 @@ import ApiResponse from "../utils/ApiResponse.js";
 import asyncHandler from "../utils/asyncHandler.js";
 import { sendMail } from "../utils/sendMail.js";
 
+/**
+ * @contactUs
+ * @params req, res
+ * @Description : This function is used to send contact us email
+ */
 const contactUs = asyncHandler(async (req, res) => {
     const { name, email, contactNo, subject, message } = req.body
 

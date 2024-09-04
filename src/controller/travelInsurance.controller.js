@@ -5,7 +5,11 @@ import asyncHandler from "../utils/asyncHandler.js";
 import { sendMail } from "../utils/sendMail.js";
 import { calculateAge } from "../utils/helper.js";
 
-
+/**
+ * @createTravelInsurance
+ * @params req, res
+ * @Description : This function is used to create travel insurance data in the 'travelInsurance' table of the 'tges' database using the MySQL module
+ */
 const createTravelInsurance = asyncHandler(async (req, res) => {
     const reqBody = req.body || {};
     const { name, gender, dob, address, contactNo, email, tripType, startDate, endDate, preExistingDisease, diseaseName, smoker, passportNo, dateOfIssue, dateOfExpiry, nomineeName, nomineeGender, nomineeRelationship } = reqBody;
@@ -46,6 +50,11 @@ const createTravelInsurance = asyncHandler(async (req, res) => {
     }
 })
 
+/**
+ * @updateTravelInsurance
+ * @params req, res
+ * @Description : This function is used to update travel insurance data in the 'travelInsurance' table of the 'tges' database using the MySQL module
+ */
 const updateTravelInsurance = asyncHandler(async (req, res) => {
     const id = req.params.id;
     const reqBody = req.body || {};
@@ -89,6 +98,11 @@ const updateTravelInsurance = asyncHandler(async (req, res) => {
     }
 })
 
+/**
+ * @deleteTravelInsurance
+ * @params req, res
+ * @Description : This function is used to delete travel insurance data in the 'travelInsurance' table of the 'tges' database using the MySQL module
+ */
 const deleteTravelInsurance = asyncHandler(async (req, res) => {
     const id = req.params.id;
 
@@ -130,6 +144,11 @@ const deleteTravelInsurance = asyncHandler(async (req, res) => {
     }
 })
 
+/**
+ * @getTravelInsuranceDetails
+ * @params req, res
+ * @Description : This function is used to get travel insurance data in the 'travelInsurance' table of the 'tges' database using the MySQL module
+ */
 const getTravelInsuranceDetails = asyncHandler(async (req, res) => {
     const id = req.user.id;
     const page = parseInt(req.query.page) || 1;

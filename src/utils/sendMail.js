@@ -9,6 +9,11 @@ const transporter = nodemailer.createTransport({
   }
 });
 
+/**
+ * @sendMail
+ * @params to, subject, html, filename, path
+ * @Description : This function is used to send mail
+ */
 export async function sendMail(to, subject, html, filename, path) {
   try {
     const mailOptions = {
