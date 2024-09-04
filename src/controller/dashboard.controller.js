@@ -743,6 +743,69 @@ const getAllHotelDetails = asyncHandler(async (req, res) => {
 })
 
 /**
+ * @getAllPassportDetails
+ * @params req, res
+ * @Description : This function is used to get all passport details data in the 'passport' table of the 'tges' database using the MySQL module
+*/
+const getAllPassportDetails = asyncHandler(async (req, res) => {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    try {
+        const sql = `SELECT SQL_CALC_FOUND_ROWS * FROM passport ORDER BY createdAt DESC LIMIT ? OFFSET ?`;
+        const params = [limit, skip];
+        const [result, fields] = await db.query(sql, params);
+
+        if (result.length === 0) {
+            return res.status(404).json(
+                new ApiResponse(
+                    200,
+                    null,
+                    "No passport details found"
+                )
+            )
+        }
+
+        const totalCountSql = `SELECT FOUND_ROWS() as count`;
+        const [totalCountResult] = await db.query(totalCountSql);
+        const totalCount = totalCountResult[0].count;
+
+        const cleanedResult = result.map(user => {
+            const { userId, createdAt, updatedAt, ...rest } = user;
+            return rest;
+        });
+
+        return res.status(200).json(
+            new ApiResponse(
+                200,
+                {
+                    data: cleanedResult,
+                    pagination: {
+                        total_records: totalCount,
+                        total_pages: Math.ceil(totalCount / limit),
+                        limit: limit,
+                        current_page: page,
+                        next_page: page < Math.ceil(totalCount / limit) ? page + 1 : null,
+                        prev_page: page > 1 ? page - 1 : null
+                    }
+                },
+                "Passport details fetched successfully"
+            )
+        )
+    } catch (error) {
+        console.error("Error getting passport details: ", error);
+        return res.status(500).json(
+            new ApiResponse(
+                500,
+                null,
+                "An error occurred while getting passport details"
+            )
+        )
+    }
+})
+
+/**
  * @getAllTravelInsurance
  * @params req, res
  * @Description : This function is used to get all travel insurance details data in the 'travelInsurance' table of the 'tges' database using the MySQL module
@@ -973,6 +1036,7 @@ export {
     getAllCabDetails,
     getAllBusDetails,
     getAllHotelDetails,
+    getAllPassportDetails,
     getAllTravelInsurance,
     getAllHealthInsurance,
     getAllCabRateCard

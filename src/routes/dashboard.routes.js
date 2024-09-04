@@ -1,5 +1,5 @@
 import express from "express";
-import { getAllAirDetails, getAllBusDetails, getAllCabDetails, getAllCabRateCard, getAllCorporateUsers, getAllHealthInsurance, getAllHotelDetails, getAllRetailUsers, getAllTrainDetails, getAllTravelInsurance, getAllVendors, loginAdmin, logoutAdmin, registerAdmin } from "../controller/dashboard.controller.js";
+import { getAllAirDetails, getAllBusDetails, getAllCabDetails, getAllCabRateCard, getAllCorporateUsers, getAllHealthInsurance, getAllHotelDetails, getAllPassportDetails, getAllRetailUsers, getAllTrainDetails, getAllTravelInsurance, getAllVendors, loginAdmin, logoutAdmin, registerAdmin } from "../controller/dashboard.controller.js";
 import { isAdmin } from "../middlewares/auth.middleware.js";
 
 const router = express.Router();
@@ -36,6 +36,9 @@ router.route("/bus")
 
 router.route("/hotel")
     .get(isAdmin, getAllHotelDetails)
+
+router.route("/passport")
+    .get(isAdmin, getAllPassportDetails)
 
 router.route("/healthInsurance")
     .get(isAdmin, getAllHealthInsurance)
