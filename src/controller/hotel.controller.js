@@ -60,6 +60,11 @@ const createHotelBooking = asyncHandler(async (req, res) => {
     }
 })
 
+/**
+ * @updateHotelBooking
+ * @params req, res
+ * @Description : This function is used to update hotel travel data in the 'hotel' table of the 'tges' database using the MySQL module
+*/
 const updateHotelBooking = asyncHandler(async (req, res) => {
     const reqBody = req.body || {};
     const id = req.params.id;
@@ -103,6 +108,11 @@ const updateHotelBooking = asyncHandler(async (req, res) => {
     }
 })
 
+/**
+ * @deleteHotelBooking
+ * @params req, res
+ * @Description : This function is used to delete hotel travel data in the 'hotel' table of the 'tges' database using the MySQL module
+*/
 const deleteHotelBooking = asyncHandler(async (req, res) => {
     const id = req.params.id;
 
@@ -144,6 +154,11 @@ const deleteHotelBooking = asyncHandler(async (req, res) => {
     }
 })
 
+/**
+ * @getHotelBookings
+ * @params req, res
+ * @Description : This function is used to get hotel travel data in the 'hotel' table of the 'tges' database using the MySQL module
+*/
 const getHotelBookings = asyncHandler(async (req, res) => {
     const id = req.user.id;
     const page = parseInt(req.query.page) || 1;

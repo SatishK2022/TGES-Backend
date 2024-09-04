@@ -98,6 +98,11 @@ const createTrainTravel = asyncHandler(async (req, res) => {
     }
 });
 
+/**
+ * @updateTrainTravel
+ * @params req, res
+ * @Description : This function is used to update train travel data in the 'train' table of the 'tges' database using the MySQL module
+ */
 const updateTrainTravel = asyncHandler(async (req, res) => {
     const reqBody = req.body || {};
     const id = req.params.id;
@@ -141,6 +146,11 @@ const updateTrainTravel = asyncHandler(async (req, res) => {
     }
 });
 
+/**
+ * @deleteTrainTravel
+ * @params req, res
+ * @Description : This function is used to delete train travel data in the 'train' table of the 'tges' database using the MySQL module
+ */
 const deleteTrainTravel = asyncHandler(async (req, res) => {
     const id = req.params.id;
 
@@ -182,6 +192,11 @@ const deleteTrainTravel = asyncHandler(async (req, res) => {
     }
 })
 
+/**
+ * @getTrainTravelDetails
+ * @params req, res
+ * @Description : This function is used to get train travel data in the 'train' table of the 'tges' database using the MySQL module
+ */
 const getTrainTravelDetails = asyncHandler(async (req, res) => {
     const id = req.user.id;
     const page = parseInt(req.query.page) || 1;

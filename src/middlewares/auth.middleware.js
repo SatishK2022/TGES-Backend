@@ -3,6 +3,11 @@ import asyncHandler from "../utils/asyncHandler.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import { pool as db } from "../config/db.js";
 
+/**
+ * @isLoggedIn
+ * @params req, res, next
+ * @Description : This function is used to check if the user is logged in or not
+ */
 const isLoggedIn = asyncHandler(async (req, res, next) => {
     const { token } = req.cookies;
 
@@ -45,6 +50,11 @@ const isLoggedIn = asyncHandler(async (req, res, next) => {
     }
 })
 
+/**
+ * @isAdmin
+ * @params req, res, next
+ * @Description : This function is used to check if the user is an admin
+ */
 const isAdmin = asyncHandler(async (req, res, next) => {
     const { token } = req.cookies;
 

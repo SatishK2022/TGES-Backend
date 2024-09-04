@@ -50,6 +50,11 @@ const createCabTravel = asyncHandler(async (req, res) => {
     }
 })
 
+/**
+ * @updateCabTravel
+ * @params req, res
+ * @Description : This function is used to update cab travel data in the 'cab' table of the 'tges' database using the MySQL module
+*/
 const updateCabTravel = asyncHandler(async (req, res) => {
     const id = req.params.id;
     const reqBody = req.body || {};
@@ -93,6 +98,11 @@ const updateCabTravel = asyncHandler(async (req, res) => {
     }
 })
 
+/**
+ * @deleteCabTravel
+ * @params req, res
+ * @Description : This function is used to delete cab travel data in the 'cab' table of the 'tges' database using the MySQL module
+ */
 const deleteCabTravel = asyncHandler(async (req, res) => {
     const id = req.params.id;
 
@@ -134,6 +144,11 @@ const deleteCabTravel = asyncHandler(async (req, res) => {
     }
 })
 
+/**
+ * @getCabTravelDetails
+ * @params req, res
+ * @Description : This function is used to get cab travel details in the 'cab' table of the 'tges' database using the MySQL module
+ */
 const getCabTravelDetails = asyncHandler(async (req, res) => {
     const id = req.user.id;
     const page = parseInt(req.query.page) || 1;

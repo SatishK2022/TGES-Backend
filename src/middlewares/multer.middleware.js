@@ -27,6 +27,11 @@ const upload = multer({
     }
 });
 
+/**
+ * @checkFileExists
+ * @params req, res, next
+ * @Description : This function is used to check if the file exists in the database
+ */
 const checkFileExists = asyncHandler(async (req, res, next) => {
     const type = req.query.type;
 
@@ -62,6 +67,11 @@ const checkFileExists = asyncHandler(async (req, res, next) => {
     }
 });
 
+/**
+ * @checkRateCardExists
+ * @params req, res, next
+ * @Description : This function is used to check if the rate card exists in the database
+ */
 const checkRateCardExists = asyncHandler(async (req, res, next) => {
     const id = req.params.id;
     const type = req.query.type;

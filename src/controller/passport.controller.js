@@ -51,6 +51,11 @@ const createPassport = asyncHandler(async (req, res) => {
     }
 })
 
+/**
+ * @updatePassport
+ * @params req, res
+ * @Description : This function is used to update passport travel data in the 'passport' table of the 'tges' database using the MySQL module
+ */
 const updatePassport = asyncHandler(async (req, res) => {
     const id = req.params.id;
     const reqBody = req.body || {};
@@ -94,6 +99,11 @@ const updatePassport = asyncHandler(async (req, res) => {
     }
 })
 
+/**
+ * @deletePassport
+ * @params req, res
+ * @Description : This function is used to delete passport travel data in the 'passport' table of the 'tges' database using the MySQL module
+ */
 const deletePassport = asyncHandler(async (req, res) => {
     const id = req.params.id;
 
@@ -135,6 +145,11 @@ const deletePassport = asyncHandler(async (req, res) => {
     }
 })
 
+/**
+ * @getPassportDetails
+ * @params req, res
+ * @Description : This function is used to get passport travel data in the 'passport' table of the 'tges' database using the MySQL module
+ */
 const getPassportDetails = asyncHandler(async (req, res) => {
     const id = req.user.id;
     const page = parseInt(req.query.page) || 1;
