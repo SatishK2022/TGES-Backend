@@ -1,0 +1,2444 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "TGES Backend API",
+    "description": "Backend for TGES",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000/api/v1"
+    }
+  ],
+  "paths": {
+    "/user/retail-register": {
+      "post": {
+        "tags": ["🧑🏻‍💻 User"],
+        "summary": "Register Retail User",
+        "requestBody": {
+          "required": {
+            "email": true,
+            "zipCode": true,
+            "country": true,
+            "city": true,
+            "state": true,
+            "password": true,
+            "userId": true,
+            "firstName": true,
+            "lastName": true,
+            "gender": true,
+            "phoneNumber1": true,
+            "username": true
+          },
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "test@retail.com"
+                  },
+                  "zipCode": {
+                    "type": "string",
+                    "example": "123456"
+                  },
+                  "country": {
+                    "type": "string",
+                    "example": "India"
+                  },
+                  "city": {
+                    "type": "string",
+                    "example": "Delhi"
+                  },
+                  "state": {
+                    "type": "string",
+                    "example": "Delhi"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "123456"
+                  },
+                  "firstName": {
+                    "type": "string",
+                    "example": "John"
+                  },
+                  "secondName": {
+                    "type": "string",
+                    "example": "Doe"
+                  },
+                  "lastName": {
+                    "type": "string",
+                    "example": "Doe"
+                  },
+                  "gender": {
+                    "type": "string",
+                    "example": "Male"
+                  },
+                  "occupation": {
+                    "type": "string",
+                    "example": "Software Engineer"
+                  },
+                  "phoneNumber1": {
+                    "type": "string",
+                    "example": "1234567890"
+                  },
+                  "phoneNumber2": {
+                    "type": "string",
+                    "example": "1234567890"
+                  },
+                  "residentialAddress": {
+                    "type": "string",
+                    "example": "123 Main St"
+                  },
+                  "username": {
+                    "type": "string",
+                    "example": "johndoe"
+                  },
+                  "stateCode": {
+                    "type": "string",
+                    "example": "DL"
+                  },
+                  "countryCode": {
+                    "type": "string",
+                    "example": "IN"
+                  },
+                  "companyName": {
+                    "type": "string",
+                    "example": "TGES"
+                  },
+                  "designation": {
+                    "type": "string",
+                    "example": "Software Engineer"
+                  },
+                  "companyAddress": {
+                    "type": "string",
+                    "example": "123 Main St"
+                  },
+                  "howDidYouKnow": {
+                    "type": "string",
+                    "example": "Google"
+                  },
+                  "preferredCurrency": {
+                    "type": "string",
+                    "example": "USD"
+                  },
+                  "website": {
+                    "type": "string",
+                    "example": "https://www.tgestravel.com"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "string",
+                      "example": "201"
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": null
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "User created successfully"
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/corporate-register": {
+      "post": {
+        "tags": ["🧑🏻‍💻 User"],
+        "summary": "Register Corporate User",
+        "requestBody": {
+          "required": {
+            "email": true,
+            "zipCode": true,
+            "country": true,
+            "city": true,
+            "state": true,
+            "password": true,
+            "userId": true,
+            "industry": true,
+            "companyName": true,
+            "address1": true,
+            "address2": true,
+            "phoneNumber": true,
+            "contactPersonFirstName": true,
+            "contactPersonLastName": true,
+            "contactPersonGender": true,
+            "website": true
+          },
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "test@corporate.com"
+                  },
+                  "zipCode": {
+                    "type": "string",
+                    "example": "123456"
+                  },
+                  "country": {
+                    "type": "string",
+                    "example": "India"
+                  },
+                  "city": {
+                    "type": "string",
+                    "example": "Delhi"
+                  },
+                  "state": {
+                    "type": "string",
+                    "example": "Delhi"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "123456"
+                  },
+                  "industry": {
+                    "type": "string",
+                    "example": "Travel"
+                  },
+                  "companyName": {
+                    "type": "string",
+                    "example": "TGES"
+                  },
+                  "address1": {
+                    "type": "string",
+                    "example": "123 Main St"
+                  },
+                  "address2": {
+                    "type": "string",
+                    "example": "456 Main St"
+                  },
+                  "address3": {
+                    "type": "string",
+                    "example": "789 Main St"
+                  },
+                  "address4": {
+                    "type": "string",
+                    "example": "123 Main St"
+                  },
+                  "phoneNumber": {
+                    "type": "string",
+                    "example": "1234567890"
+                  },
+                  "countryCode": {
+                    "type": "string",
+                    "example": "IN"
+                  },
+                  "stateCode": {
+                    "type": "string",
+                    "example": "DL"
+                  },
+                  "landlineNumber": {
+                    "type": "string",
+                    "example": "1234567890"
+                  },
+                  "landlineCityCode": {
+                    "type": "string",
+                    "example": "1234567890"
+                  },
+                  "landlineCountryCode": {
+                    "type": "string",
+                    "example": "1234567890"
+                  },
+                  "contactDepartment": {
+                    "type": "string",
+                    "example": "HR"
+                  },
+                  "contactPersonFirstName": {
+                    "type": "string",
+                    "example": "John"
+                  },
+                  "contactPersonSecondName": {
+                    "type": "string",
+                    "example": "Doe"
+                  },
+                  "contactPersonLastName": {
+                    "type": "string",
+                    "example": "Doe"
+                  },
+                  "contactPersonGender": {
+                    "type": "string",
+                    "example": "Male"
+                  },
+                  "website": {
+                    "type": "string",
+                    "example": "https://www.tgestravel.com"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "string",
+                      "example": "201"
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": null
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "User created successfully"
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/vendor-register": {
+      "post": {
+        "tags": ["🧑🏻‍💻 User"],
+        "summary": "Register Vendor User",
+        "requestBody": {
+          "required": {
+            "email": true,
+            "zipCode": true,
+            "country": true,
+            "city": true,
+            "state": true,
+            "password": true,
+            "userId": true,
+            "areaOfWork": true,
+            "companyName": true,
+            "phoneNumber": true,
+            "contactPersonFirstName": true,
+            "contactPersonLastName": true,
+            "contactPersonGender": true,
+            "website": true,
+            "address1": true,
+            "address2": true
+          },
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "test@vendor.com"
+                  },
+                  "zipCode": {
+                    "type": "string",
+                    "example": "123456"
+                  },
+                  "country": {
+                    "type": "string",
+                    "example": "India"
+                  },
+                  "city": {
+                    "type": "string",
+                    "example": "Delhi"
+                  },
+                  "state": {
+                    "type": "string",
+                    "example": "Delhi"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "123456"
+                  },
+                  "areaOfWork": {
+                    "type": "string",
+                    "example": "Travel"
+                  },
+                  "companyName": {
+                    "type": "string",
+                    "example": "TGES"
+                  },
+                  "phoneNumber": {
+                    "type": "string",
+                    "example": "1234567890"
+                  },
+                  "countryCode": {
+                    "type": "string",
+                    "example": "IN"
+                  },
+                  "stateCode": {
+                    "type": "string",
+                    "example": "DL"
+                  },
+                  "contactPersonFirstName": {
+                    "type": "string",
+                    "example": "John"
+                  },
+                  "contactPersonSecondName": {
+                    "type": "string",
+                    "example": "Doe"
+                  },
+                  "contactPersonLastName": {
+                    "type": "string",
+                    "example": "Doe"
+                  },
+                  "contactPersonGender": {
+                    "type": "string",
+                    "example": "Male"
+                  },
+                  "landlineCityCode": {
+                    "type": "string",
+                    "example": "1234567890"
+                  },
+                  "landlineCountryCode": {
+                    "type": "string",
+                    "example": "1234567890"
+                  },
+                  "landlineNumber": {
+                    "type": "string",
+                    "example": "1234567890"
+                  },
+                  "website": {
+                    "type": "string",
+                    "example": "https://www.tgestravel.com"
+                  },
+                  "address1": {
+                    "type": "string",
+                    "example": "123 Main St"
+                  },
+                  "address2": {
+                    "type": "string",
+                    "example": "456 Main St"
+                  },
+                  "address3": {
+                    "type": "string",
+                    "example": "789 Main St"
+                  },
+                  "address4": {
+                    "type": "string",
+                    "example": "123 Main St"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "string",
+                      "example": "201"
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": null
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "User created successfully"
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/login": {
+      "post": {
+        "tags": ["🧑🏻‍💻 User"],
+        "summary": "Login User",
+        "requestBody": {
+          "required": {
+            "email": true,
+            "password": true
+          },
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "test@retail.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "123456"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User logged in successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "string",
+                      "example": "200"
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {
+                        "id": 7,
+                        "firstName": "John",
+                        "secondName": "Doe",
+                        "lastName": "Doe",
+                        "gender": "Male",
+                        "Occupation": "Software Engineer",
+                        "phoneNumber1": "1234567890",
+                        "phoneNumber2": "1234567890",
+                        "residentialAddress": "123 Main St",
+                        "username": "johndoe",
+                        "countryCode": "IN",
+                        "stateCode": "DL",
+                        "companyName": "TGES",
+                        "designation": "Software Engineer",
+                        "companyAddress": "123 Main St",
+                        "howDidYouKnow": "Google",
+                        "preferredCurrency": "USD",
+                        "website": "https://www.tgestravel.com",
+                        "companyId": "JOHN1249",
+                        "email": "test@retail.com",
+                        "zipCode": "123456",
+                        "country": "India",
+                        "city": "Delhi",
+                        "state": "Delhi",
+                        "userType": "VCkT1O2TS3ccRwByXW"
+                      }
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "User logged in successfully"
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/logout": {
+      "get": {
+        "tags": ["🧑🏻‍💻 User"],
+        "summary": "Logout User",
+        "responses": {
+          "200": {
+            "description": "User logged out successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "string",
+                      "example": "200"
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": null
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "User logged out successfully"
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/forgot-password": {
+      "post": {
+        "tags": ["🧑🏻‍💻 User"],
+        "summary": "Forgot Password",
+        "requestBody": {
+          "required": {
+            "email": true
+          },
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "test@retail.com"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Password reset link sent successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "string",
+                      "example": "200"
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": null
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Password reset link sent successfully"
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/verify-otp": {
+      "post": {
+        "tags": ["🧑🏻‍💻 User"],
+        "summary": "Verify OTP",
+        "requestBody": {
+          "required": {
+            "email": true,
+            "otp": true
+          },
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "test@retail.com"
+                  },
+                  "otp": {
+                    "type": "string",
+                    "example": "123456"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OTP verified successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "string",
+                      "example": "200"
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": null
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "OTP verified successfully"
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/reset-password": {
+      "post": {
+        "tags": ["🧑🏻‍💻 User"],
+        "summary": "Reset Password",
+        "requestBody": {
+          "required": {
+            "email": true,
+            "password": true
+          },
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "test@retail.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "123456"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Password reset successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "string",
+                      "example": "200"
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": null
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Password reset successfully"
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/travel/train": {
+      "post": {
+        "tags": ["🚢 Travel"],
+        "summary": "Create Train Travel",
+        "requestBody": {
+          "required": {
+            "userId": true,
+            "fullName": true,
+            "dob": true,
+            "gender": true,
+            "contactNo": true,
+            "email": true,
+            "travelFrom": true,
+            "travelTo": true,
+            "classOfTravel": true,
+            "travelDate": true
+          },
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "fullName": {
+                      "type": "string",
+                      "example": "test"
+                    },
+                    "dob": {
+                      "type": "string",
+                      "example": "2000-01-01"
+                    },
+                    "gender": {
+                      "type": "string",
+                      "example": "Male"
+                    },
+                    "contactNo": {
+                      "type": "string",
+                      "example": "1234567890"
+                    },
+                    "email": {
+                      "type": "string",
+                      "example": "test@corporate.com"
+                    },
+                    "travelFrom": {
+                      "type": "string",
+                      "example": "Delhi"
+                    },
+                    "travelTo": {
+                      "type": "string",
+                      "example": "Mumbai"
+                    },
+                    "classOfTravel": {
+                      "type": "string",
+                      "example": "Business"
+                    },
+                    "travelDate": {
+                      "type": "string",
+                      "example": "2022-01-01"
+                    },
+                    "trainNo": {
+                      "type": "string",
+                      "example": "123456"
+                    },
+                    "timePreference": {
+                      "type": "string",
+                      "example": "morning"
+                    },
+                    "remarks": {
+                      "type": "string",
+                      "example": "test"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Train Travel created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "string",
+                      "example": "200"
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": null
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Train Travel created successfully"
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["🚢 Travel"],
+        "summary": "Get Train Travel Details",
+        "responses": {
+          "200": {
+            "description": "Get Train Travel Details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "string",
+                      "example": "200"
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {
+                        "data": [
+                          {
+                            "id": 2,
+                            "fullName": "Thaddeus Crane",
+                            "age": 43,
+                            "dob": "1980-09-22",
+                            "gender": "Pariatur Molestias ",
+                            "contactNo": "Cupidatat ",
+                            "email": "vanykejaci@mailinator.com",
+                            "travelFrom": "Fugit dolores tempo",
+                            "travelTo": "Reprehenderit exerc",
+                            "classOfTravel": "Vistadome Non AC (VS)",
+                            "travelDate": "2012-01-06",
+                            "trainNo": "In dolores pariatur",
+                            "timePreference": "23:58",
+                            "remarks": null
+                          },
+                          {
+                            "id": 3,
+                            "fullName": "Kylynn Mcgee",
+                            "age": 4,
+                            "dob": "2020-03-25",
+                            "gender": "Adipisicing id cillu",
+                            "contactNo": "Quae ex ma",
+                            "email": "qipo@mailinator.com",
+                            "travelFrom": "Voluptatem nesciunt",
+                            "travelTo": "Sapiente aut maxime ",
+                            "classOfTravel": "Vistadome Chair Car (VC)",
+                            "travelDate": "2004-07-17",
+                            "trainNo": "Sit cum harum ut an",
+                            "timePreference": "12:39",
+                            "remarks": null
+                          },
+                          {
+                            "id": 4,
+                            "fullName": "Sean Flowers",
+                            "age": 37,
+                            "dob": "1986-10-22",
+                            "gender": "Minima esse expedita",
+                            "contactNo": "Dolor veli",
+                            "email": "cipy@mailinator.com",
+                            "travelFrom": "Quis minim aut sunt",
+                            "travelTo": "Eos sint nesciunt ",
+                            "classOfTravel": "Vistadome Chair Car (VC)",
+                            "travelDate": "1974-12-18",
+                            "trainNo": "Inventore esse quis",
+                            "timePreference": "23:39",
+                            "remarks": null
+                          },
+                          {
+                            "id": 5,
+                            "fullName": "Nissim Douglas",
+                            "age": 17,
+                            "dob": "2007-08-03",
+                            "gender": "Dolor qui totam ea l",
+                            "contactNo": "Quam praes",
+                            "email": "misi@mailinator.com",
+                            "travelFrom": "Anim minima ut non i",
+                            "travelTo": "Qui voluptatem Quid",
+                            "classOfTravel": "First Class (FC)",
+                            "travelDate": "2010-08-29",
+                            "trainNo": "Consequatur maiores",
+                            "timePreference": "14:04",
+                            "remarks": null
+                          },
+                          {
+                            "id": 6,
+                            "fullName": "Kibo Garza",
+                            "age": 4,
+                            "dob": "2019-12-23",
+                            "gender": "Qui eum ab quisquam ",
+                            "contactNo": "Perferendi",
+                            "email": "panak@mailinator.com",
+                            "travelFrom": "Quia repellendus Nu",
+                            "travelTo": "Nihil aliquam eos d",
+                            "classOfTravel": "AC Chair car (CC)",
+                            "travelDate": "1975-05-22",
+                            "trainNo": "Aut nisi pariatur I",
+                            "timePreference": "22:59",
+                            "remarks": null
+                          }
+                        ],
+                        "pagination": {
+                          "total_records": 5,
+                          "total_pages": 1,
+                          "limit": 10,
+                          "current_page": 1,
+                          "next_page": null,
+                          "prev_page": null
+                        }
+                      }
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Get Train Travel Details"
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/travel/train/{id}": {
+      "put": {
+        "tags": ["🚢 Travel"],
+        "summary": "Update Train Travel",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "required": {
+            "userId": true,
+            "fullName": true,
+            "dob": true,
+            "gender": true,
+            "contactNo": true,
+            "email": true,
+            "travelFrom": true,
+            "travelTo": true,
+            "classOfTravel": true,
+            "travelDate": true
+          },
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "fullName": {
+                    "type": "string",
+                    "example": "Kylynn Mcgee"
+                  },
+                  "dob": {
+                    "type": "string",
+                    "example": "2000-01-01"
+                  },
+                  "gender": {
+                    "type": "string",
+                    "example": "Male"
+                  },
+                  "contactNo": {
+                    "type": "string",
+                    "example": "1234567890"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "test@corporate.com"
+                  },
+                  "travelFrom": {
+                    "type": "string",
+                    "example": "Delhi"
+                  },
+                  "travelTo": {
+                    "type": "string",
+                    "example": "Mumbai"
+                  },
+                  "classOfTravel": {
+                    "type": "string",
+                    "example": "Vistadome Chair Car (VC)"
+                  },
+                  "travelDate": {
+                    "type": "string",
+                    "example": "1974-12-18"
+                  },
+                  "trainNo": {
+                    "type": "string",
+                    "example": "79793"
+                  },
+                  "timePreference": {
+                    "type": "string",
+                    "example": "morning"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Train Travel updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "string",
+                      "example": "200"
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": null
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Train Travel updated successfully"
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["🚢 Travel"],
+        "summary": "Delete Train Travel",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Train Travel deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "string",
+                      "example": "200"
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": null
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Train Travel deleted successfully"
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/travel/air": {
+      "post": {
+        "tags": ["🚢 Travel"],
+        "summary": "Create Air Travel",
+        "requestBody": {
+          "required": {
+            "userId": true,
+            "fullName": true,
+            "dob": true,
+            "gender": true,
+            "contactNo": true,
+            "email": true,
+            "travelFrom": true,
+            "travelTo": true,
+            "classOfTravel": true,
+            "travelDate": true
+          },
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "fullName": {
+                      "type": "string",
+                      "example": "test"
+                    },
+                    "dob": {
+                      "type": "string",
+                      "example": "2000-01-01"
+                    },
+                    "gender": {
+                      "type": "string",
+                      "example": "Male"
+                    },
+                    "contactNo": {
+                      "type": "string",
+                      "example": "1234567890"
+                    },
+                    "email": {
+                      "type": "string",
+                      "example": "test@corporate.com"
+                    },
+                    "travelFrom": {
+                      "type": "string",
+                      "example": "Delhi"
+                    },
+                    "travelTo": {
+                      "type": "string",
+                      "example": "Mumbai"
+                    },
+                    "classOfTravel": {
+                      "type": "string",
+                      "example": "Business"
+                    },
+                    "travelDate": {
+                      "type": "string",
+                      "example": "2022-01-01"
+                    },
+                    "flightNo": {
+                      "type": "string",
+                      "example": "123456"
+                    },
+                    "timePreference": {
+                      "type": "string",
+                      "example": "morning"
+                    },
+                    "remarks": {
+                      "type": "string",
+                      "example": "test"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Air Travel created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "string",
+                      "example": "200"
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": null
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Air Travel created successfully"
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["🚢 Travel"],
+        "summary": "Get Air Travel Details",
+        "responses": {
+          "200": {
+            "description": "Get Air Travel Details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "string",
+                      "example": "200"
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {
+                        "data": [
+                          {
+                            "id": 11,
+                            "fullName": "Quinn Blackwell",
+                            "age": 53,
+                            "dob": "1971-08-20",
+                            "gender": "Harum mollitia saepe",
+                            "contactNo": "Voluptatib",
+                            "email": "xomaliv@mailinator.com",
+                            "travelFrom": "Atque quam qui repre",
+                            "travelTo": "Ea animi dolorum de",
+                            "classOfTravel": "Premium Economy",
+                            "travelDate": "2013-01-26",
+                            "flightNo": "Quia voluptatibus mo",
+                            "timePreference": "09:27",
+                            "remarks": null
+                          },
+                          {
+                            "id": 12,
+                            "fullName": "Aubrey Andrews",
+                            "age": 19,
+                            "dob": "2005-01-10",
+                            "gender": "Neque sed accusantiu",
+                            "contactNo": "Dolor at i",
+                            "email": "gufy@mailinator.com",
+                            "travelFrom": "Duis nihil minim qui",
+                            "travelTo": "Sed suscipit est ita",
+                            "classOfTravel": "Economy",
+                            "travelDate": "2012-02-29",
+                            "flightNo": "Est et dolorem nihil",
+                            "timePreference": "16:46",
+                            "remarks": null
+                          },
+                          {
+                            "id": 13,
+                            "fullName": "Oliver Campbell",
+                            "age": 38,
+                            "dob": "1986-04-19",
+                            "gender": "Adipisci dolores obc",
+                            "contactNo": "Dicta ut i",
+                            "email": "kozilekeg@mailinator.com",
+                            "travelFrom": "Nulla accusamus maio",
+                            "travelTo": "Eiusmod harum harum ",
+                            "classOfTravel": "Business",
+                            "travelDate": "2015-10-02",
+                            "flightNo": "Tempor enim ea id q",
+                            "timePreference": "18:38",
+                            "remarks": null
+                          },
+                          {
+                            "id": 14,
+                            "fullName": "Aristotle Hogan",
+                            "age": 1,
+                            "dob": "2023-05-15",
+                            "gender": "Placeat accusantium",
+                            "contactNo": "Ipsa earu",
+                            "email": "ceqec@mailinator.com",
+                            "travelFrom": "Aut rerum odit eveni",
+                            "travelTo": "Commodi beatae exerc",
+                            "classOfTravel": "Economy",
+                            "travelDate": "1975-05-01",
+                            "flightNo": "Dolore fugiat archi",
+                            "timePreference": "18:25",
+                            "remarks": null
+                          },
+                          {
+                            "id": 15,
+                            "fullName": "Yolanda Riley",
+                            "age": 5,
+                            "dob": "2019-07-05",
+                            "gender": "Quis voluptatem qui ",
+                            "contactNo": "Quia magna",
+                            "email": "xufediw@mailinator.com",
+                            "travelFrom": "Rem rem et lorem cup",
+                            "travelTo": "Molestias eum proide",
+                            "classOfTravel": "First Class",
+                            "travelDate": "2018-06-21",
+                            "flightNo": "Libero dolores a qua",
+                            "timePreference": "02:32",
+                            "remarks": null
+                          }
+                        ],
+                        "pagination": {
+                          "total_records": 5,
+                          "total_pages": 1,
+                          "limit": 10,
+                          "current_page": 1,
+                          "next_page": null,
+                          "prev_page": null
+                        }
+                      }
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Get Air Travel Details"
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/travel/air/{id}": {
+      "put": {
+        "tags": ["🚢 Travel"],
+        "summary": "Update Air Travel",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "required": {
+            "userId": true,
+            "fullName": true,
+            "dob": true,
+            "gender": true,
+            "contactNo": true,
+            "email": true,
+            "travelFrom": true,
+            "travelTo": true,
+            "classOfTravel": true,
+            "travelDate": true
+          },
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "fullName": {
+                    "type": "string",
+                    "example": "Kylynn Mcgee"
+                  },
+                  "dob": {
+                    "type": "string",
+                    "example": "2000-01-01"
+                  },
+                  "gender": {
+                    "type": "string",
+                    "example": "Male"
+                  },
+                  "contactNo": {
+                    "type": "string",
+                    "example": "1234567890"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "test@corporate.com"
+                  },
+                  "travelFrom": {
+                    "type": "string",
+                    "example": "Delhi"
+                  },
+                  "travelTo": {
+                    "type": "string",
+                    "example": "Mumbai"
+                  },
+                  "classOfTravel": {
+                    "type": "string",
+                    "example": "Vistadome Chair Car (VC)"
+                  },
+                  "travelDate": {
+                    "type": "string",
+                    "example": "1974-12-18"
+                  },
+                  "flightNo": {
+                    "type": "string",
+                    "example": "79793"
+                  },
+                  "timePreference": {
+                    "type": "string",
+                    "example": "morning"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Air Travel updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "string",
+                      "example": "200"
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": null
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Air Travel updated successfully"
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["🚢 Travel"],
+        "summary": "Delete Air Travel",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Air Travel deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "string",
+                      "example": "200"
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": null
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Air Travel deleted successfully"
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/travel/bus": {
+      "post": {
+        "tags": ["🚢 Travel"],
+        "summary": "Create Volvo Bus Travel",
+        "requestBody": {
+          "required": {
+            "userId": true,
+            "fullName": true,
+            "dob": true,
+            "gender": true,
+            "contactNo": true,
+            "email": true,
+            "pickupLocation": true,
+            "destination": true,
+            "travelDate": true
+          },
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "fullName": {
+                      "type": "string",
+                      "example": "test"
+                    },
+                    "dob": {
+                      "type": "string",
+                      "example": "2000-01-01"
+                    },
+                    "gender": {
+                      "type": "string",
+                      "example": "Male"
+                    },
+                    "contactNo": {
+                      "type": "string",
+                      "example": "1234567890"
+                    },
+                    "email": {
+                      "type": "string",
+                      "example": "test@corporate.com"
+                    },
+                    "pickupLocation": {
+                      "type": "string",
+                      "example": "Delhi"
+                    },
+                    "designation": {
+                      "type": "string",
+                      "example": "Mumbai"
+                    },
+                    "travelDate": {
+                      "type": "string",
+                      "example": "2022-01-01"
+                    },
+                    "busNo": {
+                      "type": "string",
+                      "example": "123456"
+                    },
+                    "seatType": {
+                      "type": "string",
+                      "example": "morning"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Volvo Bus Travel created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "string",
+                      "example": "200"
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": null
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Volvo Bus Travel created successfully"
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["🚢 Travel"],
+        "summary": "Get Volvo Bus Travel Details",
+        "responses": {
+          "200": {
+            "description": "Get Volvo Bus Travel Details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "string",
+                      "example": "200"
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {
+                        "data": [
+                          {
+                            "id": 1,
+                            "fullName": "Keiko James",
+                            "age": 11,
+                            "dob": "2012-12-04",
+                            "gender": "Tempora et tempora i",
+                            "contactNo": "Rerum aspe",
+                            "email": "nimiwewam@mailinator.com",
+                            "pickupLocation": "Et velit est accusam",
+                            "destination": "Animi alias praesen",
+                            "travelDate": "1993-04-22",
+                            "seatType": "Regular",
+                            "busNo": "Nemo voluptatem nequ"
+                          },
+                          {
+                            "id": 2,
+                            "fullName": "Christian Hanson",
+                            "age": 49,
+                            "dob": "1974-10-02",
+                            "gender": "Dolor possimus eum ",
+                            "contactNo": "Architecto",
+                            "email": "tetesowyqy@mailinator.com",
+                            "pickupLocation": "Quod autem non qui c",
+                            "destination": "Accusamus qui id et ",
+                            "travelDate": "1993-12-21",
+                            "seatType": "Regular",
+                            "busNo": "Minus magna qui face"
+                          },
+                          {
+                            "id": 3,
+                            "fullName": "Martin Conrad",
+                            "age": 17,
+                            "dob": "2007-03-10",
+                            "gender": "Ducimus rerum tempo",
+                            "contactNo": "Minim poss",
+                            "email": "mizyvali@mailinator.com",
+                            "pickupLocation": "Veniam excepturi ex",
+                            "destination": "Minim quis rem offic",
+                            "travelDate": "1992-06-21",
+                            "seatType": "Sleeper",
+                            "busNo": "Dolores nemo exercit"
+                          },
+                          {
+                            "id": 4,
+                            "fullName": "Aiko Logan",
+                            "age": 10,
+                            "dob": "2013-10-03",
+                            "gender": "Et dolor fugiat nem",
+                            "contactNo": "Ipsam quia",
+                            "email": "xolem@mailinator.com",
+                            "pickupLocation": "Et tempor culpa lau",
+                            "destination": "Quisquam nobis sit ",
+                            "travelDate": "2017-02-25",
+                            "seatType": "Regular",
+                            "busNo": "Praesentium amet vo"
+                          },
+                          {
+                            "id": 5,
+                            "fullName": "Gay Pope",
+                            "age": 27,
+                            "dob": "1996-11-10",
+                            "gender": "Consequatur sit hic",
+                            "contactNo": "Animi tem",
+                            "email": "cowadat@mailinator.com",
+                            "pickupLocation": "Ratione laborum et i",
+                            "destination": "Molestias dolor ut l",
+                            "travelDate": "1991-05-17",
+                            "seatType": "Sleeper",
+                            "busNo": "Provident iusto imp"
+                          }
+                        ],
+                        "pagination": {
+                          "total_records": 5,
+                          "total_pages": 1,
+                          "limit": 10,
+                          "current_page": 1,
+                          "next_page": null,
+                          "prev_page": null
+                        }
+                      }
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Get Volvo Bus Travel Details"
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/travel/bus/{id}": {
+      "put": {
+        "tags": ["🚢 Travel"],
+        "summary": "Update Volvo Bus Travel",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "required": {
+            "userId": true,
+            "fullName": true,
+            "dob": true,
+            "gender": true,
+            "contactNo": true,
+            "email": true,
+            "pickupLocation": true,
+            "destination": true,
+            "travelDate": true
+          },
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "fullName": {
+                    "type": "string",
+                    "example": "Kylynn Mcgee"
+                  },
+                  "dob": {
+                    "type": "string",
+                    "example": "2000-01-01"
+                  },
+                  "gender": {
+                    "type": "string",
+                    "example": "Male"
+                  },
+                  "contactNo": {
+                    "type": "string",
+                    "example": "1234567890"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "test@corporate.com"
+                  },
+                  "pickupLocation": {
+                    "type": "string",
+                    "example": "Delhi"
+                  },
+                  "designation": {
+                    "type": "string",
+                    "example": "Mumbai"
+                  },
+                  "travelDate": {
+                    "type": "string",
+                    "example": "1974-12-18"
+                  },
+                  "seatType": {
+                    "type": "string",
+                    "example": "79793"
+                  },
+                  "busNo": {
+                    "type": "string",
+                    "example": "morning"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Volvo Bus Travel updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "string",
+                      "example": "200"
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": null
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Volvo Bus Travel updated successfully"
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["🚢 Travel"],
+        "summary": "Delete Volvo Bus Travel",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Volvo Bus Travel deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "string",
+                      "example": "200"
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": null
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Volvo Bus Travel deleted successfully"
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/travel/cab": {
+      "post": {
+        "tags": ["🚢 Travel"],
+        "summary": "Create Cab Travel",
+        "requestBody": {
+          "required": {
+            "userId": true,
+            "pickupLocation": true,
+            "nationality": true,
+            "tourPlan": true,
+            "name": true,
+            "contactNo": true,
+            "email": true,
+            "cabRequiredAt": true,
+            "cabRequiredFor": true,
+            "pickupDateTime": true,
+            "pickupAddress": true,
+            "dropDateTime": true,
+            "dropAddress": true,
+            "cabDuration": true,
+            "noOfCabsRequired": true,
+            "typeOfCabRequired": true,
+            "noOfPersonsTravelling": true,
+            "noOfChildren": true
+          },
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "pickupCountry": {
+                    "type": "string",
+                    "example": "India"
+                  },
+                  "nationality": {
+                    "type": "string",
+                    "example": "India"
+                  },
+                  "tourPlan": {
+                    "type": "string",
+                    "example": "Manali"
+                  },
+                  "name": {
+                    "type": "string",
+                    "example": "test"
+                  },
+                  "contactNo": {
+                    "type": "string",
+                    "example": "1234567890"
+                  },
+                  "alternateContactNo": {
+                    "type": "string",
+                    "example": "1234567890"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "test@corporate.com"
+                  },
+                  "cabRequiredAt": {
+                    "type": "string",
+                    "example": "2022-01-01"
+                  },
+                  "cabRequiredFor": {
+                    "type": "string",
+                    "example": "2022-01-01"
+                  },
+                  "localTravelKmsLimit": {
+                    "type": "string",
+                    "example": "100"
+                  },
+                  "pickupDateTime": {
+                    "type": "string",
+                    "example": "2022-01-01"
+                  },
+                  "pickupAddress": {
+                    "type": "string",
+                    "example": "Delhi"
+                  },
+                  "pickupLandmark": {
+                    "type": "string",
+                    "example": "Delhi"
+                  },
+                  "dropDateTime": {
+                    "type": "string",
+                    "example": "2022-01-01"
+                  },
+                  "dropAddress": {
+                    "type": "string",
+                    "example": "Mumbai"
+                  },
+                  "dropLandmark": {
+                    "type": "string",
+                    "example": "Mumbai"
+                  },
+                  "cabDuration": {
+                    "type": "string",
+                    "example": "10"
+                  },
+                  "noOfCabsRequired": {
+                    "type": "string",
+                    "example": "10"
+                  },
+                  "typeOfCabRequired": {
+                    "type": "string",
+                    "example": "10"
+                  },
+                  "noOfPersonsTravelling": {
+                    "type": "string",
+                    "example": "10"
+                  },
+                  "noOfInfants": {
+                    "type": "string",
+                    "example": "10"
+                  },
+                  "noOfChildren": {
+                    "type": "string",
+                    "example": "10"
+                  },
+                  "otherRequirements": {
+                    "type": "string",
+                    "example": "No"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Cab Travel created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "string",
+                      "example": "200"
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": null
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Cab Travel created successfully"
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["🚢 Travel"],
+        "summary": "Get Cab Travel Details",
+        "responses": {
+          "200": {
+            "description": "Get Air Travel Details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "string",
+                      "example": "200"
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {
+                        "data": [
+                          {
+                            "id": 1,
+                            "pickupCountry": "India",
+                            "nationality": "American",
+                            "tourPlan": "Outstation",
+                            "name": "Ocean Cobb",
+                            "contactNo": "Labore eu eum rerum ",
+                            "alternateContactNo": "Repellendus Et aut ",
+                            "email": "byxyhopufu@mailinator.com",
+                            "cabRequiredAt": "Airport",
+                            "cabRequiredFor": "Local Travel",
+                            "localTravelKmsLimit": "Full Day",
+                            "pickupDateTime": "2018-04-20T16:55",
+                            "pickupAddress": "Quibusdam nihil volu",
+                            "pickupLandmark": "Nostrud architecto q",
+                            "dropDateTime": "1978-02-01T05:26",
+                            "dropAddress": "Sunt pariatur Fugia",
+                            "dropLandmark": "Quam illo suscipit m",
+                            "cabDuration": "8 Hrs",
+                            "noOfCabsRequired": "89",
+                            "typeOfCabRequired": "Sedan",
+                            "noOfPersonsTravelling": "30",
+                            "noOfInfants": "25",
+                            "noOfChildren": "51",
+                            "otherRequirements": "Aut possimus dicta "
+                          }
+                        ],
+                        "pagination": {
+                          "total_records": 1,
+                          "total_pages": 1,
+                          "limit": 10,
+                          "current_page": 1,
+                          "next_page": null,
+                          "prev_page": null
+                        }
+                      }
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Get Cab Travel Details"
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/travel/cab/{id}": {
+      "put": {
+        "tags": ["🚢 Travel"],
+        "summary": "Update Air Travel",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "required": {
+            "userId": true,
+            "pickupLocation": true,
+            "nationality": true,
+            "tourPlan": true,
+            "name": true,
+            "contactNo": true,
+            "email": true,
+            "cabRequiredAt": true,
+            "cabRequiredFor": true,
+            "pickupDateTime": true,
+            "pickupAddress": true,
+            "dropDateTime": true,
+            "dropAddress": true,
+            "cabDuration": true,
+            "noOfCabsRequired": true,
+            "typeOfCabRequired": true,
+            "noOfPersonsTravelling": true,
+            "noOfChildren": true
+          },
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "pickupCountry": {
+                    "type": "string",
+                    "example": "India"
+                  },
+                  "nationality": {
+                    "type": "string",
+                    "example": "India"
+                  },
+                  "tourPlan": {
+                    "type": "string",
+                    "example": "Manali"
+                  },
+                  "name": {
+                    "type": "string",
+                    "example": "test"
+                  },
+                  "contactNo": {
+                    "type": "string",
+                    "example": "1234567890"
+                  },
+                  "alternateContactNo": {
+                    "type": "string",
+                    "example": "1234567890"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "test@corporate.com"
+                  },
+                  "cabRequiredAt": {
+                    "type": "string",
+                    "example": "2022-01-01"
+                  },
+                  "cabRequiredFor": {
+                    "type": "string",
+                    "example": "2022-01-01"
+                  },
+                  "localTravelKmsLimit": {
+                    "type": "string",
+                    "example": "100"
+                  },
+                  "pickupDateTime": {
+                    "type": "string",
+                    "example": "2022-01-01"
+                  },
+                  "pickupAddress": {
+                    "type": "string",
+                    "example": "Delhi"
+                  },
+                  "pickupLandmark": {
+                    "type": "string",
+                    "example": "Delhi"
+                  },
+                  "dropDateTime": {
+                    "type": "string",
+                    "example": "2022-01-01"
+                  },
+                  "dropAddress": {
+                    "type": "string",
+                    "example": "Mumbai"
+                  },
+                  "dropLandmark": {
+                    "type": "string",
+                    "example": "Mumbai"
+                  },
+                  "cabDuration": {
+                    "type": "string",
+                    "example": "10"
+                  },
+                  "noOfCabsRequired": {
+                    "type": "string",
+                    "example": "10"
+                  },
+                  "typeOfCabRequired": {
+                    "type": "string",
+                    "example": "10"
+                  },
+                  "noOfPersonsTravelling": {
+                    "type": "string",
+                    "example": "10"
+                  },
+                  "noOfInfants": {
+                    "type": "string",
+                    "example": "10"
+                  },
+                  "noOfChildren": {
+                    "type": "string",
+                    "example": "10"
+                  },
+                  "otherRequirements": {
+                    "type": "string",
+                    "example": "No"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Cab Travel updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "string",
+                      "example": "200"
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": null
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Cab Travel updated successfully"
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["🚢 Travel"],
+        "summary": "Delete Cab Travel",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cab Travel deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "string",
+                      "example": "200"
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": null
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Cab Travel deleted successfully"
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/dashboard/login": {
+      "post": {
+        "tags": ["🔑 Admin Dashboard"],
+        "summary": "Login",
+        "requestBody": {
+          "required": {
+            "email": true,
+            "password": true
+          },
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "admin@gmail.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "123456"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Admin Login successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "string",
+                      "example": "200"
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {
+                        "email": "admin@gmail.com",
+                        "role": "admin"
+                      }
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Admin Login successful"
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -5,6 +5,8 @@ import cors from "cors"
 import cookieParser from "cookie-parser"
 import bodyParser from "body-parser";
 import morgan from "morgan"
+import swaggerUi from "swagger-ui-express";
+import swaggerDocument from "./swagger.json" assert { type: "json" };
 import { connectToDb, pool as db } from "./config/db.js";
 import { user, retail_user, corporate_user, vendor, train, air, volvoBus, cab, hotel, passport, healthInsurance, travelInsurance, admin, branch, employee, cab_rate_card, hotel_rate_card, room, event_rate_card, conference_hall } from "./constants.js"
 
@@ -66,6 +68,15 @@ app.use("/api/v1/dashboard", dashboardRouter)
 app.use("/api/v1/corporate", corporateDashboardRouter)
 app.use("/api/v1/vendor", vendorDashboardRouter)
 app.use("/api/v1", miscellaneousRouter)
+
+
+// swagger routes
+app.use('/api/v1/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, {
+    swaggerOptions: {
+        docExpansion: "none",
+    },
+    customSiteTitle: "TGES API Documentation",
+}));
 
 // Home Route
 app.get("/", (req, res) => {
