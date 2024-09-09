@@ -2439,6 +2439,784 @@
           }
         }
       }
+    },
+    "/dashboard/logout": {
+      "get": {
+        "tags": ["🔑 Admin Dashboard"],
+        "summary": "Logout",
+        "responses": {
+          "200": {
+            "description": "Admin logged out successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "string",
+                      "example": "200"
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": null
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Admin logged out successfully"
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/dashboard/retail": {
+      "get": {
+        "tags": ["🔑 Admin Dashboard"],
+        "summary": "Retail Users",
+        "responses": {
+          "200": {
+            "description": "All Retail Users",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "string",
+                      "example": "200"
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {
+                        "data": [
+                          {
+                            "id": 7,
+                            "email": "test06@gmail.com",
+                            "zipCode": "150",
+                            "country": "Finland",
+                            "city": "Turku",
+                            "state": "Varsinais-Suomi",
+                            "firstName": "Patience",
+                            "secondName": "Meyers",
+                            "lastName": "Gibbs",
+                            "gender": "male",
+                            "Occupation": null,
+                            "phoneNumber1": "9898989898",
+                            "phoneNumber2": "",
+                            "residentialAddress": "Vel tempora magna do",
+                            "username": "toxawesery",
+                            "countryCode": "989",
+                            "stateCode": null,
+                            "companyName": null,
+                            "designation": null,
+                            "companyAddress": null,
+                            "howDidYouKnow": "Qui fuga Blanditiis",
+                            "preferredCurrency": null,
+                            "website": null
+                          },
+                          {
+                            "id": 6,
+                            "email": "ska2472003@gmail.com",
+                            "zipCode": "841243",
+                            "country": "India",
+                            "city": "siwan",
+                            "state": "Bihar",
+                            "firstName": "SURAJ",
+                            "secondName": "",
+                            "lastName": "SHARMA",
+                            "gender": "male",
+                            "Occupation": null,
+                            "phoneNumber1": "7455655655",
+                            "phoneNumber2": "9856895685",
+                            "residentialAddress": "kabirpur mairwa siwan",
+                            "username": "iam_not_iiconic",
+                            "countryCode": "91",
+                            "stateCode": null,
+                            "companyName": null,
+                            "designation": null,
+                            "companyAddress": null,
+                            "howDidYouKnow": "friend",
+                            "preferredCurrency": null,
+                            "website": null
+                          },
+                          {
+                            "id": 5,
+                            "email": "andrew@op",
+                            "zipCode": "841243",
+                            "country": "India",
+                            "city": "Siwan",
+                            "state": "Bihar",
+                            "firstName": "Alexa",
+                            "secondName": "SHARMA",
+                            "lastName": "Sharma",
+                            "gender": "female",
+                            "Occupation": null,
+                            "phoneNumber1": "8452052056",
+                            "phoneNumber2": "8956235623",
+                            "residentialAddress": "kabirpur mairwa siwan",
+                            "username": "iam_not_iiconic",
+                            "countryCode": "91",
+                            "stateCode": null,
+                            "companyName": null,
+                            "designation": null,
+                            "companyAddress": null,
+                            "howDidYouKnow": "gt",
+                            "preferredCurrency": null,
+                            "website": null
+                          }
+                        ],
+                        "pagination": {
+                          "total_records": 3,
+                          "total_pages": 1,
+                          "limit": 10,
+                          "current_page": 1,
+                          "next_page": null,
+                          "prev_page": null
+                        }
+                      }
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "All Retail Users retrieved successfully"
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/dashboard/corporate": {
+      "get": {
+        "tags": ["🔑 Admin Dashboard"],
+        "summary": "Corporate Users",
+        "responses": {
+          "200": {
+            "description": "All Corporate Users",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "string",
+                      "example": "200"
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {
+                        "data": [
+                          {
+                            "id": 3,
+                            "email": "alex@op.com",
+                            "zipCode": "10001",
+                            "country": "United States",
+                            "city": "New York City",
+                            "state": "New York",
+                            "industry": "Automobiles",
+                            "companyName": "abcd",
+                            "address1": "area",
+                            "address2": "51",
+                            "address3": "us",
+                            "address4": "dd",
+                            "phoneNumber": "9562389562",
+                            "countryCode": "1",
+                            "stateCode": null,
+                            "landlineNumber": "8512851",
+                            "landlineCityCode": "0000",
+                            "landlineCountryCode": "1",
+                            "contactDepartment": "Travel Desk",
+                            "contactPersonFirstName": "Alex",
+                            "contactPersonSecondName": "jekar",
+                            "contactPersonLastName": "k",
+                            "contactPersonGender": "transgender",
+                            "website": "yhoo.com"
+                          },
+                          {
+                            "id": 2,
+                            "email": "test05@gmail.com",
+                            "zipCode": "150",
+                            "country": "Finland",
+                            "city": "Turku",
+                            "state": "Varsinais-Suomi",
+                            "industry": "Automobiles",
+                            "companyName": "Wallace and Jacobs Trading",
+                            "address1": "818 North Oak Drive",
+                            "address2": "kjsdlkjdlkj",
+                            "address3": "sjdlkfjdlk",
+                            "address4": "",
+                            "phoneNumber": "9898988989",
+                            "countryCode": "898",
+                            "stateCode": null,
+                            "landlineNumber": "",
+                            "landlineCityCode": "",
+                            "landlineCountryCode": "",
+                            "contactDepartment": "Hr/Human Resources",
+                            "contactPersonFirstName": "Consectetur volupta",
+                            "contactPersonSecondName": "Voluptatem vel iste ",
+                            "contactPersonLastName": "Labore doloribus rat",
+                            "contactPersonGender": "transgender",
+                            "website": "httpswww.xacedady.biz"
+                          },
+                          {
+                            "id": 1,
+                            "email": "test1@gmail.com",
+                            "zipCode": "150",
+                            "country": "Finland",
+                            "city": "Turku",
+                            "state": "Varsinais-Suomi",
+                            "industry": "Automobiles",
+                            "companyName": "Gould Phillips Plc",
+                            "address1": "656 Hague Lane",
+                            "address2": "Veritatis lorem anim",
+                            "address3": "",
+                            "address4": "",
+                            "phoneNumber": "9989898989",
+                            "countryCode": "898",
+                            "stateCode": null,
+                            "landlineNumber": "",
+                            "landlineCityCode": "",
+                            "landlineCountryCode": "",
+                            "contactDepartment": "Hr/Human Resources",
+                            "contactPersonFirstName": "Aute nisi tempor ill",
+                            "contactPersonSecondName": "Ipsum ut numquam na",
+                            "contactPersonLastName": "Amet id atque delen",
+                            "contactPersonGender": "transgender",
+                            "website": "httpswww.torasexet.mobi"
+                          }
+                        ],
+                        "pagination": {
+                          "total_records": 3,
+                          "total_pages": 1,
+                          "limit": 10,
+                          "current_page": 1,
+                          "next_page": null,
+                          "prev_page": null
+                        }
+                      }
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "All Corporate Users retrieved successfully"
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/dashboard/vendor": {
+      "get": {
+        "tags": ["🔑 Admin Dashboard"],
+        "summary": "All Vendor Users",
+        "responses": {
+          "200": {
+            "description": "All Vendor Users retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "string",
+                      "example": "200"
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {
+                        "data": [
+                          {
+                            "id": 3,
+                            "email": "vend05@gmail.com",
+                            "zipCode": "150",
+                            "country": "Finland",
+                            "city": "Turku",
+                            "state": "Varsinais-Suomi",
+                            "areaOfWork": "Travel agents",
+                            "companyName": "Davenport and Calhoun Traders",
+                            "phoneNumber": "9898989898",
+                            "countryCode": "989",
+                            "stateCode": null,
+                            "contactPersonFirstName": "Quis dolor illo quae",
+                            "contactPersonSecondName": "Labore enim qui mole",
+                            "contactPersonLastName": "Ex et animi recusan",
+                            "contactPersonGender": "male",
+                            "landlineCityCode": "9898",
+                            "landlineCountryCode": "989",
+                            "landlineNumber": "9898989",
+                            "website": "httpswww.zyfacogiped.mobi",
+                            "address1": "80 Milton Court",
+                            "address2": "ljslfjdlkj",
+                            "address3": "lajsljdflkj",
+                            "address4": "ljslkdfjdlkjf"
+                          },
+                          {
+                            "id": 2,
+                            "email": "vendor1@vid.com",
+                            "zipCode": "10001",
+                            "country": "United States",
+                            "city": "New York City",
+                            "state": "New York",
+                            "areaOfWork": "Cab Vendor",
+                            "companyName": "abcd",
+                            "phoneNumber": "5284512485",
+                            "countryCode": "1",
+                            "stateCode": null,
+                            "contactPersonFirstName": "Vendor1",
+                            "contactPersonSecondName": "cab ",
+                            "contactPersonLastName": "Temp",
+                            "contactPersonGender": "male",
+                            "landlineCityCode": "0000",
+                            "landlineCountryCode": "1",
+                            "landlineNumber": "8585487",
+                            "website": "vendor.com",
+                            "address1": "area",
+                            "address2": "51",
+                            "address3": "fghjfgfdfdfdfdfdfdf",
+                            "address4": "dfgefghrfgthjghjhjk"
+                          },
+                          {
+                            "id": 1,
+                            "email": "surajandsharma07@gmail.com",
+                            "zipCode": "841243",
+                            "country": "India",
+                            "city": "Siwan",
+                            "state": "Bihar",
+                            "areaOfWork": "Cab Vendor",
+                            "companyName": "abcd",
+                            "phoneNumber": "9569565969",
+                            "countryCode": "91",
+                            "stateCode": null,
+                            "contactPersonFirstName": "Akgs",
+                            "contactPersonSecondName": "Skak",
+                            "contactPersonLastName": "DRFGH",
+                            "contactPersonGender": "male",
+                            "landlineCityCode": "101",
+                            "landlineCountryCode": "91",
+                            "landlineNumber": "9562398",
+                            "website": "yhoo.com",
+                            "address1": "kabirpur mairwa siwan",
+                            "address2": "",
+                            "address3": "",
+                            "address4": ""
+                          }
+                        ],
+                        "pagination": {
+                          "total_records": 3,
+                          "total_pages": 1,
+                          "limit": 10,
+                          "current_page": 1,
+                          "next_page": null,
+                          "prev_page": null
+                        }
+                      }
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "All Vendor Users retrieved successfully"
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/dashboard/train": {
+      "get": {
+        "tags": ["🔑 Admin Dashboard"],
+        "summary": "Get Train Travel Details",
+        "responses": {
+          "200": {
+            "description": "Get Train Travel Details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "string",
+                      "example": "200"
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {
+                        "data": [
+                          {
+                            "id": 12,
+                            "fullName": "Kitra Callahan",
+                            "age": 13,
+                            "dob": "2011-08-28",
+                            "gender": "Et laudantium ut au",
+                            "contactNo": "Distinctio",
+                            "email": "tipuritul@mailinator.com",
+                            "travelFrom": "Iure irure sunt minu",
+                            "travelTo": "Dolorem ut quia accu",
+                            "classOfTravel": "AC 3 Economy (3E)",
+                            "travelDate": "1996-02-18",
+                            "trainNo": "Et deleniti molestia",
+                            "timePreference": "20:09",
+                            "remarks": null
+                          },
+                          {
+                            "id": 13,
+                            "fullName": "Shaeleigh Schneider",
+                            "age": 25,
+                            "dob": "1999-03-16",
+                            "gender": "Ipsum officia id qu",
+                            "contactNo": "Atque even",
+                            "email": "nagusi@mailinator.com",
+                            "travelFrom": "Ea voluptatem Nobis",
+                            "travelTo": "Ea quis ratione dolo",
+                            "classOfTravel": "AC 3 Tier (3A)",
+                            "travelDate": "2019-10-18",
+                            "trainNo": "Nobis et perferendis",
+                            "timePreference": "11:54",
+                            "remarks": null
+                          },
+                          {
+                            "id": 14,
+                            "fullName": "Zorita Foster",
+                            "age": 23,
+                            "dob": "2001-07-19",
+                            "gender": "Aliquip eveniet sed",
+                            "contactNo": "Accusantiu",
+                            "email": "rowyso@mailinator.com",
+                            "travelFrom": "Ut voluptas optio v",
+                            "travelTo": "Modi dolores explica",
+                            "classOfTravel": "Sleeper (SL)",
+                            "travelDate": "1970-01-14",
+                            "trainNo": "Ut quasi libero in o",
+                            "timePreference": "10:02",
+                            "remarks": null
+                          }
+                        ],
+                        "pagination": {
+                          "total_records": 3,
+                          "total_pages": 1,
+                          "limit": 10,
+                          "current_page": 1,
+                          "next_page": null,
+                          "prev_page": null
+                        }
+                      }
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Get All Train Travel Details"
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/dashboard/air": {
+      "get": {
+        "tags": ["🔑 Admin Dashboard"],
+        "summary": "Get Air Travel Details",
+        "responses": {
+          "200": {
+            "description": "Get Air Travel Details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "string",
+                      "example": "200"
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {}
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Get All Air Travel Details"
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/dashboard/cab": {
+      "get": {
+        "tags": ["🔑 Admin Dashboard"],
+        "summary": "Get Cab Travel Details",
+        "responses": {
+          "200": {
+            "description": "Get Cab Travel Details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "string",
+                      "example": "200"
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {
+                        "data": [
+                          {
+                            "id": 3,
+                            "pickupCountry": "USA",
+                            "nationality": "Indian",
+                            "tourPlan": "Local",
+                            "name": "Josephine Colon",
+                            "contactNo": "Deserunt ullam ad si",
+                            "alternateContactNo": "Quos impedit occaec",
+                            "email": "coluku@mailinator.com",
+                            "cabRequiredAt": "Railway Station",
+                            "cabRequiredFor": "Local Travel",
+                            "localTravelKmsLimit": "4 Hrs & 40 Kms",
+                            "pickupDateTime": "1988-08-28T04:26",
+                            "pickupAddress": "Praesentium quo quae",
+                            "pickupLandmark": "Commodi voluptatem m",
+                            "dropDateTime": "2020-07-20T01:44",
+                            "dropAddress": "Ut veniam aliqua A",
+                            "dropLandmark": "Excepturi recusandae",
+                            "cabDuration": "12 Hrs",
+                            "noOfCabsRequired": "61",
+                            "typeOfCabRequired": "Sedan",
+                            "noOfPersonsTravelling": "48",
+                            "noOfInfants": "93",
+                            "noOfChildren": "18",
+                            "otherRequirements": "Magnam esse cupidita"
+                          },
+                          {
+                            "id": 2,
+                            "pickupCountry": "India",
+                            "nationality": "Indian",
+                            "tourPlan": "Outstation",
+                            "name": "Anjolie Mcdaniel",
+                            "contactNo": "Autem in aut quas vo",
+                            "alternateContactNo": "Minus minima amet c",
+                            "email": "tily@mailinator.com",
+                            "cabRequiredAt": "Airport",
+                            "cabRequiredFor": "Local Travel",
+                            "localTravelKmsLimit": "Full Day",
+                            "pickupDateTime": "2022-12-18T12:52",
+                            "pickupAddress": "Quibusdam fugiat min",
+                            "pickupLandmark": "Aliquip esse accusam",
+                            "dropDateTime": "1973-09-06T00:48",
+                            "dropAddress": "Exercitationem fuga",
+                            "dropLandmark": "Nostrum eaque dolor ",
+                            "cabDuration": "12 Hrs",
+                            "noOfCabsRequired": "89",
+                            "typeOfCabRequired": "SUV",
+                            "noOfPersonsTravelling": "86",
+                            "noOfInfants": "80",
+                            "noOfChildren": "17",
+                            "otherRequirements": "Minus cumque est ex "
+                          },
+                          {
+                            "id": 1,
+                            "pickupCountry": "India",
+                            "nationality": "American",
+                            "tourPlan": "Outstation",
+                            "name": "Ocean Cobb",
+                            "contactNo": "Labore eu eum rerum ",
+                            "alternateContactNo": "Repellendus Et aut ",
+                            "email": "byxyhopufu@mailinator.com",
+                            "cabRequiredAt": "Airport",
+                            "cabRequiredFor": "Local Travel",
+                            "localTravelKmsLimit": "Full Day",
+                            "pickupDateTime": "2018-04-20T16:55",
+                            "pickupAddress": "Quibusdam nihil volu",
+                            "pickupLandmark": "Nostrud architecto q",
+                            "dropDateTime": "1978-02-01T05:26",
+                            "dropAddress": "Sunt pariatur Fugia",
+                            "dropLandmark": "Quam illo suscipit m",
+                            "cabDuration": "8 Hrs",
+                            "noOfCabsRequired": "89",
+                            "typeOfCabRequired": "Sedan",
+                            "noOfPersonsTravelling": "30",
+                            "noOfInfants": "25",
+                            "noOfChildren": "51",
+                            "otherRequirements": "Aut possimus dicta "
+                          }
+                        ],
+                        "pagination": {
+                          "total_records": 3,
+                          "total_pages": 1,
+                          "limit": 10,
+                          "current_page": 1,
+                          "next_page": null,
+                          "prev_page": null
+                        }
+                      }
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Get All Cab Travel Details"
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/dashboard/bus": {
+      "get": {
+        "tags": ["🔑 Admin Dashboard"],
+        "summary": "Get Bus Travel Details",
+        "responses": {
+          "200": {
+            "description": "Get Bus Travel Details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "string",
+                      "example": "200"
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {
+                        "data": [
+                          {
+                            "id": 11,
+                            "fullName": "Kyra Shields",
+                            "age": null,
+                            "dob": "1977-08-05",
+                            "gender": "Voluptas magnam eum ",
+                            "contactNo": "Dolor magn",
+                            "email": "zabo@mailinator.com",
+                            "pickupLocation": "Repudiandae iure dol",
+                            "destination": "Esse expedita accus",
+                            "travelDate": "2020-12-30",
+                            "seatType": "Semi-Sleeper",
+                            "busNo": "Laudantium delectus"
+                          },
+                          {
+                            "id": 12,
+                            "fullName": "Raymond Aguilar",
+                            "age": null,
+                            "dob": "2011-09-08",
+                            "gender": "Dolorem corrupti ma",
+                            "contactNo": "Ipsum id ",
+                            "email": "jucihapamo@mailinator.com",
+                            "pickupLocation": "Voluptas rem dolorem",
+                            "destination": "Eos pariatur Delen",
+                            "travelDate": "2001-06-26",
+                            "seatType": "Semi-Sleeper",
+                            "busNo": "Molestiae iste offic"
+                          },
+                          {
+                            "id": 13,
+                            "fullName": "Berk Mendez",
+                            "age": null,
+                            "dob": "2001-11-03",
+                            "gender": "Perferendis exercita",
+                            "contactNo": "Commodi od",
+                            "email": "fazypuju@mailinator.com",
+                            "pickupLocation": "Rem commodo labore s",
+                            "destination": "Dignissimos iste mol",
+                            "travelDate": "1976-02-12",
+                            "seatType": "Regular",
+                            "busNo": "Qui consequatur labo"
+                          },
+                          {
+                            "id": 14,
+                            "fullName": "Faith Craft",
+                            "age": null,
+                            "dob": "1994-06-23",
+                            "gender": "Consequatur Id sit",
+                            "contactNo": "A est dolo",
+                            "email": "gilyjil@mailinator.com",
+                            "pickupLocation": "Velit et qui dolores",
+                            "destination": "Non quia quis nihil ",
+                            "travelDate": "2002-07-07",
+                            "seatType": "Semi-Sleeper",
+                            "busNo": "Eum iusto labore eiu"
+                          },
+                          {
+                            "id": 15,
+                            "fullName": "David Hamilton",
+                            "age": null,
+                            "dob": "2015-06-23",
+                            "gender": "Labore qui laborum ",
+                            "contactNo": "Sunt reru",
+                            "email": "zekecy@mailinator.com",
+                            "pickupLocation": "Debitis amet sunt ",
+                            "destination": "Rerum odio molestiae",
+                            "travelDate": "1970-03-14",
+                            "seatType": "Semi-Sleeper",
+                            "busNo": "Voluptate est in of"
+                          }
+                        ],
+                        "pagination": {
+                          "total_records": 5,
+                          "total_pages": 1,
+                          "limit": 10,
+                          "current_page": 1,
+                          "next_page": null,
+                          "prev_page": null
+                        }
+                      }
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Get All Bus Travel Details"
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 }
