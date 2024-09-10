@@ -176,13 +176,25 @@ const corporateRegister = asyncHandler(async (req, res) => {
 */
 const vendorRegister = asyncHandler(async (req, res) => {
     const reqBody = req.body || {};
-    const { areaOfWork, companyName, zipCode, country, city, state, contactPersonFirstName, contactPersonSecondName, contactPersonLastName, landlineCityCode, landlineCountryCode, contactPersonGender, phoneNumber, landlineNumber, countryCode, stateCode, email, password, website, address1, address2, address3, address4 } = reqBody;
+    const {
+        areaOfWork, companyName, zipCode, country, city, state,
+        contactPersonFirstName, contactPersonSecondName, contactPersonLastName,
+        landlineCityCode, landlineCountryCode, contactPersonGender,
+        phoneNumber, landlineNumber, countryCode, stateCode,
+        email, password, website, address1, address2, address3, address4, services
+    } = reqBody;
+
+    // Get a connection from the pool
+    const connection = await db.getConnection();
 
     try {
-        // Check for duplicate email or username
+        // Start a transaction
+        await connection.beginTransaction();
+
+        // Check for duplicate email
         const checkEmailSql = `SELECT * FROM user WHERE email = ?`;
         const emailParams = [email];
-        const [emailResult, emailFields] = await db.query(checkEmailSql, emailParams);
+        const [emailResult] = await connection.query(checkEmailSql, emailParams);
 
         if (emailResult.length > 0) {
             return res.status(409).json(
@@ -195,39 +207,19 @@ const vendorRegister = asyncHandler(async (req, res) => {
         }
 
         const companyId = generateCompanyId(companyName);
-
-        const insertUserSql = `INSERT INTO user (email, zipCode, country, city, state, password, companyId) VALUES ( ?, ?, ?, ?, ?, ?, ?)`;
+        const insertUserSql = `INSERT INTO user (email, zipCode, country, city, state, password, companyId) VALUES (?, ?, ?, ?, ?, ?, ?)`;
         const hashedPassword = await hashPassword(password);
         const userParams = [email, zipCode, country, city, state, hashedPassword, companyId];
-        const [result, fields] = await db.query(insertUserSql, userParams);
+        const [result] = await connection.query(insertUserSql, userParams);
 
         const userId = result.insertId;
 
-        const insertVendorSql = `INSERT INTO vendor (userId, areaOfWork, companyName, phoneNumber, countryCode, stateCode, landlineNumber, landlineCityCode, landlineCountryCode,contactPersonFirstName, contactPersonSecondName, contactPersonLastName, contactPersonGender, website, address1, address2, address3, address4) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-        const vendorParams = [userId, areaOfWork, companyName, phoneNumber, countryCode, stateCode, landlineNumber, landlineCityCode, landlineCountryCode, contactPersonFirstName, contactPersonSecondName, contactPersonLastName, contactPersonGender, website, address1, address2, address3, address4];
-        await db.query(insertVendorSql, vendorParams);
+        const insertVendorSql = `INSERT INTO vendor (userId, areaOfWork, companyName, phoneNumber, countryCode, stateCode, landlineNumber, landlineCityCode, landlineCountryCode, contactPersonFirstName, contactPersonSecondName, contactPersonLastName, contactPersonGender, website, address1, address2, address3, address4, services) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+        const vendorParams = [userId, areaOfWork, companyName, phoneNumber, countryCode, stateCode, landlineNumber, landlineCityCode, landlineCountryCode, contactPersonFirstName, contactPersonSecondName, contactPersonLastName, contactPersonGender, website, address1, address2, address3, address4, JSON.stringify(services)];
+        await connection.query(insertVendorSql, vendorParams);
 
-        // Send Mail
-        // try {
-        //     sendMail(
-        //         email,
-        //         "Welcome to TGES",
-        //         vendorRegisterTemplate({ companyName, address: `${address1} ${address2} ${address3} ${address4}`, city, country, state, zipCode, phoneNumber, contactPerson: `${contactPersonFirstName} ${contactPersonLastName}`, landlineNumber, email })
-        //     )
-        // } catch (error) {
-        //     console.log("Error while sending welcome email: ", error);
-        // }
-
-        // Send Mail to admin
-        // try {
-        //     sendMail(
-        //         "tges@gmail.com",
-        //         "Vendor Registration",
-        //         vendorRegisterTemplate({ companyName, address: `${address1} ${address2} ${address3} ${address4}`, city, country, state, zipCode, phoneNumber, contactPerson: `${contactPersonFirstName} ${contactPersonLastName}`, landlineNumber, email })
-        //     )
-        // } catch (error) {
-        //     console.log("Error while sending admin notification email: ", error);
-        // }
+        // Commit the transaction
+        await connection.commit();
 
         return res.status(201).json(
             new ApiResponse(
@@ -237,6 +229,8 @@ const vendorRegister = asyncHandler(async (req, res) => {
             )
         );
     } catch (error) {
+        // Rollback the transaction in case of an error
+        await connection.rollback();
         console.error('Error during user registration:', error);
         return res.status(500).json(
             new ApiResponse(
@@ -245,8 +239,11 @@ const vendorRegister = asyncHandler(async (req, res) => {
                 "An error occurred during registration"
             )
         );
+    } finally {
+        // Release the connection back to the pool
+        connection.release();
     }
-})
+});
 
 /**
  * @login
