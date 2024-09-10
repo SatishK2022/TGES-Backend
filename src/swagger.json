@@ -4233,6 +4233,354 @@
           }
         }
       }
+    },
+    "/vendor/ratecard/cab": {
+      "post": {
+        "tags": ["🧑🏻‍💻 Vendor"],
+        "summary": "Add Cab Rate Card",
+        "parameters": [
+          {
+            "name": "type",
+            "in": "query",
+            "type": "string",
+            "required": true,
+            "description": "Type of Rate Card",
+            "example": "cab"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "city": {
+                      "type": "string",
+                      "example": "Mumbai"
+                    },
+                    "vehicleType": {
+                      "type": "string",
+                      "example": "Sedan"
+                    },
+                    "airportPickupRate": {
+                      "type": "string",
+                      "example": "100"
+                    },
+                    "airportDropRate": {
+                      "type": "string",
+                      "example": "100"
+                    },
+                    "fourHourRate": {
+                      "type": "string",
+                      "example": "100"
+                    },
+                    "eightHourRate": {
+                      "type": "string",
+                      "example": "100"
+                    },
+                    "twelveHourRate": {
+                      "type": "string",
+                      "example": "100"
+                    },
+                    "extraKmRate": {
+                      "type": "string",
+                      "example": "100"
+                    },
+                    "extraHourRate": {
+                      "type": "string",
+                      "example": "100"
+                    },
+                    "nightRate": {
+                      "type": "string",
+                      "example": "100"
+                    },
+                    "outstationRate": {
+                      "type": "string",
+                      "example": "100"
+                    },
+                    "outstationExtraKmRate": {
+                      "type": "string",
+                      "example": "100"
+                    },
+                    "outstationExtraHourRate": {
+                      "type": "string",
+                      "example": "100"
+                    },
+                    "outstationNightRate": {
+                      "type": "string",
+                      "example": "100"
+                    },
+                    "rateValidFrom": {
+                      "type": "string",
+                      "example": "2022-01-01"
+                    },
+                    "rateValidTill": {
+                      "type": "string",
+                      "example": "2022-01-31"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Cab Rate Card added successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": null
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Cab Rate Card added successfully"
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["🧑🏻‍💻 Vendor"],
+        "summary": "Get Cab Rate Card Details",
+        "responses": {
+          "201": {
+            "description": "Cab rate card details fetched successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {
+                        "data": [
+                          {
+                            "id": 6,
+                            "filePath": null,
+                            "fileExists": 0,
+                            "type": "Sedan",
+                            "city": "New Delhi",
+                            "vehicleType": "Sedan",
+                            "airportPickupRate": "800",
+                            "airportDropRate": "800",
+                            "fourHourRate": "800",
+                            "eightHourRate": "1600",
+                            "twelveHourRate": "2400",
+                            "extraKmRate": "12",
+                            "extraHourRate": "200",
+                            "nightRate": "1.2",
+                            "outstationRate": "12",
+                            "outstationExtraKmRate": "12",
+                            "outstationExtraHourRate": "200",
+                            "outstationNightRate": "1.2",
+                            "rateValidFrom": "2023-01-01",
+                            "rateValidTill": "2023-12-31"
+                          },
+                          {
+                            "id": 7,
+                            "filePath": null,
+                            "fileExists": 0,
+                            "type": "SUV",
+                            "city": "New Delhi",
+                            "vehicleType": "SUV",
+                            "airportPickupRate": "1200",
+                            "airportDropRate": "1200",
+                            "fourHourRate": "1200",
+                            "eightHourRate": "2400",
+                            "twelveHourRate": "3600",
+                            "extraKmRate": "15",
+                            "extraHourRate": "250",
+                            "nightRate": "1.2",
+                            "outstationRate": "15",
+                            "outstationExtraKmRate": "15",
+                            "outstationExtraHourRate": "250",
+                            "outstationNightRate": "1.2",
+                            "rateValidFrom": "2023-01-01",
+                            "rateValidTill": "2023-12-31"
+                          }
+                        ],
+                        "pagination": {
+                          "total_records": 2,
+                          "total_pages": 1,
+                          "limit": 10,
+                          "current_page": 1,
+                          "next_page": null,
+                          "prev_page": null
+                        }
+                      }
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Cab rate card details fetched successfully"
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/vendor/ratecard/cab/{id}": {
+      "delete": {
+        "tags": ["🧑🏻‍💻 Vendor"],
+        "summary": "Update Cab Rate Card",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cab rate card deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": null
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Cab Rate Card deleted successfully"
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/vendor/ratecard/cab/upload": {
+      "post": {
+        "tags": ["🧑🏻‍💻 Vendor"],
+        "summary": "Add Cab Rate Card File",
+        "consumes": ["multipart/form-data"],
+        "parameters": [
+          {
+            "name": "cabRateCard",
+            "in": "formData",
+            "required": true,
+            "schema": {
+              "type": "file"
+            }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "type": "string",
+            "required": true,
+            "description": "Type of Rate Card",
+            "example": "cab"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cab rate card added successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": null
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Cab Rate Card added successfully"
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/vendor/ratecard/cab/download": {
+      "get": {
+        "tags": ["🧑🏻‍💻 Vendor"],
+        "summary": "Download Cab Rate Card",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "File downloaded successfully",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
     }
   }
 }
