@@ -116,6 +116,7 @@ const downloadCabRateCardFile = asyncHandler(async (req, res) => {
  */
 const addCabRateCard = asyncHandler(async (req, res) => {
     const reqBody = req.body || [];
+    const { type } = req.query || {};
 
     if (reqBody.length === 0) {
         return res.status(400).json(
@@ -146,7 +147,7 @@ const addCabRateCard = asyncHandler(async (req, res) => {
         const sql2 = 'INSERT INTO cab_rate_card (userId, type, city, vehicleType, airportPickupRate, airportDropRate, fourHourRate, eightHourRate, twelveHourRate, extraKmRate, extraHourRate, nightRate, outstationRate, outstationExtraKmRate, outstationExtraHourRate, outstationNightRate, rateValidFrom, rateValidTill) VALUES ?';
         const rateCardParams = reqBody.map((data) => [
             req.user.id,
-            data.type,
+            type,
             data.city,
             data.vehicleType,
             data.airportPickupRate,
