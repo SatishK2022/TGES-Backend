@@ -363,7 +363,7 @@ const getEmployee = asyncHandler(async (req, res) => {
 
         const employeeData = resultEmployeeInfo.map(employee => {
             const { userId, createdAt, updatedAt, ...rest } = employee;
-            const calculatedAge = calculateAge(employee.age);
+            const calculatedAge = calculateAge(employee.dob);
             return { ...rest, age: calculatedAge };
         });
 
@@ -434,7 +434,7 @@ const getBranchEmployees = asyncHandler(async (req, res) => {
 
         const employeeData = result.map(employee => {
             const { userId, branchId, createdAt, updatedAt, ...rest } = employee;
-            const calculatedAge = calculateAge(employee.age);
+            const calculatedAge = calculateAge(employee.dob);
             return { ...rest, age: calculatedAge };
         });
 
@@ -544,7 +544,7 @@ const getAllEmployees = asyncHandler(async (req, res) => {
         // Clean up employee data by removing sensitive fields
         const employeeData = resultEmployees.map(employee => {
             const { userId, createdAt, updatedAt, ...rest } = employee;
-            const calculatedAge = calculateAge(employee.age);
+            const calculatedAge = calculateAge(employee.dob);
             return { ...rest, age: calculatedAge };
         });
 

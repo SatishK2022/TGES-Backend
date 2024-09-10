@@ -3217,6 +3217,1022 @@
           }
         }
       }
+    },
+    "/corporate/branch": {
+      "post": {
+        "tags": ["💼 Corporate Dashboard"],
+        "summary": "Add Corporate Branch Details",
+        "requestBody": {
+          "required": {
+            "type": "object",
+            "properties": {
+              "userId": true,
+              "companyId": true,
+              "name": true,
+              "country": true,
+              "city": true,
+              "state": true,
+              "zipCode": true,
+              "address1": true,
+              "address2": true,
+              "countryCode": true,
+              "contactNo": true,
+              "landlineNumber": true,
+              "landlineCityCode": true,
+              "landlineCountryCode": true,
+              "email": true
+            }
+          },
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "userId": {
+                    "type": "number",
+                    "example": 1
+                  },
+                  "companyId": {
+                    "type": "string",
+                    "example": "TGES"
+                  },
+                  "name": {
+                    "type": "string",
+                    "example": "TGES"
+                  },
+                  "country": {
+                    "type": "string",
+                    "example": "India"
+                  },
+                  "city": {
+                    "type": "string",
+                    "example": "Delhi"
+                  },
+                  "state": {
+                    "type": "string",
+                    "example": "Delhi"
+                  },
+                  "zipCode": {
+                    "type": "string",
+                    "example": "123456"
+                  },
+                  "address1": {
+                    "type": "string",
+                    "example": "TGES"
+                  },
+                  "address2": {
+                    "type": "string",
+                    "example": "TGES"
+                  },
+                  "countryCode": {
+                    "type": "string",
+                    "example": "123456"
+                  },
+
+                  "landlineNumber": {
+                    "type": "string",
+                    "example": "123456"
+                  },
+                  "landlineCityCode": {
+                    "type": "string",
+                    "example": "123456"
+                  },
+                  "landlineCountryCode": {
+                    "type": "string",
+                    "example": "123456"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "accounts@corporate.com"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Corporate Branch Details added successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "string",
+                      "example": "200"
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": null
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Corporate Branch Details added successfully"
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/corporate/branch/{branchId}": {
+      "put": {
+        "tags": ["💼 Corporate Dashboard"],
+        "summary": "Update Branch Details",
+        "parameters": [
+          {
+            "name": "branchId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "DELH4481"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": {
+            "type": "object",
+            "properties": {
+              "name": true,
+              "country": true,
+              "city": true,
+              "state": true,
+              "zipCode": true,
+              "address1": true,
+              "address2": true,
+              "countryCode": true,
+              "contactNo": true,
+              "landlineNumber": true,
+              "landlineCityCode": true,
+              "landlineCountryCode": true,
+              "email": true
+            }
+          },
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "TGES"
+                  },
+                  "country": {
+                    "type": "string",
+                    "example": "India"
+                  },
+                  "city": {
+                    "type": "string",
+                    "example": "Delhi"
+                  },
+                  "state": {
+                    "type": "string",
+                    "example": "Delhi"
+                  },
+                  "zipCode": {
+                    "type": "string",
+                    "example": "123456"
+                  },
+                  "address1": {
+                    "type": "string",
+                    "example": "TGES"
+                  },
+                  "address2": {
+                    "type": "string",
+                    "example": "TGES"
+                  },
+                  "countryCode": {
+                    "type": "string",
+                    "example": "123456"
+                  },
+
+                  "landlineNumber": {
+                    "type": "string",
+                    "example": "123456"
+                  },
+                  "landlineCityCode": {
+                    "type": "string",
+                    "example": "123456"
+                  },
+                  "landlineCountryCode": {
+                    "type": "string",
+                    "example": "123456"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "accounts@corporate.com"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Corporate Branch Details updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "string",
+                      "example": "200"
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": null
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Corporate Branch Details updated successfully"
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["💼 Corporate Dashboard"],
+        "summary": "Delete Corporate Branch",
+        "parameters": [
+          {
+            "name": "branchId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "DELH4481"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Corporate Branch Deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "string",
+                      "example": "200"
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": null
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Corporate Branch Deleted successfully"
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/corporate/branch/all": {
+      "get": {
+        "tags": ["💼 Corporate Dashboard"],
+        "summary": "Get All Corporate Branch Details",
+        "responses": {
+          "200": {
+            "description": "Get All Corporate Branch Details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "string",
+                      "example": "200"
+                    },
+                    "data": {
+                      "type": "array",
+                      "example": [
+                        {
+                          "branchId": "MUMB2570",
+                          "companyId": "HEAL2094",
+                          "name": "Mumbai",
+                          "country": "United States",
+                          "city": "San Francisco",
+                          "state": "California",
+                          "zipCode": "94105",
+                          "address1": "123 Market St",
+                          "address2": "Apt 4B",
+                          "countryCode": "US",
+                          "contactNo": "+1-415-555-0199",
+                          "landlineNumber": "+1-415-555-0123",
+                          "landlineCityCode": "415",
+                          "landlineCountryCode": "1",
+                          "email": "johndoe@example.com"
+                        },
+                        {
+                          "branchId": "MUMB1922",
+                          "companyId": "HEAL2094",
+                          "name": "Mumbai",
+                          "country": "United States",
+                          "city": "San Francisco",
+                          "state": "California",
+                          "zipCode": "94105",
+                          "address1": "123 Market St",
+                          "address2": "Apt 4B",
+                          "countryCode": "US",
+                          "contactNo": "+1-415-555-0199",
+                          "landlineNumber": "+1-415-555-0123",
+                          "landlineCityCode": "415",
+                          "landlineCountryCode": "1",
+                          "email": "johndoe@example.com"
+                        },
+                        {
+                          "branchId": "MUMB1069",
+                          "companyId": "HEAL2094",
+                          "name": "Mumbai",
+                          "country": "United States",
+                          "city": "San Francisco",
+                          "state": "California",
+                          "zipCode": "94105",
+                          "address1": "123 Market St",
+                          "address2": "Apt 4B",
+                          "countryCode": "US",
+                          "contactNo": "+1-415-555-0199",
+                          "landlineNumber": "+1-415-555-0123",
+                          "landlineCityCode": "415",
+                          "landlineCountryCode": "1",
+                          "email": "johndoe@example.com"
+                        },
+                        {
+                          "branchId": "MUMB1774",
+                          "companyId": "HEAL2094",
+                          "name": "Mumbai",
+                          "country": "United States",
+                          "city": "San Francisco",
+                          "state": "California",
+                          "zipCode": "94105",
+                          "address1": "123 Market St",
+                          "address2": "Apt 4B",
+                          "countryCode": "US",
+                          "contactNo": "+1-415-555-0199",
+                          "landlineNumber": "+1-415-555-0123",
+                          "landlineCityCode": "415",
+                          "landlineCountryCode": "1",
+                          "email": "johndoe@example.com"
+                        },
+                        {
+                          "branchId": "MUMB8494",
+                          "companyId": "HEAL2094",
+                          "name": "Mumbai",
+                          "country": "United States",
+                          "city": "San Francisco",
+                          "state": "California",
+                          "zipCode": "94105",
+                          "address1": "123 Market St",
+                          "address2": "Apt 4B",
+                          "countryCode": "US",
+                          "contactNo": "+1-415-555-0199",
+                          "landlineNumber": "+1-415-555-0123",
+                          "landlineCityCode": "415",
+                          "landlineCountryCode": "1",
+                          "email": "johndoe@example.com"
+                        }
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Get All Corporate Branch Details"
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/corporate/employee/{branchId}": {
+      "post": {
+        "tags": ["💼 Corporate Dashboard"],
+        "summary": "Add Employee to Branch",
+        "parameters": [
+          {
+            "name": "branchId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "DELH4481"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": {
+            "userId": true,
+            "employeeId": true,
+            "name": true,
+            "gender": true,
+            "dob": true,
+            "zipCode": true,
+            "country": true,
+            "city": true,
+            "state": true,
+            "email": true,
+            "password": true,
+            "countryCode": true,
+            "contactNo": true,
+            "department": true,
+            "position": true
+          },
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "employeeId": {
+                    "type": "string",
+                    "example": "HEAL2094"
+                  },
+                  "name": {
+                    "type": "string",
+                    "example": "John Doe"
+                  },
+                  "gender": {
+                    "type": "string",
+                    "example": "Male"
+                  },
+                  "dob": {
+                    "type": "string",
+                    "example": "1990-01-01"
+                  },
+                  "zipCode": {
+                    "type": "string",
+                    "example": "94105"
+                  },
+                  "country": {
+                    "type": "string",
+                    "example": "India"
+                  },
+                  "city": {
+                    "type": "string",
+                    "example": "San Francisco"
+                  },
+                  "state": {
+                    "type": "string",
+                    "example": "California"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "johndoe@example.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "password"
+                  },
+                  "countryCode": {
+                    "type": "string",
+                    "example": "1"
+                  },
+                  "contactNo": {
+                    "type": "string",
+                    "example": "1234567890"
+                  },
+                  "department": {
+                    "type": "string",
+                    "example": "HR"
+                  },
+                  "position": {
+                    "type": "string",
+                    "example": "Manager"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Employee added successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": null
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Employee added successfully"
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["💼 Corporate Dashboard"],
+        "summary": "Get All Branch Employees",
+        "parameters": [
+          {
+            "name": "branchId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "DELH4481"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get All Branch Employees Details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {
+                        "data": [
+                          {
+                            "id": 3,
+                            "employeeId": "E12347",
+                            "name": "John Doe",
+                            "gender": "Male",
+                            "dob": "1985-06-15",
+                            "age": 39,
+                            "zipCode": "10001",
+                            "country": "United States",
+                            "city": "New York",
+                            "state": "New York",
+                            "email": "john.doe@company.com",
+                            "password": "securepassword123",
+                            "countryCode": "US",
+                            "contactNo": "+1-800-555-0123",
+                            "department": "IT",
+                            "position": "Software Engineer"
+                          },
+                          {
+                            "id": 2,
+                            "employeeId": "E12346",
+                            "name": "John Doe",
+                            "gender": "Male",
+                            "dob": "1985-06-15",
+                            "age": 39,
+                            "zipCode": "10001",
+                            "country": "United States",
+                            "city": "New York",
+                            "state": "New York",
+                            "email": "john.doe@company.com",
+                            "password": "securepassword123",
+                            "countryCode": "US",
+                            "contactNo": "+1-800-555-0123",
+                            "department": "IT",
+                            "position": "Software Engineer"
+                          },
+                          {
+                            "id": 1,
+                            "employeeId": "E12345",
+                            "name": "John Doe",
+                            "gender": "Male",
+                            "dob": "1985-06-15",
+                            "age": 39,
+                            "zipCode": "10001",
+                            "country": "United States",
+                            "city": "New York",
+                            "state": "New York",
+                            "email": "john.doe@company.com",
+                            "password": "securepassword123",
+                            "countryCode": "US",
+                            "contactNo": "+1-800-555-0123",
+                            "department": "IT",
+                            "position": "Software Engineer"
+                          }
+                        ],
+                        "pagination": {
+                          "total_records": 3,
+                          "total_pages": 1,
+                          "limit": 10,
+                          "current_page": 1,
+                          "next_page": null,
+                          "prev_page": null
+                        }
+                      }
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "All Branch Employees Details fetched successfully"
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/corporate/employee/{employeeId}": {
+      "put": {
+        "tags": ["💼 Corporate Dashboard"],
+        "summary": "Update Employee",
+        "parameters": [
+          {
+            "name": "employeeId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "E12345"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": {
+            "userId": true,
+            "employeeId": true,
+            "name": true,
+            "gender": true,
+            "dob": true,
+            "zipCode": true,
+            "country": true,
+            "city": true,
+            "state": true,
+            "email": true,
+            "password": true,
+            "countryCode": true,
+            "contactNo": true,
+            "department": true,
+            "position": true
+          },
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "employeeId": {
+                    "type": "string",
+                    "example": "HEAL2094"
+                  },
+                  "name": {
+                    "type": "string",
+                    "example": "John Doe"
+                  },
+                  "gender": {
+                    "type": "string",
+                    "example": "Male"
+                  },
+                  "dob": {
+                    "type": "string",
+                    "example": "1990-01-01"
+                  },
+                  "zipCode": {
+                    "type": "string",
+                    "example": "94105"
+                  },
+                  "country": {
+                    "type": "string",
+                    "example": "India"
+                  },
+                  "city": {
+                    "type": "string",
+                    "example": "San Francisco"
+                  },
+                  "state": {
+                    "type": "string",
+                    "example": "California"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "johndoe@example.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "password"
+                  },
+                  "countryCode": {
+                    "type": "string",
+                    "example": "1"
+                  },
+                  "contactNo": {
+                    "type": "string",
+                    "example": "1234567890"
+                  },
+                  "department": {
+                    "type": "string",
+                    "example": "HR"
+                  },
+                  "position": {
+                    "type": "string",
+                    "example": "Manager"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Employee updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "string",
+                      "example": "200"
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": null
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Employee updated successfully"
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["💼 Corporate Dashboard"],
+        "summary": "Delete Employee",
+        "parameters": [
+          {
+            "name": "employeeId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "E12345"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Employee deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "string",
+                      "example": "200"
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": null
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Employee deleted successfully"
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/corporate/employee": {
+      "get": {
+        "tags": ["💼 Corporate Dashboard"],
+        "summary": "Get Employee",
+        "requestBody": {
+          "required": {
+            "employeeId": true,
+            "companyId": true
+          },
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "employeeId": {
+                    "type": "string",
+                    "example": "E12347"
+                  },
+                  "companyId": {
+                    "type": "string",
+                    "example": "HEAL2094"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Employee fetched successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "string",
+                      "example": "200"
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": [
+                        {
+                          "id": 3,
+                          "branchId": "MUMB2570",
+                          "employeeId": "E12347",
+                          "name": "John Doe",
+                          "gender": "Male",
+                          "dob": "1985-06-15",
+                          "age": 39,
+                          "zipCode": "10001",
+                          "country": "United States",
+                          "city": "New York",
+                          "state": "New York",
+                          "email": "john.doe@company.com",
+                          "password": "securepassword123",
+                          "countryCode": "US",
+                          "contactNo": "+1-800-555-0123",
+                          "department": "IT",
+                          "position": "Software Engineer"
+                        }
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Employee fetched successfully"
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/corporate/employees": {
+      "get": {
+        "tags": ["💼 Corporate Dashboard"],
+        "summary": "Get All Employees",
+        "responses": {
+          "200": {
+            "description": "Employees fetched successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "string",
+                      "example": "200"
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {
+                        "data": [
+                          {
+                            "id": 3,
+                            "branchId": "MUMB2570",
+                            "employeeId": "E12347",
+                            "name": "John Doe",
+                            "gender": "Male",
+                            "dob": "1985-06-15",
+                            "age": 39,
+                            "zipCode": "10001",
+                            "country": "United States",
+                            "city": "New York",
+                            "state": "New York",
+                            "email": "john.doe@company.com",
+                            "password": "securepassword123",
+                            "countryCode": "US",
+                            "contactNo": "+1-800-555-0123",
+                            "department": "IT",
+                            "position": "Software Engineer"
+                          },
+                          {
+                            "id": 2,
+                            "branchId": "MUMB2570",
+                            "employeeId": "E12346",
+                            "name": "John Doe",
+                            "gender": "Male",
+                            "dob": "1985-06-15",
+                            "age": 39,
+                            "zipCode": "10001",
+                            "country": "United States",
+                            "city": "New York",
+                            "state": "New York",
+                            "email": "john.doe@company.com",
+                            "password": "securepassword123",
+                            "countryCode": "US",
+                            "contactNo": "+1-800-555-0123",
+                            "department": "IT",
+                            "position": "Software Engineer"
+                          },
+                          {
+                            "id": 1,
+                            "branchId": "MUMB2570",
+                            "employeeId": "E12345",
+                            "name": "John Doe",
+                            "gender": "Male",
+                            "dob": "1985-06-15",
+                            "age": 39,
+                            "zipCode": "10001",
+                            "country": "United States",
+                            "city": "New York",
+                            "state": "New York",
+                            "email": "john.doe@company.com",
+                            "password": "securepassword123",
+                            "countryCode": "US",
+                            "contactNo": "+1-800-555-0123",
+                            "department": "IT",
+                            "position": "Software Engineer"
+                          }
+                        ],
+                        "pagination": {
+                          "total_records": 3,
+                          "total_pages": 1,
+                          "limit": 10,
+                          "current_page": 1,
+                          "next_page": null,
+                          "prev_page": null
+                        }
+                      }
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Employees fetched successfully"
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 }
