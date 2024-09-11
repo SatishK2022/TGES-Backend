@@ -3,6 +3,68 @@ import ApiResponse from "../utils/ApiResponse.js";
 import { pool as db } from "../config/db.js";
 import fs from 'fs';
 
+/**
+ * @updateProfile
+ * @params req, res
+ * @Description : This function is used to update vendor user data in the 'user' table of the 'tges' database using the MySQL module
+ */
+const updateProfile = asyncHandler(async (req, res) => {
+    const { user } = req;
+    const reqBody = req.body || {};
+    const { zipCode, country, city, state, areaOfWork, companyName, phoneNumber, countryCode, stateCode, contactPersonFirstName, contactPersonSecondName, contactPersonLastName, contactPersonGender, landlineCityCode, landlineCountryCode, landlineNumber, website, address1, address2, address3, address4, services } = reqBody;
+
+    const connection = await db.getConnection();
+
+    try {
+        const sql = `SELECT * FROM user WHERE id = ?`;
+        const params = [user.id];
+        const [result, fields] = await connection.query(sql, params);
+
+        if (result.length === 0) {
+            return res.status(404).json(
+                new ApiResponse(
+                    404,
+                    null,
+                    "User not found"
+                )
+            );
+        }
+
+        await connection.beginTransaction();
+        const sql1 = `UPDATE user SET zipCode = ?, country = ?, city = ?, state = ? WHERE id = ?`;
+        const params1 = [zipCode, country, city, state, user.id];
+        await connection.query(sql1, params1);
+
+        const servicesString = JSON.stringify(services);
+
+        const sql2 = `UPDATE vendor SET areaOfWork = ?, companyName = ?, phoneNumber = ?, countryCode = ?, stateCode = ?, contactPersonFirstName = ?, contactPersonSecondName = ?, contactPersonLastName = ?, contactPersonGender = ?, landlineCityCode = ?, landlineCountryCode = ?, landlineNumber = ?, website = ?, address1 = ?, address2 = ?, address3 = ?, address4 = ?, services = ? WHERE userId = ?`;
+        const params2 = [areaOfWork, companyName, phoneNumber, countryCode, stateCode, contactPersonFirstName, contactPersonSecondName, contactPersonLastName, contactPersonGender, landlineCityCode, landlineCountryCode, landlineNumber, website, address1, address2, address3, address4, servicesString, user.id];
+        await connection.query(sql2, params2);
+
+        await connection.commit();
+
+        return res.status(200).json(
+            new ApiResponse(
+                200,
+                null,
+                "Profile updated successfully"
+            )
+        );
+    } catch (error) {
+        await connection.rollback();
+        console.error("Error while updating vendor profile:", error);
+        return res.status(500).json(
+            new ApiResponse(
+                500,
+                null,
+                "Error while updating vendor profile"
+            )
+        );
+    } finally {
+        // Release the connection
+        connection.release();
+    }
+})
 
 // Cab Rate Card
 /**
@@ -1538,6 +1600,7 @@ const getEventRateCardDetails = asyncHandler(async (req, res) => {
 });
 
 export {
+    updateProfile,
     addCabRateCardFile,
     downloadCabRateCardFile,
     getCabRateCardDetails,

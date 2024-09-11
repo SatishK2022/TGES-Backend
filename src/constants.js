@@ -30,7 +30,7 @@ export const retail_user = `CREATE TABLE IF NOT EXISTS retail_user (
     secondName VARCHAR(255),
     lastName VARCHAR(255) NOT NULL,
     gender VARCHAR(255) NOT NULL,
-    Occupation VARCHAR(255),
+    occupation VARCHAR(255),
     phoneNumber1 VARCHAR(255) NOT NULL,
     phoneNumber2 VARCHAR(255),
     residentialAddress VARCHAR(255),

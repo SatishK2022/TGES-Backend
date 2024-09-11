@@ -1,8 +1,12 @@
 import express from "express";
 import { isLoggedIn } from "../middlewares/auth.middleware.js";
-import { addCabRateCard, addCabRateCardFile, addHotelRateCard, addHotelRateCardFile, deleteCabRateCard, deleteHotelRateCard, downloadCabRateCardFile, downloadHotelRateCardFile, getCabRateCardDetails, getHotelRateCardDetails, updateCabRateCard, updateHotelRateCard } from "../controller/vendorDashboard.controller.js";
+import { addCabRateCard, addCabRateCardFile, addHotelRateCard, addHotelRateCardFile, deleteCabRateCard, deleteHotelRateCard, downloadCabRateCardFile, downloadHotelRateCardFile, getCabRateCardDetails, getHotelRateCardDetails, updateCabRateCard, updateHotelRateCard, updateProfile } from "../controller/vendorDashboard.controller.js";
 import { checkFileExists, checkRateCardExists, upload } from "../middlewares/multer.middleware.js";
 const router = express.Router();
+
+router
+    .route("/update-profile")
+    .post(isLoggedIn, updateProfile);
 
 // Cab Rate Card
 router

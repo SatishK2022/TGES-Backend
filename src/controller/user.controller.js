@@ -606,6 +606,119 @@ const logout = asyncHandler(async (req, res) => {
         );
 })
 
+/**
+ * @profile
+ * @params req, res
+ * @Description : This function is used to get the user profile.
+ */
+const profile = asyncHandler(async (req, res) => {
+    const { user } = req;
+
+    console.log(user)
+
+    try {
+        const sql = `SELECT * FROM user WHERE id = ?`;
+        const params = [user.id];
+        const [users, usersField] = await db.query(sql, params);
+
+        console.log(users)
+
+        if (users.length === 0) {
+            return res.status(404).json(
+                new ApiResponse(
+                    404,
+                    null,
+                    "User not found"
+                )
+            );
+        }
+
+        const sql2 = `SELECT user.id, user.email, user.zipCode, user.country, user.city, user.state, ${users[0].userType === RETAIL_TYPE_NAME ? "retail_user.*" : users[0].userType === CORPORATE_TYPE_NAME ? "corporate_user.*" : users[0].userType === VENDOR_TYPE_NAME ? "vendor.*" : ""} FROM ${users[0].userType === RETAIL_TYPE_NAME ? "retail_user" : users[0].userType === CORPORATE_TYPE_NAME ? "corporate_user" : users[0].userType === VENDOR_TYPE_NAME ? "vendor" : ""} INNER JOIN user ON ${users[0].userType === RETAIL_TYPE_NAME ? "retail_user.userId" : users[0].userType === CORPORATE_TYPE_NAME ? "corporate_user.userId" : users[0].userType === VENDOR_TYPE_NAME ? "vendor.userId" : ""} = user.id WHERE user.id = ?`;
+        const params2 = [user.id];
+        const [result, resultField] = await db.query(sql2, params);
+
+        const { userId, createdAt, updatedAt, ...cleanedResult } = result[0];
+
+        return res.status(200).json(
+            new ApiResponse(
+                200,
+                cleanedResult,
+                "Profile fetched successfully"
+            )
+        );
+    } catch (error) {
+        console.error("Error while getting profile: ", error);
+        return res.status(500).json(
+            new ApiResponse(
+                500,
+                null,
+                "Error while getting profile"
+            )
+        );
+    }
+})
+
+/**
+ * @updateRetailProfile
+ * @params req, res
+ * @Description : This function is used to update the user profile.
+ */
+const updateRetailProfile = asyncHandler(async (req, res) => {
+    const { user } = req;
+    const reqBody = req.body || {};
+    const { zipCode, country, city, state, firstName, secondName, lastName, gender, occupation, phoneNumber1, phoneNumber2, residentialAddress, countryCode, stateCode, companyName, designation, companyAddress, howDidYouKnow, preferredCurrency, website } = reqBody;
+
+    const connection = await db.getConnection();
+
+    try {
+        const sql = `SELECT * FROM user WHERE id = ?`;
+        const params = [user.id];
+        const [result, fields] = await connection.query(sql, params);
+
+        if (result.length === 0) {
+            return res.status(404).json(
+                new ApiResponse(
+                    404,
+                    null,
+                    "User not found"
+                )
+            );
+        }
+
+        await connection.beginTransaction();
+
+        const sql1 = `UPDATE user SET zipCode = ?, country = ?, city = ?, state = ? WHERE id = ?`;
+        const params1 = [zipCode, country, city, state, user.id];
+        await connection.query(sql1, params1);
+
+        const sql2 = `UPDATE retail_user SET firstName = ?, secondName = ?, lastName = ?, gender = ?, occupation = ?, phoneNumber1 = ?, phoneNumber2 = ?, residentialAddress = ?, countryCode = ?, stateCode = ?, companyName = ?, designation = ?, companyAddress = ?, howDidYouKnow = ?, preferredCurrency = ?, website = ? WHERE userId = ?`;
+        const params2 = [firstName, secondName, lastName, gender, occupation, phoneNumber1, phoneNumber2, residentialAddress, countryCode, stateCode, companyName, designation, companyAddress, howDidYouKnow, preferredCurrency, website, user.id];
+        await connection.query(sql2, params2);
+
+
+        await connection.commit();
+        return res.status(200).json(
+            new ApiResponse(
+                200,
+                null,
+                "Profile updated successfully"
+            )
+        );
+    } catch (error) {
+        await connection.rollback();
+        console.error("Error while updating retail profile: ", error);
+        return res.status(500).json(
+            new ApiResponse(
+                500,
+                null,
+                "Error while updating retail profile"
+            )
+        );
+    } finally {
+        connection.release();
+    }
+})
+
 export {
     corporateRegister,
     retailRegister,
@@ -614,5 +727,7 @@ export {
     forgotPassword,
     verifyOtp,
     resetPassword,
-    logout
+    logout,
+    profile,
+    updateRetailProfile
 }
