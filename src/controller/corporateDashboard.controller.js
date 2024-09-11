@@ -3,6 +3,66 @@ import ApiResponse from "../utils/ApiResponse.js";
 import { pool as db } from "../config/db.js";
 import { calculateAge, generateBranchId } from "../utils/helper.js";
 
+/**
+ * @updateProfile
+ * @params req, res
+ * @Description : This function is used to update corporate user data in the 'user' table of the 'tges' database using the MySQL module
+ */
+const updateProfile = asyncHandler(async (req, res) => {
+    const {user} = req;
+    const reqBody = req.body || {};
+    const { zipCode, country, city, state, industry, companyName, address1, address2, address3, address4, phoneNumber, countryCode, stateCode, landlineNumber, landlineCityCode, landlineCountryCode, contactDepartment, contactPersonFirstName, contactPersonSecondName, contactPersonLastName, contactPersonGender, website } = reqBody;
+
+    const connection = await db.getConnection();
+
+    try {
+        const sql = `SELECT * FROM user WHERE id = ?`;
+        const params = [user.id];
+        const [result, fields] = await connection.query(sql, params);
+
+        if (result.length === 0) {
+            return res.status(404).json(
+                new ApiResponse(
+                    404,
+                    null,
+                    "User not found"
+                )
+            );
+        }
+
+        await connection.beginTransaction();
+
+        const sql1 = `UPDATE user SET zipCode = ?, country = ?, city = ?, state = ? WHERE id = ?`;
+        const params1 = [zipCode, country, city, state, user.id];
+        await connection.query(sql1, params1);
+
+        const sql2 = `UPDATE corporate_user SET industry = ?, companyName = ?, address1 = ?, address2 = ?, address3 = ?, address4 = ?, phoneNumber = ?, countryCode = ?, stateCode = ?, landlineNumber = ?, landlineCityCode = ?, landlineCountryCode = ?, contactDepartment = ?, contactPersonFirstName = ?, contactPersonSecondName = ?, contactPersonLastName = ?, contactPersonGender = ?, website = ? WHERE userId = ?`;
+        const params2 = [industry, companyName, address1, address2, address3, address4, phoneNumber, countryCode, stateCode, landlineNumber, landlineCityCode, landlineCountryCode, contactDepartment, contactPersonFirstName, contactPersonSecondName, contactPersonLastName, contactPersonGender, website, user.id];
+        await connection.query(sql2, params2);
+
+        await connection.commit();
+
+        return res.status(200).json(
+            new ApiResponse(
+                200,
+                null,
+                "Profile updated successfully"
+            )
+        );
+    } catch (error) {
+        await connection.rollback();
+        console.error("Error while updating corporate profile:", error);
+        return res.status(500).json(
+            new ApiResponse(
+                500,
+                null,
+                "Error while updating corporate profile"
+            )
+        );
+    } finally {
+        connection.release();
+    }
+})
 
 /**
  * @addBranch
@@ -579,6 +639,7 @@ const getAllEmployees = asyncHandler(async (req, res) => {
 });
 
 export {
+    updateProfile,
     addBranch,
     updateBranch,
     deleteBranch,

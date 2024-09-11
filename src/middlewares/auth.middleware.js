@@ -43,7 +43,8 @@ const isLoggedIn = asyncHandler(async (req, res, next) => {
             )
         }
 
-        req.user = result[0];
+        const { password, ...others } = result[0];
+        req.user = others;
         next();
     } catch (error) {
         console.log(error)

@@ -1,7 +1,11 @@
 import express from "express";
 import { isLoggedIn } from "../middlewares/auth.middleware.js";
-import { addBranch, addEmployee, deleteBranch, deleteEmployee, getAllBranches, getAllEmployees, getBranchEmployees, getEmployee, updateBranch, updateEmployee } from "../controller/corporateDashboard.controller.js";
+import { addBranch, addEmployee, deleteBranch, deleteEmployee, getAllBranches, getAllEmployees, getBranchEmployees, getEmployee, updateBranch, updateEmployee, updateProfile } from "../controller/corporateDashboard.controller.js";
 const router = express.Router();
+
+router
+    .route("/update-profile")
+    .post(isLoggedIn, updateProfile);
 
 router
     .route("/branch")

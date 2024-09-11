@@ -17,6 +17,7 @@ export const user = `CREATE TABLE IF NOT EXISTS user (
     city VARCHAR(255) NOT NULL,
     state VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
+    userType VARCHAR(255) NOT NULL,
     otp VARCHAR(6),
     otpExpires DATETIME
 )`;
@@ -29,7 +30,7 @@ export const retail_user = `CREATE TABLE IF NOT EXISTS retail_user (
     secondName VARCHAR(255),
     lastName VARCHAR(255) NOT NULL,
     gender VARCHAR(255) NOT NULL,
-    Occupation VARCHAR(255),
+    occupation VARCHAR(255),
     phoneNumber1 VARCHAR(255) NOT NULL,
     phoneNumber2 VARCHAR(255),
     residentialAddress VARCHAR(255),
@@ -443,7 +444,7 @@ export const conference_hall = `CREATE TABLE IF NOT EXISTS conference_hall (
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 )`
 
-export const log_messages = `CREATE TABLE IF NOT EXISTS log_messages (
+export const log_messages = `CREATE TABLE IF NOT EXISTS logs (
     id INT AUTO_INCREMENT PRIMARY KEY,
     userId INT NOT NULL,
     action VARCHAR(255) NOT NULL,
