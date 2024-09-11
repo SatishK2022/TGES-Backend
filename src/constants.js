@@ -443,6 +443,15 @@ export const conference_hall = `CREATE TABLE IF NOT EXISTS conference_hall (
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 )`
 
+export const log_messages = `CREATE TABLE IF NOT EXISTS log_messages (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    userId INT NOT NULL,
+    action VARCHAR(255) NOT NULL,
+    userType VARCHAR(255) NOT NULL,
+    message VARCHAR(255) NOT NULL,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)`
+
 export const RETAIL_TYPE_NAME = "VCkT1O2TS3ccRwByXW"
 export const CORPORATE_TYPE_NAME = "Q5UZcJ9Z5RnXb5hJy"
 export const VENDOR_TYPE_NAME = "G4Jt5Fw9U8VvIv3z"

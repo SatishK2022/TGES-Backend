@@ -1024,6 +1024,59 @@ const getAllCabRateCard = asyncHandler(async (req, res) => {
     }
 });
 
+const getLogMessages = asyncHandler(async (req, res) => {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    try {
+        const sql = `SELECT SQL_CALC_FOUND_ROWS * FROM log_messages ORDER BY createdAt DESC LIMIT ? OFFSET ?`;
+        const params = [limit, skip];
+        const [result, fields] = await db.query(sql, params);
+
+        if (result.length === 0) {
+            return res.status(404).json(
+                new ApiResponse(
+                    200,
+                    null,
+                    "No log messages found"
+                )
+            )
+        }
+
+        const totalCountSql = `SELECT FOUND_ROWS() as count`;
+        const [totalCountResult] = await db.query(totalCountSql);
+        const totalCount = totalCountResult[0].count;
+
+        return res.status(200).json(
+            new ApiResponse(
+                200,
+                {
+                    data: result,
+                    pagination: {
+                        total_records: totalCount,
+                        total_pages: Math.ceil(totalCount / limit),
+                        limit: limit,
+                        current_page: page,
+                        next_page: page < Math.ceil(totalCount / limit) ? page + 1 : null,
+                        prev_page: page > 1 ? page - 1 : null
+                    }
+                },
+                "Log messages fetched successfully"
+            )
+        )
+    } catch (error) {
+        console.log("Error getting log messages:", error);
+        return res.status(500).json(
+            new ApiResponse(
+                500,
+                null,
+                "An error occurred while getting log messages"
+            )
+        )
+    }
+})
+
 export {
     registerAdmin,
     loginAdmin,
@@ -1039,5 +1092,6 @@ export {
     getAllPassportDetails,
     getAllTravelInsurance,
     getAllHealthInsurance,
-    getAllCabRateCard
+    getAllCabRateCard,
+    getLogMessages
 }

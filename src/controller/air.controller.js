@@ -46,6 +46,11 @@ const createAirTravel = asyncHandler(async (req, res) => {
 
         const [insertResult, insertFields] = await db.query(insertAir, [airParams]);
 
+        // Logs
+        const logs = `INSERT INTO logs (userId, action, userType, message) VALUES (?, ?, ?, ?)`;
+        const logsParams = [req.user.id, "CREATE", "ADMIN", "Created an air travel"];
+        await db.query(logs, logsParams);
+
         const emailContent = reqBody.map(data => {
             const age = calculateAge(data.dob);
             return {
@@ -142,6 +147,11 @@ const updateAirTravel = asyncHandler(async (req, res) => {
 
         const [updateResult, updateFields] = await db.query(updateSql, updateParams);
 
+        // Logs
+        const logs = `INSERT INTO logs (userId, action, userType, message) VALUES (?, ?, ?, ?)`;
+        const logsParams = [req.user.id, "UPDATE", req.user.userType, "Updated an air travel"];
+        await db.query(logs, logsParams);
+
         return res.status(200).json(
             new ApiResponse(
                 200,
@@ -187,6 +197,11 @@ const deleteAirTravel = asyncHandler(async (req, res) => {
         const deleteSql = 'DELETE FROM air WHERE id = ?';
         const deleteParams = [id];
         const [deleteResult, deleteFields] = await db.query(deleteSql, deleteParams);
+
+        // Logs
+        const logs = `INSERT INTO logs (userId, action, userType, message) VALUES (?, ?, ?, ?)`;
+        const logsParams = [req.user.id, "DELETE", req.user.userType, "Deleted an air travel"];
+        await db.query(logs, logsParams);
 
         return res.status(200).json(
             new ApiResponse(

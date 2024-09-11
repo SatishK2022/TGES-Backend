@@ -20,6 +20,11 @@ const createTravelInsurance = asyncHandler(async (req, res) => {
 
         const [insertResult, insertFields] = await db.query(travelInsurance, travelInsuranceParams);
 
+        // Logs
+        const logs = `INSERT INTO logs (userId, action, userType, message) VALUES (?, ?, ?, ?)`;
+        const logsParams = [req.user.id, "CREATE", req.user.userType, "Created a travel insurance"];
+        await db.query(logs, logsParams);
+
         // Send Mail
         // try {
         //     sendMail(
@@ -79,6 +84,11 @@ const updateTravelInsurance = asyncHandler(async (req, res) => {
         const updateParams = [name, gender, dob, address, contactNo, email, tripType, startDate, endDate, preExistingDisease, diseaseName, smoker, passportNo, dateOfIssue, dateOfExpiry, nomineeName, nomineeGender, nomineeRelationship, id];
         const [updateResult] = await db.query(updateSql, updateParams);
 
+        // Logs
+        const logs = `INSERT INTO logs (userId, action, userType, message) VALUES (?, ?, ?, ?)`;
+        const logsParams = [req.user.id, "UPDATE", req.user.userType, "Updated a travel insurance"];
+        await db.query(logs, logsParams);
+
         return res.status(200).json(
             new ApiResponse(
                 200,
@@ -124,6 +134,11 @@ const deleteTravelInsurance = asyncHandler(async (req, res) => {
         const sqlDelete = 'DELETE FROM travelInsurance WHERE id = ?';
         const paramsDelete = [id];
         const [deleteResult] = await db.query(sqlDelete, paramsDelete);
+
+        // Logs
+        const logs = `INSERT INTO logs (userId, action, userType, message) VALUES (?, ?, ?, ?)`;
+        const logsParams = [req.user.id, "DELETE", req.user.userType, "Deleted a travel insurance"];
+        await db.query(logs, logsParams);
 
         return res.status(200).json(
             new ApiResponse(

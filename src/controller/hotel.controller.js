@@ -30,6 +30,11 @@ const createHotelBooking = asyncHandler(async (req, res) => {
         const hotelParams = [req.user.id, nationality, name, contactNo1, contactNo2, email, country, state, city, roomCategory, mealPlan, hotelCategory, priceRange, checkInDate, checkOutDate, numberOfNights, numberOfRooms, adults, children, infants];
         const [insertResult, insertFields] = await db.query(hotelTravel, hotelParams);
 
+        // Logs
+        const logs = `INSERT INTO logs (userId, action, userType, message) VALUES (?, ?, ?, ?)`;
+        const logsParams = [req.user.id, "CREATE", req.user.userType, "Created a hotel travel"];
+        await db.query(logs, logsParams);
+
         // Send Mail
         // try {
         //     sendMail(
@@ -89,6 +94,11 @@ const updateHotelBooking = asyncHandler(async (req, res) => {
         const updateParams = [nationality, name, contactNo1, contactNo2, email, country, state, city, roomCategory, mealPlan, hotelCategory, priceRange, checkInDate, checkOutDate, numberOfNights, numberOfRooms, adults, children, infants, id];
         const [updateResult] = await db.query(updateSql, updateParams);
 
+        // Logs
+        const logs = `INSERT INTO logs (userId, action, userType, message) VALUES (?, ?, ?, ?)`;
+        const logsParams = [req.user.id, "UPDATE", req.user.userType, "Updated a hotel travel"];
+        await db.query(logs, logsParams);
+
         return res.status(200).json(
             new ApiResponse(
                 200,
@@ -134,6 +144,11 @@ const deleteHotelBooking = asyncHandler(async (req, res) => {
         const deleteSql = `DELETE FROM hotel WHERE id = ?`;
         const deleteParams = [id];
         const [deleteResult] = await db.query(deleteSql, deleteParams);
+
+        // Logs
+        const logs = `INSERT INTO logs (userId, action, userType, message) VALUES (?, ?, ?, ?)`;
+        const logsParams = [req.user.id, "DELETE", req.user.userType, "Deleted a hotel travel"];
+        await db.query(logs, logsParams);
 
         return res.status(200).json(
             new ApiResponse(

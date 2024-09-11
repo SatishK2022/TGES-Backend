@@ -20,6 +20,11 @@ const createCabTravel = asyncHandler(async (req, res) => {
 
         const [result, fields] = await db.query(insertCab, cabParams);
 
+        // Logs
+        const logs = `INSERT INTO logs (userId, action, userType, message) VALUES (?, ?, ?, ?)`;
+        const logsParams = [req.user.id, "CREATE", req.user.userType, "Created a cab travel"];
+        await db.query(logs, logsParams);
+
         // Send Mail
         // try {
         //     sendMail(
@@ -79,6 +84,11 @@ const updateCabTravel = asyncHandler(async (req, res) => {
         const updateParams = [pickupCountry, nationality, tourPlan, name, contactNo, alternateContactNo, email, cabRequiredAt, cabRequiredFor, localTravelKmsLimit, pickupDateTime, pickupAddress, pickupLandmark, dropDateTime, dropAddress, dropLandmark, cabDuration, noOfCabsRequired, typeOfCabRequired, noOfPersonsTravelling, noOfInfants, noOfChildren, otherRequirements, id];
         const [updateResult, updateFields] = await db.query(updateSql, updateParams);
 
+        // Logs
+        const logs = `INSERT INTO logs (userId, action, userType, message) VALUES (?, ?, ?, ?)`;
+        const logsParams = [req.user.id, "UPDATE", req.user.userType, "Updated a cab travel"];
+        await db.query(logs, logsParams);
+
         return res.status(200).json(
             new ApiResponse(
                 200,
@@ -124,6 +134,11 @@ const deleteCabTravel = asyncHandler(async (req, res) => {
         const deleteSql = 'DELETE FROM cab WHERE id = ?';
         const deleteParams = [id];
         const [deleteResult, deleteFields] = await db.query(deleteSql, deleteParams);
+
+        // Logs
+        const logs = `INSERT INTO logs (userId, action, userType, message) VALUES (?, ?, ?, ?)`;
+        const logsParams = [req.user.id, "DELETE", req.user.userType, "Deleted a cab travel"];
+        await db.query(logs, logsParams);
 
         return res.status(200).json(
             new ApiResponse(
