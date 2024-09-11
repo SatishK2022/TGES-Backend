@@ -11,7 +11,7 @@ router.post("/login", login)
 router.get("/logout", logout)
 
 router.get("/profile", isLoggedIn, profile)
-router.post("/update-profile", isLoggedIn, updateRetailProfile)
+router.put("/update-profile", isLoggedIn, updateRetailProfile)
 
 router.post("/forgot-password", forgotPassword)
 router.post("/verify-otp", verifyOtp)

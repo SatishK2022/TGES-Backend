@@ -5,7 +5,7 @@ const router = express.Router();
 
 router
     .route("/update-profile")
-    .post(isLoggedIn, updateProfile);
+    .put(isLoggedIn, updateProfile);
 
 router
     .route("/branch")
