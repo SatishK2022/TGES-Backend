@@ -36,9 +36,9 @@ const retailRegister = asyncHandler(async (req, res) => {
 
         const companyId = generateCompanyId(firstName);
 
-        const insertUserSql = `INSERT INTO user (email, zipCode, country, state, city, password, companyId) VALUES ( ?, ?, ?, ?, ?, ?, ?)`;
+        const insertUserSql = `INSERT INTO user (email, zipCode, country, state, city, password, companyId, userType) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?)`;
         const hashedPassword = await hashPassword(password);
-        const userParams = [email, zipCode, country, state, city, hashedPassword, companyId];
+        const userParams = [email, zipCode, country, state, city, hashedPassword, companyId, RETAIL_TYPE_NAME];
         const [result, fields] = await db.query(insertUserSql, userParams);
 
         const userId = result.insertId;
@@ -117,9 +117,9 @@ const corporateRegister = asyncHandler(async (req, res) => {
 
         const companyId = generateCompanyId(companyName);
 
-        const insertUserSql = `INSERT INTO user (email, zipCode, country, city, state, password, companyId) VALUES ( ?, ?, ?, ?, ?, ?, ?)`;
+        const insertUserSql = `INSERT INTO user (email, zipCode, country, city, state, password, companyId, userType) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?)`;
         const hashedPassword = await hashPassword(password);
-        const userParams = [email, zipCode, country, city, state, hashedPassword, companyId];
+        const userParams = [email, zipCode, country, city, state, hashedPassword, companyId, CORPORATE_TYPE_NAME];
         const [result, fields] = await db.query(insertUserSql, userParams);
 
         const userId = result.insertId;
@@ -207,9 +207,9 @@ const vendorRegister = asyncHandler(async (req, res) => {
         }
 
         const companyId = generateCompanyId(companyName);
-        const insertUserSql = `INSERT INTO user (email, zipCode, country, city, state, password, companyId) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+        const insertUserSql = `INSERT INTO user (email, zipCode, country, city, state, password, companyId, userType) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
         const hashedPassword = await hashPassword(password);
-        const userParams = [email, zipCode, country, city, state, hashedPassword, companyId];
+        const userParams = [email, zipCode, country, city, state, hashedPassword, companyId, VENDOR_TYPE_NAME];
         const [result] = await connection.query(insertUserSql, userParams);
 
         const userId = result.insertId;
@@ -268,18 +268,15 @@ const login = asyncHandler(async (req, res) => {
     const queries = [
         {
             sql: `SELECT retail_user.*, user.* FROM retail_user INNER JOIN user ON retail_user.userId = user.id WHERE user.email = ?;`,
-            params: [email],
-            type: RETAIL_TYPE_NAME
+            params: [email]
         },
         {
             sql: `SELECT corporate_user.*, user.* FROM corporate_user INNER JOIN user ON corporate_user.userId = user.id WHERE user.email = ?;`,
-            params: [email],
-            type: CORPORATE_TYPE_NAME
+            params: [email]
         },
         {
             sql: `SELECT vendor.*, user.* FROM vendor INNER JOIN user ON vendor.userId = user.id WHERE user.email = ?;`,
-            params: [email],
-            type: VENDOR_TYPE_NAME
+            params: [email]
         }
     ];
 
@@ -290,7 +287,7 @@ const login = asyncHandler(async (req, res) => {
         for (const query of queries) {
             const [result] = await db.query(query.sql, query.params);
             if (result.length > 0) {
-                user = { ...result[0], userType: query.type };
+                user = { ...result[0] };
                 break;
             }
         }
