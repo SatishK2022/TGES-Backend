@@ -782,6 +782,194 @@
         }
       }
     },
+    "/user/profile": {
+      "get": {
+        "tags": ["🧑🏻‍💻 User"],
+        "summary": "Get User Profile For Retail, Corporate and Vendor",
+        "responses": {
+          "200": {
+            "description": "Get User Profile",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "string",
+                      "example": "200"
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {
+                        "id": 1,
+                        "email": "vend01@gmail.com",
+                        "zipCode": "110034",
+                        "country": "USA",
+                        "city": "San Francisco",
+                        "state": "California",
+                        "areaOfWork": "Hospital",
+                        "companyName": "Tech Innovators Ltd.",
+                        "phoneNumber": "5551234567",
+                        "countryCode": "US",
+                        "stateCode": "CA",
+                        "contactPersonFirstName": "ICE",
+                        "contactPersonSecondName": "MARIE",
+                        "contactPersonLastName": "CREAM",
+                        "contactPersonGender": "Female",
+                        "landlineCityCode": "415",
+                        "landlineCountryCode": "1",
+                        "landlineNumber": "5559876543",
+                        "website": "https://tgestravel.com",
+                        "address1": "123 Innovation Drive",
+                        "address2": "Suite 400",
+                        "address3": "Technology Park",
+                        "address4": "San Francisco, CA 94016",
+                        "services": "[\"cab\"]"
+                      }
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Get User Profile"
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "user/update-profile": {
+      "put": {
+        "tags": ["🧑🏻‍💻 User"],
+        "summary": "Update Retail User Profile",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "firstName": {
+                    "type": "string",
+                    "example": "John"
+                  },
+                  "secondName": {
+                    "type": "string",
+                    "example": "Doe"
+                  },
+                  "lastName": {
+                    "type": "string",
+                    "example": "Doe"
+                  },
+                  "residentialAddress": {
+                    "type": "string",
+                    "example": "123 Main St"
+                  },
+                  "zipCode": {
+                    "type": "string",
+                    "example": "123456"
+                  },
+                  "country": {
+                    "type": "string",
+                    "example": "India"
+                  },
+                  "city": {
+                    "type": "string",
+                    "example": "Delhi"
+                  },
+                  "state": {
+                    "type": "string",
+                    "example": "Delhi"
+                  },
+                  "phoneNumber1": {
+                    "type": "string",
+                    "example": "1234567890"
+                  },
+                  "phoneNumber2": {
+                    "type": "string",
+                    "example": "1234567890"
+                  },
+                  "stateCode": {
+                    "type": "string",
+                    "example": "IN"
+                  },
+                  "countryCode": {
+                    "type": "string",
+                    "example": "91"
+                  },
+                  "gender": {
+                    "type": "string",
+                    "example": "Male"
+                  },
+                  "occupation": {
+                    "type": "string",
+                    "example": "Software Engineer"
+                  },
+                  "companyName": {
+                    "type": "string",
+                    "example": "TGES"
+                  },
+                  "designation": {
+                    "type": "string",
+                    "example": "Software Engineer"
+                  },
+                  "companyAddress": {
+                    "type": "string",
+                    "example": "123 Main St"
+                  },
+                  "howDidYouKnow": {
+                    "type": "string",
+                    "example": "Google"
+                  },
+                  "preferredCurrency": {
+                    "type": "string",
+                    "example": "USD"
+                  },
+                  "website": {
+                    "type": "string",
+                    "example": "https://www.tgestravel.com"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Update Retail User Profile",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "properties": {
+                    "statusCode": {
+                      "type": "string",
+                      "example": "200"
+                    },
+                    "data": {
+                      "type": "string",
+                      "example": null
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Profile updated successfully"
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/travel/train": {
       "post": {
         "tags": ["🚢 Travel"],
@@ -3225,6 +3413,141 @@
         }
       }
     },
+    "/corporate/update-profile": {
+      "put": {
+        "tags": ["💼 Corporate Dashboard"],
+        "summary": "Update Corporate Details",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "industry": {
+                    "type": "string",
+                    "example": "IT"
+                  },
+                  "companyName": {
+                    "type": "string",
+                    "example": "Health Solutions"
+                  },
+                  "address1": {
+                    "type": "string",
+                    "example": "123 Main Street"
+                  },
+                  "address2": {
+                    "type": "string",
+                    "example": "Suite 100"
+                  },
+                  "address3": {
+                    "type": "string",
+                    "example": "123 Main Street"
+                  },
+                  "address4": {
+                    "type": "string",
+                    "example": "Suite 100"
+                  },
+                  "phoneNumber": {
+                    "type": "string",
+                    "example": "1234567890"
+                  },
+                  "countryCode": {
+                    "type": "string",
+                    "example": "IN"
+                  },
+                  "stateCode": {
+                    "type": "string",
+                    "example": "DL"
+                  },
+                  "landlineNumber": {
+                    "type": "string",
+                    "example": "1234567890"
+                  },
+                  "landlineCityCode": {
+                    "type": "string",
+                    "example": "1234567890"
+                  },
+                  "landlineCountryCode": {
+                    "type": "string",
+                    "example": "1234567890"
+                  },
+                  "contactDepartment": {
+                    "type": "string",
+                    "example": "IT"
+                  },
+                  "contactPersonFirstName": {
+                    "type": "string",
+                    "example": "John"
+                  },
+                  "contactPersonSecondName": {
+                    "type": "string",
+                    "example": "Doe"
+                  },
+                  "contactPersonLastName": {
+                    "type": "string",
+                    "example": "Doe"
+                  },
+                  "contactPersonGender": {
+                    "type": "string",
+                    "example": "Male"
+                  },
+                  "website": {
+                    "type": "string",
+                    "example": "https://www.tgestravel.com"
+                  },
+                  "zipCode": {
+                    "type": "string",
+                    "example": "123456"
+                  },
+                  "country": {
+                    "type": "string",
+                    "example": "India"
+                  },
+                  "city": {
+                    "type": "string",
+                    "example": "Delhi"
+                  },
+                  "state": {
+                    "type": "string",
+                    "example": "Delhi"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Profile Updated Successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "string",
+                      "example": "200"
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": null
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Profile updated successfully"
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/corporate/branch": {
       "post": {
         "tags": ["💼 Corporate Dashboard"],
@@ -4228,6 +4551,144 @@
                     "message": {
                       "type": "string",
                       "example": "Employees fetched successfully"
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/vendor/update-profile": {
+      "put": {
+        "tags": ["🧑🏻‍💻 Vendor"],
+        "summary": "Update Vendor Profile",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "areaOfWork": {
+                    "type": "string",
+                    "example": "Hospital"
+                  },
+                  "companyName": {
+                    "type": "string",
+                    "example": "Tech Innovators Ltd."
+                  },
+                  "zipCode": {
+                    "type": "string",
+                    "example": "110034"
+                  },
+                  "country": {
+                    "type": "string",
+                    "example": "USA"
+                  },
+                  "city": {
+                    "type": "string",
+                    "example": "New York"
+                  },
+                  "state": {
+                    "type": "string",
+                    "example": "New York"
+                  },
+                  "contactPersonFirstName": {
+                    "type": "string",
+                    "example": "Marie"
+                  },
+                  "contactPersonSecondName": {
+                    "type": "string",
+                    "example": "C"
+                  },
+                  "contactPersonLastName": {
+                    "type": "string",
+                    "example": "C"
+                  },
+                  "landlineCityCode": {
+                    "type": "string",
+                    "example": "123"
+                  },
+                  "landlineCountryCode": {
+                    "type": "string",
+                    "example": "123"
+                  },
+                  "contactPersonGender": {
+                    "type": "string",
+                    "example": "Female"
+                  },
+                  "phoneNumber": {
+                    "type": "string",
+                    "example": "1234567890"
+                  },
+                  "landlineNumber": {
+                    "type": "string",
+                    "example": "1234567890"
+                  },
+                  "countryCode": {
+                    "type": "string",
+                    "example": "IN"
+                  },
+                  "stateCode": {
+                    "type": "string",
+                    "example": "DL"
+                  },
+                  "website": {
+                    "type": "string",
+                    "example": "https://tgestravel.com"
+                  },
+                  "address1": {
+                    "type": "string",
+                    "example": "123 Innovation Drive"
+                  },
+                  "address2": {
+                    "type": "string",
+                    "example": "123 Innovation Drive"
+                  },
+                  "address3": {
+                    "type": "string",
+                    "example": "123 Innovation Drive"
+                  },
+                  "address4": {
+                    "type": "string",
+                    "example": "San Francisco, CA 94016"
+                  },
+                  "services": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "example": "Cab"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Vendor profile updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "string",
+                      "example": "200"
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": null
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Profile updated successfully"
                     },
                     "success": {
                       "type": "boolean",
