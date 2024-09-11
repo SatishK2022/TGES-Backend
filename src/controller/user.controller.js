@@ -16,11 +16,16 @@ const retailRegister = asyncHandler(async (req, res) => {
     const reqBody = req.body || {};
     const { firstName, secondName, lastName, email, residentialAddress, zipCode, country, city, state, phoneNumber1, phoneNumber2, stateCode, countryCode, username, password, gender, occupation, companyName, designation, companyAddress, howDidYouKnow, preferredCurrency, website } = reqBody;
 
+    // Get a connection from the pool
+    const connection = await db.getConnection();
+
     try {
+
+        await connection.beginTransaction();
         // Check for duplicate email or username
         const checkEmailSql = `SELECT * FROM user WHERE email = ? `;
         const emailParams = [email];
-        const [existingUserResult, existingUserFields] = await db.query(checkEmailSql, emailParams);
+        const [existingUserResult, existingUserFields] = await connection.query(checkEmailSql, emailParams);
 
         console.log(existingUserResult);
 
@@ -39,13 +44,13 @@ const retailRegister = asyncHandler(async (req, res) => {
         const insertUserSql = `INSERT INTO user (email, zipCode, country, state, city, password, companyId, userType) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?)`;
         const hashedPassword = await hashPassword(password);
         const userParams = [email, zipCode, country, state, city, hashedPassword, companyId, RETAIL_TYPE_NAME];
-        const [result, fields] = await db.query(insertUserSql, userParams);
+        const [result, fields] = await connection.query(insertUserSql, userParams);
 
         const userId = result.insertId;
 
         const insertRetailUserSql = `INSERT INTO retail_user (userId, firstName, secondName, lastName, username, gender, phoneNumber1, phoneNumber2, stateCode, countryCode, occupation, residentialAddress, companyName, designation, companyAddress, howDidYouKnow, preferredCurrency, website) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
         const retailParams = [userId, firstName, secondName, lastName, username, gender, phoneNumber1, phoneNumber2, stateCode, countryCode, occupation, residentialAddress, companyName, designation, companyAddress, howDidYouKnow, preferredCurrency, website];
-        await db.query(insertRetailUserSql, retailParams);
+        await connection.query(insertRetailUserSql, retailParams);
 
         // Send Mail to user
         // try {
@@ -69,6 +74,9 @@ const retailRegister = asyncHandler(async (req, res) => {
         //     console.error('Error sending admin notification email:', error);
         // }
 
+        // Commit the transaction
+        await connection.commit();
+
         return res.status(201).json(
             new ApiResponse(
                 201,
@@ -77,6 +85,8 @@ const retailRegister = asyncHandler(async (req, res) => {
             )
         );
     } catch (error) {
+        // Rollback the transaction
+        await connection.rollback();
         console.error('Error during user registration:', error);
         return res.status(500).json(
             new ApiResponse(
@@ -85,6 +95,9 @@ const retailRegister = asyncHandler(async (req, res) => {
                 "An error occurred during registration"
             )
         );
+    } finally {
+        // Release the connection
+        connection.release();
     }
 });
 
@@ -99,11 +112,16 @@ const corporateRegister = asyncHandler(async (req, res) => {
 
     let contactDepartmentTitle = (contactDepartment?.title === 'Other') ? contactDepartment?.otherTitle : contactDepartment?.title;
 
+    // Get a connection from the pool
+    const connection = await db.getConnection();
+
     try {
+        await connection.beginTransaction();
+
         // Check for duplicate email
         const checkEmailSql = `SELECT * FROM user WHERE email = ?`;
         const emailParams = [email];
-        const [emailResult, emailFields] = await db.query(checkEmailSql, emailParams);
+        const [emailResult, emailFields] = await connection.query(checkEmailSql, emailParams);
 
         if (emailResult.length > 0) {
             return res.status(409).json(
@@ -120,13 +138,13 @@ const corporateRegister = asyncHandler(async (req, res) => {
         const insertUserSql = `INSERT INTO user (email, zipCode, country, city, state, password, companyId, userType) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?)`;
         const hashedPassword = await hashPassword(password);
         const userParams = [email, zipCode, country, city, state, hashedPassword, companyId, CORPORATE_TYPE_NAME];
-        const [result, fields] = await db.query(insertUserSql, userParams);
+        const [result, fields] = await connection.query(insertUserSql, userParams);
 
         const userId = result.insertId;
 
         const insertCorprate = `INSERT INTO corporate_user (userId, industry, companyName, address1, address2, address3, address4, phoneNumber, countryCode, stateCode, landlineNumber, landlineCityCode, landlineCountryCode, contactDepartment, contactPersonFirstName, contactPersonSecondName, contactPersonLastName, contactPersonGender, website) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
         const corprateParams = [userId, industry, companyName, address1, address2, address3, address4, phoneNumber, countryCode, stateCode, landlineNumber, landlineCityCode, landlineCountryCode, contactDepartmentTitle, contactPersonFirstName, contactPersonSecondName, contactPersonLastName, contactPersonGender, website];
-        await db.query(insertCorprate, corprateParams);
+        await connection.query(insertCorprate, corprateParams);
 
         // Send Mail
         // try {
@@ -150,6 +168,9 @@ const corporateRegister = asyncHandler(async (req, res) => {
         //     console.log("Error while sending admin notification email: ", error);
         // }
 
+        // Commit the transaction
+        await connection.commit();
+
         return res.status(201).json(
             new ApiResponse(
                 201,
@@ -158,6 +179,8 @@ const corporateRegister = asyncHandler(async (req, res) => {
             )
         );
     } catch (error) {
+        // Rollback the transaction
+        await connection.rollback();
         console.error('Error during user registration:', error);
         return res.status(500).json(
             new ApiResponse(
@@ -166,6 +189,9 @@ const corporateRegister = asyncHandler(async (req, res) => {
                 "An error occurred during registration"
             )
         );
+    } finally {
+        // Release the connection
+        connection.release();
     }
 });
 
