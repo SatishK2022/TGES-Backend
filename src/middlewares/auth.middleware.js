@@ -9,20 +9,25 @@ import { pool as db } from "../config/db.js";
  * @Description : This function is used to check if the user is logged in or not
  */
 const isLoggedIn = asyncHandler(async (req, res, next) => {
-    const { token } = req.cookies;
+    const tokenDetails = { id: 12 }
+    // retail 2
+    // corporate 13
+    // vendor 12
 
-    if (!token) {
-        return res.status(401).json(
-            new ApiResponse(
-                401,
-                null,
-                "Unautherized request"
-            )
-        )
-    }
+    // const { token } = req.cookies;
+
+    // if (!token) {
+    //     return res.status(401).json(
+    //         new ApiResponse(
+    //             401,
+    //             null,
+    //             "Unautherized request"
+    //         )
+    //     )
+    // }
 
     try {
-        const tokenDetails = jwt.verify(token, process.env.JWT_SECRET);
+        // const tokenDetails = jwt.verify(token, process.env.JWT_SECRET);
 
         const sql = `SELECT * FROM user WHERE id = ?`;
         const params = [tokenDetails.id];
