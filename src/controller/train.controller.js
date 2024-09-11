@@ -41,6 +41,11 @@ const createTrainTravel = asyncHandler(async (req, res) => {
 
         const [result, fields] = await db.query(insertTrain, [trainParams]);
 
+        // Logs
+        const logs = `INSERT INTO logs (userId, action, userType, message) VALUES (?, ?, ?, ?)`;
+        const logsParams = [req.user.id, "CREATE", req.user.userType, "Created a train travel"];
+        await db.query(logs, logsParams);
+
         const emailContent = reqBody.map(data => {
             const age = calculateAge(data.dob);
             return {
@@ -127,6 +132,11 @@ const updateTrainTravel = asyncHandler(async (req, res) => {
         const updateParams = [fullName, dob, gender, contactNo, email, travelFrom, travelTo, classOfTravel, travelDate, trainNo, timePreference, id];
         const [updateResult] = await db.query(updateSql, updateParams);
 
+        // Logs
+        const logs = `INSERT INTO logs (userId, action, userType, message) VALUES (?, ?, ?, ?)`;
+        const logsParams = [req.user.id, "UPDATE", req.user.userType, "Updated a train travel"];
+        await db.query(logs, logsParams);
+
         return res.status(200).json(
             new ApiResponse(
                 200,
@@ -172,6 +182,11 @@ const deleteTrainTravel = asyncHandler(async (req, res) => {
         const deleteSql = 'DELETE FROM train WHERE id = ?';
         const deleteParams = [id];
         const [deleteResult] = await db.query(deleteSql, deleteParams);
+
+        // Logs
+        const logs = `INSERT INTO logs (userId, action, userType, message) VALUES (?, ?, ?, ?)`;
+        const logsParams = [req.user.id, "DELETE", req.user.userType, "Deleted a train travel"];
+        await db.query(logs, logsParams);
 
         return res.status(200).json(
             new ApiResponse(

@@ -18,8 +18,12 @@ const createPassport = asyncHandler(async (req, res) => {
     try {
         const passportTravel = `INSERT INTO passport (userId, totalNoOfTravellers, name, nationality, dob, gender, passportNo, passportIssueDate, passportExpiryDate, passportValidityPeriod, placeOfIssue, nomineeName, nomineeGender, addressWithPinCode, contactNo, email, holdPassportFrom, applyFrom, goTo, travelEntryDate, travelExitDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
         const passportParams = [req.user.id, totalNoOfTravellers, name, nationality, dob, gender, passportNo, passportIssueDate, passportExpiryDate, passportValidityPeriod, placeOfIssue, nomineeName, nomineeGender, addressWithPinCode, contactNo, email, holdPassportFrom, applyFrom, goTo, travelDuration.entryDate, travelDuration.exitDate];
-
         const [insertResult, insertFields] = await db.query(passportTravel, passportParams);
+
+        // Logs
+        const logs = `INSERT INTO logs (userId, action, userType, message) VALUES (?, ?, ?, ?)`;
+        const logsParams = [req.user.id, "CREATE", req.user.userType, "Created a passport"];
+        await db.query(logs, logsParams);
 
         // Send Mail
         // try {
@@ -80,6 +84,11 @@ const updatePassport = asyncHandler(async (req, res) => {
         const updateParams = [totalNoOfTravellers, name, nationality, dob, gender, passportNo, passportIssueDate, passportExpiryDate, passportValidityPeriod, placeOfIssue, nomineeName, nomineeGender, addressWithPinCode, contactNo, email, holdPassportFrom, applyFrom, goTo, travelDuration.entryDate, travelDuration.exitDate, id];
         const [updateResult] = await db.query(updateSql, updateParams);
 
+        // Logs
+        const logs = `INSERT INTO logs (userId, action, userType, message) VALUES (?, ?, ?, ?)`;
+        const logsParams = [req.user.id, "UPDATE", req.user.userType, "Updated a passport"];
+        await db.query(logs, logsParams);
+
         return res.status(200).json(
             new ApiResponse(
                 200,
@@ -125,6 +134,11 @@ const deletePassport = asyncHandler(async (req, res) => {
         const deleteSql = 'DELETE FROM passport WHERE id = ?';
         const deleteParams = [id];
         const [deleteResult] = await db.query(deleteSql, deleteParams);
+
+        // Logs
+        const logs = `INSERT INTO logs (userId, action, userType, message) VALUES (?, ?, ?, ?)`;
+        const logsParams = [req.user.id, "DELETE", req.user.userType, "Deleted a passport"];
+        await db.query(logs, logsParams);
 
         return res.status(200).json(
             new ApiResponse(

@@ -8,7 +8,7 @@ import morgan from "morgan"
 import swaggerUi from "swagger-ui-express";
 import swaggerDocument from "./swagger.json" assert { type: "json" };
 import { connectToDb, pool as db } from "./config/db.js";
-import { user, retail_user, corporate_user, vendor, train, air, volvoBus, cab, hotel, passport, healthInsurance, travelInsurance, admin, branch, employee, cab_rate_card, hotel_rate_card, room, event_rate_card, conference_hall } from "./constants.js"
+import { user, retail_user, corporate_user, vendor, train, air, volvoBus, cab, hotel, passport, healthInsurance, travelInsurance, admin, branch, employee, cab_rate_card, hotel_rate_card, room, event_rate_card, conference_hall, log_messages } from "./constants.js"
 
 const app = express();
 
@@ -37,6 +37,7 @@ await connectToDb()
         await db.query(hotel_rate_card)
         await db.query(conference_hall)
         await db.query(event_rate_card)
+        await db.query(log_messages)
     })
 
 // middlewares

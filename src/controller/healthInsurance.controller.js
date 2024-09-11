@@ -20,6 +20,11 @@ const createHealthInsurance = asyncHandler(async (req, res) => {
 
         const [insertResult, insertFields] = await db.query(healthInsurance, healthInsuranceParams);
 
+        // Logs
+        const logs = `INSERT INTO logs (userId, action, userType, message) VALUES (?, ?, ?, ?)`;
+        const logsParams = [req.user.id, "CREATE", req.user.userType, "Created a health insurance"];
+        await db.query(logs, logsParams);
+
         // Send Mail
         // try {
         //     sendMail(
@@ -79,6 +84,11 @@ const updateHealthInsurance = asyncHandler(async (req, res) => {
         const updateParams = [name, gender, dob, address, contactNo, email, preExistingDisease, diseaseName, smoker, nomineeName, nomineeGender, nomineeRelationship, id];
         const [updateResult] = await db.query(updateSql, updateParams);
 
+        // Logs
+        const logs = `INSERT INTO logs (userId, action, userType, message) VALUES (?, ?, ?, ?)`;
+        const logsParams = [req.user.id, "UPDATE", req.user.userType, "Updated a health insurance"];
+        await db.query(logs, logsParams);
+
         return res.status(200).json(
             new ApiResponse(
                 200,
@@ -124,6 +134,11 @@ const deleteHealthInsurance = asyncHandler(async (req, res) => {
         const deleteSql = 'DELETE FROM healthInsurance WHERE id = ?';
         const deleteParams = [id];
         const [deleteResult] = await db.query(deleteSql, deleteParams);
+
+        // Logs
+        const logs = `INSERT INTO logs (userId, action, userType, message) VALUES (?, ?, ?, ?)`;
+        const logsParams = [req.user.id, "DELETE", req.user.userType, "Deleted a health insurance"];
+        await db.query(logs, logsParams);
 
         return res.status(200).json(
             new ApiResponse(
