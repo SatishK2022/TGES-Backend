@@ -11,7 +11,7 @@ import { calculateAge, generateBranchId } from "../utils/helper.js";
 const updateProfile = asyncHandler(async (req, res) => {
     const {user} = req;
     const reqBody = req.body || {};
-    const { zipCode, country, city, state, industry, companyName, address1, address2, address3, address4, phoneNumber, countryCode, stateCode, landlineNumber, landlineCityCode, landlineCountryCode, contactDepartment, contactPersonFirstName, contactPersonSecondName, contactPersonLastName, contactPersonGender, website } = reqBody;
+    const { zipCode, country, city, state, industry, companyName, address1, address2, address3, address4, phoneNumber, countryCode, stateCode, landlineNumber, landlineCityCode, landlineCountryCode, contactDepartment, contactPersonFirstName, contactPersonSecondName, contactPersonLastName, contactPersonGender, website, gstNumber } = reqBody;
 
     const connection = await db.getConnection();
 
@@ -36,8 +36,8 @@ const updateProfile = asyncHandler(async (req, res) => {
         const params1 = [zipCode, country, city, state, user.id];
         await connection.query(sql1, params1);
 
-        const sql2 = `UPDATE corporate_user SET industry = ?, companyName = ?, address1 = ?, address2 = ?, address3 = ?, address4 = ?, phoneNumber = ?, countryCode = ?, stateCode = ?, landlineNumber = ?, landlineCityCode = ?, landlineCountryCode = ?, contactDepartment = ?, contactPersonFirstName = ?, contactPersonSecondName = ?, contactPersonLastName = ?, contactPersonGender = ?, website = ? WHERE userId = ?`;
-        const params2 = [industry, companyName, address1, address2, address3, address4, phoneNumber, countryCode, stateCode, landlineNumber, landlineCityCode, landlineCountryCode, contactDepartment, contactPersonFirstName, contactPersonSecondName, contactPersonLastName, contactPersonGender, website, user.id];
+        const sql2 = `UPDATE corporate_user SET industry = ?, companyName = ?, address1 = ?, address2 = ?, address3 = ?, address4 = ?, phoneNumber = ?, countryCode = ?, stateCode = ?, landlineNumber = ?, landlineCityCode = ?, landlineCountryCode = ?, contactDepartment = ?, contactPersonFirstName = ?, contactPersonSecondName = ?, contactPersonLastName = ?, contactPersonGender = ?, website = ?, gstNumber = ? WHERE userId = ?`;
+        const params2 = [industry, companyName, address1, address2, address3, address4, phoneNumber, countryCode, stateCode, landlineNumber, landlineCityCode, landlineCountryCode, contactDepartment, contactPersonFirstName, contactPersonSecondName, contactPersonLastName, contactPersonGender, website, gstNumber, user.id];
         await connection.query(sql2, params2);
 
         await connection.commit();
