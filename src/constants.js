@@ -69,6 +69,7 @@ export const corporate_user = `CREATE TABLE IF NOT EXISTS corporate_user (
     contactPersonLastName VARCHAR(255) NOT NULL,
     contactPersonGender VARCHAR(255) NOT NULL,
     website VARCHAR(255) NOT NULL,
+    gstNumber VARCHAR(50),
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 )`;
@@ -95,6 +96,7 @@ export const vendor = `CREATE TABLE IF NOT EXISTS vendor (
     address3 VARCHAR(255),
     address4 VARCHAR(255),
     services VARCHAR(255) NOT NULL,
+    gstNumber VARCHAR(50),
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 )`;

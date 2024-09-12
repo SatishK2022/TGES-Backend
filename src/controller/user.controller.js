@@ -635,7 +635,7 @@ const profile = asyncHandler(async (req, res) => {
 
         const sql2 = `SELECT user.id, user.email, user.zipCode, user.country, user.city, user.state, ${users[0].userType === RETAIL_TYPE_NAME ? "retail_user.*" : users[0].userType === CORPORATE_TYPE_NAME ? "corporate_user.*" : users[0].userType === VENDOR_TYPE_NAME ? "vendor.*" : ""} FROM ${users[0].userType === RETAIL_TYPE_NAME ? "retail_user" : users[0].userType === CORPORATE_TYPE_NAME ? "corporate_user" : users[0].userType === VENDOR_TYPE_NAME ? "vendor" : ""} INNER JOIN user ON ${users[0].userType === RETAIL_TYPE_NAME ? "retail_user.userId" : users[0].userType === CORPORATE_TYPE_NAME ? "corporate_user.userId" : users[0].userType === VENDOR_TYPE_NAME ? "vendor.userId" : ""} = user.id WHERE user.id = ?`;
         const params2 = [user.id];
-        const [result, resultField] = await db.query(sql2, params);
+        const [result, resultField] = await db.query(sql2, params2);
 
         const { userId, createdAt, updatedAt, ...cleanedResult } = result[0];
 

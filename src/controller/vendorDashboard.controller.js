@@ -11,7 +11,7 @@ import fs from 'fs';
 const updateProfile = asyncHandler(async (req, res) => {
     const { user } = req;
     const reqBody = req.body || {};
-    const { zipCode, country, city, state, areaOfWork, companyName, phoneNumber, countryCode, stateCode, contactPersonFirstName, contactPersonSecondName, contactPersonLastName, contactPersonGender, landlineCityCode, landlineCountryCode, landlineNumber, website, address1, address2, address3, address4, services } = reqBody;
+    const { zipCode, country, city, state, areaOfWork, companyName, phoneNumber, countryCode, stateCode, contactPersonFirstName, contactPersonSecondName, contactPersonLastName, contactPersonGender, landlineCityCode, landlineCountryCode, landlineNumber, website, address1, address2, address3, address4, services, gstNumber } = reqBody;
 
     const connection = await db.getConnection();
 
@@ -37,8 +37,8 @@ const updateProfile = asyncHandler(async (req, res) => {
 
         const servicesString = JSON.stringify(services);
 
-        const sql2 = `UPDATE vendor SET areaOfWork = ?, companyName = ?, phoneNumber = ?, countryCode = ?, stateCode = ?, contactPersonFirstName = ?, contactPersonSecondName = ?, contactPersonLastName = ?, contactPersonGender = ?, landlineCityCode = ?, landlineCountryCode = ?, landlineNumber = ?, website = ?, address1 = ?, address2 = ?, address3 = ?, address4 = ?, services = ? WHERE userId = ?`;
-        const params2 = [areaOfWork, companyName, phoneNumber, countryCode, stateCode, contactPersonFirstName, contactPersonSecondName, contactPersonLastName, contactPersonGender, landlineCityCode, landlineCountryCode, landlineNumber, website, address1, address2, address3, address4, servicesString, user.id];
+        const sql2 = `UPDATE vendor SET areaOfWork = ?, companyName = ?, phoneNumber = ?, countryCode = ?, stateCode = ?, contactPersonFirstName = ?, contactPersonSecondName = ?, contactPersonLastName = ?, contactPersonGender = ?, landlineCityCode = ?, landlineCountryCode = ?, landlineNumber = ?, website = ?, address1 = ?, address2 = ?, address3 = ?, address4 = ?, services = ?, gstNumber = ? WHERE userId = ?`;
+        const params2 = [areaOfWork, companyName, phoneNumber, countryCode, stateCode, contactPersonFirstName, contactPersonSecondName, contactPersonLastName, contactPersonGender, landlineCityCode, landlineCountryCode, landlineNumber, website, address1, address2, address3, address4, servicesString, gstNumber, user.id];
         await connection.query(sql2, params2);
 
         await connection.commit();
