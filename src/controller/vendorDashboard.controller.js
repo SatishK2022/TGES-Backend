@@ -13,6 +13,16 @@ const updateProfile = asyncHandler(async (req, res) => {
     const reqBody = req.body || {};
     const { zipCode, country, city, state, areaOfWork, companyName, phoneNumber, countryCode, stateCode, contactPersonFirstName, contactPersonSecondName, contactPersonLastName, contactPersonGender, landlineCityCode, landlineCountryCode, landlineNumber, website, address1, address2, address3, address4, services, gstNumber } = reqBody;
 
+    if (!Array.isArray(services)) {
+        return res.status(400).json(
+            new ApiResponse(
+                400,
+                null,
+                "Services must be an array"
+            )
+        );
+    }
+
     const connection = await db.getConnection();
 
     try {
