@@ -108,7 +108,7 @@ const retailRegister = asyncHandler(async (req, res) => {
 */
 const corporateRegister = asyncHandler(async (req, res) => {
     const reqBody = req.body || {};
-    const { industry, companyName, address1, address2, address3, address4, phoneNumber, countryCode, stateCode, landlineNumber, landlineCityCode, landlineCountryCode, contactDepartment, contactPersonFirstName, contactPersonSecondName, contactPersonLastName, contactPersonGender, website, email, password, zipCode, country, city, state } = reqBody;
+    const { industry, companyName, address1, address2, address3, address4, phoneNumber, countryCode, stateCode, landlineNumber, landlineCityCode, landlineCountryCode, contactDepartment, contactPersonFirstName, contactPersonSecondName, contactPersonLastName, contactPersonGender, website, email, password, zipCode, country, city, state, gstNumber } = reqBody;
 
     let contactDepartmentTitle = (contactDepartment?.title === 'Other') ? contactDepartment?.otherTitle : contactDepartment?.title;
 
@@ -142,8 +142,8 @@ const corporateRegister = asyncHandler(async (req, res) => {
 
         const userId = result.insertId;
 
-        const insertCorprate = `INSERT INTO corporate_user (userId, industry, companyName, address1, address2, address3, address4, phoneNumber, countryCode, stateCode, landlineNumber, landlineCityCode, landlineCountryCode, contactDepartment, contactPersonFirstName, contactPersonSecondName, contactPersonLastName, contactPersonGender, website) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-        const corprateParams = [userId, industry, companyName, address1, address2, address3, address4, phoneNumber, countryCode, stateCode, landlineNumber, landlineCityCode, landlineCountryCode, contactDepartmentTitle, contactPersonFirstName, contactPersonSecondName, contactPersonLastName, contactPersonGender, website];
+        const insertCorprate = `INSERT INTO corporate_user (userId, industry, companyName, address1, address2, address3, address4, phoneNumber, countryCode, stateCode, landlineNumber, landlineCityCode, landlineCountryCode, contactDepartment, contactPersonFirstName, contactPersonSecondName, contactPersonLastName, contactPersonGender, website, gstNumber) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+        const corprateParams = [userId, industry, companyName, address1, address2, address3, address4, phoneNumber, countryCode, stateCode, landlineNumber, landlineCityCode, landlineCountryCode, contactDepartmentTitle, contactPersonFirstName, contactPersonSecondName, contactPersonLastName, contactPersonGender, website, gstNumber];
         await connection.query(insertCorprate, corprateParams);
 
         // Send Mail
@@ -207,7 +207,7 @@ const vendorRegister = asyncHandler(async (req, res) => {
         contactPersonFirstName, contactPersonSecondName, contactPersonLastName,
         landlineCityCode, landlineCountryCode, contactPersonGender,
         phoneNumber, landlineNumber, countryCode, stateCode,
-        email, password, website, address1, address2, address3, address4, services
+        email, password, website, address1, address2, address3, address4, services, gstNumber
     } = reqBody;
 
     // Get a connection from the pool
@@ -240,8 +240,8 @@ const vendorRegister = asyncHandler(async (req, res) => {
 
         const userId = result.insertId;
 
-        const insertVendorSql = `INSERT INTO vendor (userId, areaOfWork, companyName, phoneNumber, countryCode, stateCode, landlineNumber, landlineCityCode, landlineCountryCode, contactPersonFirstName, contactPersonSecondName, contactPersonLastName, contactPersonGender, website, address1, address2, address3, address4, services) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-        const vendorParams = [userId, areaOfWork, companyName, phoneNumber, countryCode, stateCode, landlineNumber, landlineCityCode, landlineCountryCode, contactPersonFirstName, contactPersonSecondName, contactPersonLastName, contactPersonGender, website, address1, address2, address3, address4, JSON.stringify(services)];
+        const insertVendorSql = `INSERT INTO vendor (userId, areaOfWork, companyName, phoneNumber, countryCode, stateCode, landlineNumber, landlineCityCode, landlineCountryCode, contactPersonFirstName, contactPersonSecondName, contactPersonLastName, contactPersonGender, website, address1, address2, address3, address4, services, gstNumber) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+        const vendorParams = [userId, areaOfWork, companyName, phoneNumber, countryCode, stateCode, landlineNumber, landlineCityCode, landlineCountryCode, contactPersonFirstName, contactPersonSecondName, contactPersonLastName, contactPersonGender, website, address1, address2, address3, address4, JSON.stringify(services), gstNumber];
         await connection.query(insertVendorSql, vendorParams);
 
         // Commit the transaction

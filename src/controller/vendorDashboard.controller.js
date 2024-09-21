@@ -53,10 +53,16 @@ const updateProfile = asyncHandler(async (req, res) => {
 
         await connection.commit();
 
+        const sql3 = `SELECT * FROM vendor WHERE userId = ?`;
+        const params3 = [user.id];
+        const [result2, fields2] = await connection.query(sql3, params3);
+
+        const { userId, ...cleanedResult } = result2[0];
+
         return res.status(200).json(
             new ApiResponse(
                 200,
-                null,
+                cleanedResult,
                 "Profile updated successfully"
             )
         );
