@@ -3618,7 +3618,10 @@
                     "type": "string",
                     "example": "123456"
                   },
-
+                  "contactNo": {
+                    "type": "string",
+                    "example": "9999999999"
+                  },
                   "landlineNumber": {
                     "type": "string",
                     "example": "123456"
