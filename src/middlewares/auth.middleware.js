@@ -9,7 +9,7 @@ import { pool as db } from "../config/db.js";
  * @Description : This function is used to check if the user is logged in or not
  */
 const isLoggedIn = asyncHandler(async (req, res, next) => {
-    const tokenDetails = { id: 5 }
+    const tokenDetails = { id: 2 }
     // retail 1
     // corporate 2
     // vendor 5
