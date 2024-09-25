@@ -337,7 +337,7 @@ const getAllCorporateUsers = asyncHandler(async (req, res) => {
  * @Description : This function is used to get all vendors data in the 'vendor' table of the 'tges' database using the MySQL module
 */
 const getAllVendors = asyncHandler(async (req, res) => {
-    const { companyName, email } = req.query;
+    const { companyName, city, zipCode } = req.query;
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
@@ -354,15 +354,20 @@ const getAllVendors = asyncHandler(async (req, res) => {
         if (companyName) {
             sql += ` WHERE vendor.companyName LIKE ?`;
             params.push(`%${companyName}%`); // Use LIKE for partial matches
-        }
-        if (email) {
-            sql += ` AND user.email LIKE ?`;
-            params.push(`%${email}%`); // Use LIKE for partial matches
+        } else if (city) {
+            sql += ' AND user.city LIKE ?';
+            params.push(`%${city}%`);
+        } else if (zipCode) {
+            sql += ` AND user.zipCode LIKE ?`;
+            params.push(`%${zipCode}%`); // Use LIKE for partial matches
         }
 
         // Add ordering and pagination to the SQL query
         sql += ` ORDER BY vendor.createdAt DESC LIMIT ? OFFSET ?`;
         params.push(limit, skip);
+
+        console.log(sql)
+        console.log(params)
 
         const [result] = await db.query(sql, params);
 
@@ -945,34 +950,35 @@ const getAllHealthInsurance = asyncHandler(async (req, res) => {
  * @Description : This function is used to get all cab rate card details data in the 'cab_rate_card' table of the 'tges' database using the MySQL module
 */
 const getAllCabRateCard = asyncHandler(async (req, res) => {
-    const { zipCode, city } = req.query;
+    const { zipCode, city, companyId, countryId } = req.query; // Added countryId
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
 
-    console.log(zipCode, city)
+    console.log(zipCode, city, companyId, countryId, req.query);
 
     let sql = `
-        SELECT SQL_CALC_FOUND_ROWS user.id, user.email, user.zipCode, user.country, user.city, user.state, cab_rate_card.* 
-        FROM cab_rate_card 
-        INNER JOIN user ON cab_rate_card.userId = user.id`;
+    SELECT SQL_CALC_FOUND_ROWS user.id, user.email, user.zipCode, user.country, user.state, user.companyId, cab_rate_card.* 
+    FROM cab_rate_card 
+    INNER JOIN user ON cab_rate_card.userId = user.id`;
 
     const params = [];
-
-    // Initialize WHERE clause if any filter is provided
     let whereClauses = [];
 
-    // Add search conditions if provided
+    // Search conditions
     if (zipCode) {
         whereClauses.push(`user.zipCode LIKE ?`);
         params.push(`%${zipCode}%`);
     }
     if (city) {
-        whereClauses.push(`LOWER(user.city) LIKE ?`);
+        whereClauses.push(`LOWER(cab_rate_card.city) LIKE ?`);
         params.push(`%${city.toLowerCase()}%`);
     }
+    if (companyId) {
+        whereClauses.push('LOWER(user.companyId) LIKE ?');
+        params.push(`%${companyId.toLowerCase()}%`);
+    }
 
-    // If there are any where clauses, append them to the SQL query
     if (whereClauses.length > 0) {
         sql += ` WHERE ${whereClauses.join(' AND ')}`;
     }
@@ -980,13 +986,13 @@ const getAllCabRateCard = asyncHandler(async (req, res) => {
     sql += ` ORDER BY cab_rate_card.createdAt DESC LIMIT ? OFFSET ?`;
     params.push(limit, skip);
 
-    console.log(sql)
-    console.log(params)
+    console.log(sql);
+    console.log(params);
 
     try {
-        const [result, fields] = await db.query(sql, params);
+        const [result] = await db.query(sql, params);
 
-        console.log(result)
+        console.log(result);
 
         if (result.length === 0) {
             return res.status(404).json(
@@ -1024,13 +1030,18 @@ const getAllCabRateCard = asyncHandler(async (req, res) => {
     }
 });
 
+/**
+ * @getLogMessages
+ * @params req, res
+ * @Description : This function is used to get all the log messages in the 'logs' table of the 'tges' database using the MySQL module
+ */
 const getLogMessages = asyncHandler(async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
 
     try {
-        const sql = `SELECT SQL_CALC_FOUND_ROWS * FROM log_messages ORDER BY createdAt DESC LIMIT ? OFFSET ?`;
+        const sql = `SELECT SQL_CALC_FOUND_ROWS * FROM logs ORDER BY createdAt DESC LIMIT ? OFFSET ?`;
         const params = [limit, skip];
         const [result, fields] = await db.query(sql, params);
 
