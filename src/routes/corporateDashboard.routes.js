@@ -1,6 +1,6 @@
 import express from "express";
 import { isLoggedIn } from "../middlewares/auth.middleware.js";
-import { addBranch, addEmployee, deleteBranch, deleteEmployee, getAllBranches, getAllEmployees, getBranchEmployees, getEmployee, updateBranch, updateEmployee, updateProfile } from "../controller/corporateDashboard.controller.js";
+import { addBranch, addEmployee, deleteBranch, deleteEmployee, employeeLogin, getAllBranches, getAllEmployees, getBranchEmployees, getEmployee, updateBranch, updateEmployee, updateProfile } from "../controller/corporateDashboard.controller.js";
 const router = express.Router();
 
 router
@@ -37,5 +37,9 @@ router
 router
     .route("/employees")
     .get(isLoggedIn, getAllEmployees);
+
+router
+    .route("/employee-login")
+    .post(employeeLogin)
 
 export default router;
