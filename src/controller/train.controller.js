@@ -23,7 +23,7 @@ const createTrainTravel = asyncHandler(async (req, res) => {
     }
 
     try {
-        const insertTrain = `INSERT INTO train (userId, fullName, dob, gender, contactNo, email, travelFrom, travelTo, classOfTravel, travelDate, trainNo, timePreference) VALUES ?`;
+        const insertTrain = `INSERT INTO train (userId, fullName, dob, gender, contactNo, email, travelFrom, travelTo, classOfTravel, travelDate, trainNo, adult, children, timePreference) VALUES ?`;
         const trainParams = reqBody.map(data => [
             req.user.id,
             data.fullName,
@@ -36,6 +36,8 @@ const createTrainTravel = asyncHandler(async (req, res) => {
             data.classOfTravel,
             data.travelDate,
             data.trainNo,
+            data.adult,
+            data.children,
             data.timePreference
         ]);
 
@@ -111,7 +113,7 @@ const createTrainTravel = asyncHandler(async (req, res) => {
 const updateTrainTravel = asyncHandler(async (req, res) => {
     const reqBody = req.body || {};
     const id = req.params.id;
-    const { fullName, dob, gender, contactNo, email, travelFrom, travelTo, classOfTravel, travelDate, trainNo, timePreference } = reqBody;
+    const { fullName, dob, gender, contactNo, email, travelFrom, travelTo, classOfTravel, travelDate, trainNo, timePreference, adult, children } = reqBody;
 
     try {
         const sql = 'SELECT * from train WHERE id = ?';
@@ -128,8 +130,8 @@ const updateTrainTravel = asyncHandler(async (req, res) => {
             );
         }
 
-        const updateSql = 'UPDATE train SET fullName = ?, dob = ?, gender = ?, contactNo = ?, email = ?, travelFrom = ?, travelTo = ?, classOfTravel = ?, travelDate = ?, trainNo = ?, timePreference = ? WHERE id = ?';
-        const updateParams = [fullName, dob, gender, contactNo, email, travelFrom, travelTo, classOfTravel, travelDate, trainNo, timePreference, id];
+        const updateSql = 'UPDATE train SET fullName = ?, dob = ?, gender = ?, contactNo = ?, email = ?, travelFrom = ?, travelTo = ?, classOfTravel = ?, travelDate = ?, trainNo = ?, timePreference = ?, adult = ?, children = ? WHERE id = ?';
+        const updateParams = [fullName, dob, gender, contactNo, email, travelFrom, travelTo, classOfTravel, travelDate, trainNo, timePreference, adult, children, id];
         const [updateResult] = await db.query(updateSql, updateParams);
 
         // Logs
