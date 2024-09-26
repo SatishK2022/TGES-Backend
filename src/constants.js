@@ -119,6 +119,8 @@ export const train = `CREATE TABLE IF NOT EXISTS train (
     travelDate VARCHAR(255) NOT NULL,
     trainNo VARCHAR(255),
     timePreference VARCHAR(255),
+    adult VARCHAR(2),
+    children VARCHAR(2),
     remarks VARCHAR(255),
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -140,6 +142,8 @@ export const air = `CREATE TABLE IF NOT EXISTS air (
     travelDate VARCHAR(255) NOT NULL,
     flightNo VARCHAR(255),
     timePreference VARCHAR(255),
+    adult VARCHAR(2),
+    children VARCHAR(2),
     remarks VARCHAR(255),
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP

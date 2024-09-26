@@ -1,7 +1,7 @@
 import asyncHandler from "../utils/asyncHandler.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import { pool as db } from "../config/db.js";
-import { calculateAge, generateBranchId } from "../utils/helper.js";
+import { calculateAge, comparePassword, generateBranchId, generateToken, hashPassword } from "../utils/helper.js";
 
 /**
  * @updateProfile
@@ -9,7 +9,7 @@ import { calculateAge, generateBranchId } from "../utils/helper.js";
  * @Description : This function is used to update corporate user data in the 'user' table of the 'tges' database using the MySQL module
  */
 const updateProfile = asyncHandler(async (req, res) => {
-    const {user} = req;
+    const { user } = req;
     const reqBody = req.body || {};
     const { zipCode, country, city, state, industry, companyName, address1, address2, address3, address4, phoneNumber, countryCode, stateCode, landlineNumber, landlineCityCode, landlineCountryCode, contactDepartment, contactPersonFirstName, contactPersonSecondName, contactPersonLastName, contactPersonGender, website, gstNumber } = reqBody;
 
@@ -259,8 +259,9 @@ const addEmployee = asyncHandler(async (req, res) => {
             );
         }
 
+        const hashedPassword = await hashPassword(password)
         const employee = `INSERT INTO employee (userId, branchId, employeeId, name, gender, dob, zipCode, country, city, state, email, password, countryCode, contactNo, department, position) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-        const employeeParams = [req.user.id, branchId, employeeId, name, gender, dob, zipCode, country, city, state, email, password, countryCode, contactNo, department, position];
+        const employeeParams = [req.user.id, branchId, employeeId, name, gender, dob, zipCode, country, city, state, email, hashedPassword, countryCode, contactNo, department, position];
 
         const [insertResult, insertFields] = await db.query(employee, employeeParams);
 
@@ -282,6 +283,97 @@ const addEmployee = asyncHandler(async (req, res) => {
         );
     }
 });
+
+/**
+ * @employeeLogin
+ * @params req, res
+ * @Description : This function is used to login employee
+ */
+const employeeLogin = asyncHandler(async (req, res) => {
+    const reqBody = req.body || {};
+    const { employeeId, email, password } = reqBody;
+
+    if (!employeeId || !email || !password) {
+        return res.status(400).json(
+            new ApiResponse(
+                400,
+                null,
+                "All fields are required"
+            )
+        );
+    }
+
+    try {
+        const sql = 'SELECT * FROM employee WHERE email = ? AND employeeId = ?';
+        const params = [email, employeeId];
+
+        const [results] = await db.query(sql, params)
+
+        if (!results) {
+            return res.status(404).json(
+                new ApiResponse(
+                    404,
+                    null,
+                    "Employee not found"
+                )
+            );
+        }
+
+        const user = results[0];
+        const passwordMatch = await comparePassword(password, user.password);
+        if (!passwordMatch) {
+            return res.status(401).json(
+                new ApiResponse(
+                    401,
+                    null,
+                    "Invalid credentials"
+                )
+            );
+        }
+
+        const token = generateToken({
+            id: user.id,
+            email: user.email,
+        });
+
+        const cookieOptions = {
+            httpOnly: true,
+            secure: true,
+        };
+
+        const calculatedAge = calculateAge(user.dob)
+        const updateSql = 'UPDATE employee SET age = ? WHERE employeeId = ?';
+        await db.query(updateSql, [calculatedAge, employeeId]);
+
+        const cleanedResult = {
+            ...user,
+            userId: undefined,
+            password: undefined,
+            createdAt: undefined,
+            updatedAt: undefined,
+        };
+
+        return res
+            .status(200)
+            .cookie("token", token, cookieOptions)
+            .json(
+                new ApiResponse(
+                    200,
+                    cleanedResult,
+                    "Login Successful"
+                )
+            );
+    } catch (error) {
+        console.error("Error while employee login: ", error);
+        return res.status(500).json(
+            new ApiResponse(
+                500,
+                null,
+                "Error while employee login"
+            )
+        )
+    }
+})
 
 /**
  * @updateEmployee
@@ -645,6 +737,7 @@ export {
     deleteBranch,
     getAllBranches,
     addEmployee,
+    employeeLogin,
     updateEmployee,
     deleteEmployee,
     getEmployee,
