@@ -169,10 +169,10 @@ const updateVolvoBusTravel = asyncHandler(async (req, res) => {
  * @Description : This function is used to delete volvo bus travel data in the 'bus' table of the 'tges' database using the MySQL module
 */
 const deleteVolvoBusTravel = asyncHandler(async (req, res) => {
-    const id = req.user.id;
+    const id = req.params.id;
 
     try {
-        const sql = 'SELECT * FROM bus WHERE userId = ?';
+        const sql = 'SELECT * FROM bus WHERE id = ?';
         const params = [id];
         const [result] = await db.query(sql, params);
 
