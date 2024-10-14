@@ -119,6 +119,7 @@ const loginAdmin = asyncHandler(async (req, res) => {
 
         const cleanedResult = {
             ...admin,
+            token,
             id: undefined,
             password: undefined,
             createdAt: undefined,
