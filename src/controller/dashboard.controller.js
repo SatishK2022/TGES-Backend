@@ -119,6 +119,7 @@ const loginAdmin = asyncHandler(async (req, res) => {
 
         const cleanedResult = {
             ...admin,
+            token,
             id: undefined,
             password: undefined,
             createdAt: undefined,
@@ -1088,6 +1089,163 @@ const getLogMessages = asyncHandler(async (req, res) => {
     }
 })
 
+/**
+ * @addContactDetails
+ * @params req, res
+ * @Description : This function is used to add contact details in the 'contact' table of the 'tges' database using the MySQL module
+ */
+const addContactDetails = asyncHandler(async (req, res) => {
+    const reqBody = req.body;
+    const { name, email, phoneNumbers: { phoneNoOne, phoneNoTwo }, address, type, profession } = reqBody;
+
+    try {
+        const sql = `INSERT INTO contact (name, email, phoneNoOne, phoneNoTwo, address, type, profession) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+        const params = [name, email, phoneNoOne, phoneNoTwo, address, type, profession];
+        const [result] = await db.query(sql, params);
+
+        if (result.affectedRows === 0) {
+            return res.status(500).json(
+                new ApiResponse(
+                    500,
+                    null,
+                    "Failed to add contact details"
+                )
+            )
+        }
+
+        return res.status(200).json(
+            new ApiResponse(
+                200,
+                null,
+                "Contact details added successfully"
+            )
+        )
+    } catch (error) {
+        console.error("Error while adding contact details:", error);
+        return res.status(500).json(
+            new ApiResponse(
+                500,
+                null,
+                "An error occurred while adding contact details"
+            )
+        )
+    }
+})
+
+/**
+ * @getContactDetails
+ * @params req, res
+ * @Description : This function is used to get all the contact details in the 'contact' table of the 'tges' database using the MySQL module
+ */
+const getContactDetails = asyncHandler(async (req, res) => {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    try {
+        const sql = `SELECT SQL_CALC_FOUND_ROWS * FROM contact ORDER BY createdAt DESC LIMIT ? OFFSET ?`;
+        const params = [limit, skip];
+        const [result] = await db.query(sql, params);
+
+        if (result.length === 0) {
+            return res.status(404).json(
+                new ApiResponse(
+                    200,
+                    null,
+                    "No contact details found"
+                )
+            )
+        }
+
+        const totalCountSql = `SELECT FOUND_ROWS() as count`;
+        const [totalCountResult] = await db.query(totalCountSql);
+        const totalCount = totalCountResult[0].count;
+
+        return res.status(200).json(
+            new ApiResponse(
+                200,
+                {
+                    data: result,
+                    pagination: {
+                        total_records: totalCount,
+                        total_pages: Math.ceil(totalCount / limit),
+                        limit: limit,
+                        current_page: page,
+                        next_page: page < Math.ceil(totalCount / limit) ? page + 1 : null,
+                        prev_page: page > 1 ? page - 1 : null
+                    }
+                },
+                "Contact details fetched successfully"
+            )
+        )
+    } catch {
+        console.error("Error while getting contact details:", error);
+        return res.status(500).json(
+            new ApiResponse(
+                500,
+                null,
+                "An error occurred while getting contact details"
+            )
+        )
+    }
+})
+
+/**
+ * @searchContactDetails
+ * @params req, res
+ * @Description : This function is used to search contact details in the 'contact' table of the 'tges' database using the MySQL module
+ */
+const searchContactDetails = asyncHandler(async (req, res) => {
+    const { query, value } = req.params;
+
+    try {
+        let sql = ``;
+        let params = [];
+        if (query === 'id') {
+            sql = `SELECT * FROM contact WHERE id = ?`;
+            params = [value];
+        } else if (query === 'name') {
+            sql = `SELECT * FROM contact WHERE name LIKE ?`;
+            params = [`%${value}%`];
+        } else if (query === 'email') {
+            sql = `SELECT * FROM contact WHERE email LIKE ?`;
+            params = [`%${value}%`];
+        } else if (query === 'phone') {
+            sql = `SELECT * FROM contact WHERE phoneNoOne LIKE ? OR phoneNoTwo LIKE ?`;
+            params = [`%${value}%`, `%${value}%`];
+        }
+
+        const [result] = await db.query(sql, params);
+
+        if (result.length === 0) {
+            return res.status(404).json(
+                new ApiResponse(
+                    200,
+                    null,
+                    "No contact details found"
+                )
+            )
+        }
+
+        return res.status(200).json(
+            new ApiResponse(
+                200,
+                result,
+                "Contact details fetched successfully"
+            )
+        )
+    } catch (error) {
+        console.error("Error while searching contact details:", error);
+        return res.status(500).json(
+            new ApiResponse(
+                500,
+                null,
+                "An error occurred while searching contact details"
+            )
+        )
+    }
+})
+
 export {
     registerAdmin,
     loginAdmin,
@@ -1104,5 +1262,8 @@ export {
     getAllTravelInsurance,
     getAllHealthInsurance,
     getAllCabRateCard,
-    getLogMessages
+    getLogMessages,
+    addContactDetails,
+    getContactDetails,
+    searchContactDetails
 }

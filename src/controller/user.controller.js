@@ -352,6 +352,7 @@ const login = asyncHandler(async (req, res) => {
 
         const cleanedResult = {
             ...user,
+            token,
             otp: undefined,
             otpExpires: undefined,
             password: undefined,
